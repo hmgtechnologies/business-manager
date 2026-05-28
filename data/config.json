@@ -1,0 +1,26 @@
+{
+  "businessName": "HMG Concepts",
+  "ownerName": "Adewale Samson Adeagbo",
+  "businessType": "Multi-industry Solutions",
+  "address": "Lagos, Nigeria",
+  "phone": "",
+  "email": "",
+  "currency": "₦",
+  "lowStockThreshold": 10,
+  "taxRate": 0,
+  "fyStart": 1,
+  "categories": ["Beverages","Food","Household","Personal Care","Electronics","Stationery","Other"],
+  "theme": "dark-green",
+  "receiptFooter": "Thank you for your business! — HMG Concepts",
+  "brandTagline": "Technology-Powered Business Intelligence",
+  "brandWebsite": "cssadewale.pages.dev",
+  "brandLogo": "HMG",
+  "features": {
+    "dashboard": true, "sales": true, "inventory": true, "reports": true,
+    "export": true, "pwa": true, "backup": true, "profit": true, "receipt": true,
+    "expenses": true, "customers": true, "register": true, "targets": true,
+    "activityLog": true, "themes": true, "suppliers": true, "notes": true
+  },
+  "version": "3.0.0",
+  "generatedAt": "2026-05-27T00:00:00.000Z"
+}
