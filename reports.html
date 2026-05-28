@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports — SaleTrack — HMG Enterprise</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">
+    <div class="brand-logo">HMG</div>
+    <div>
+      <div class="brand-name" id="bizNameNav">My Store</div>
+      <div class="brand-sub">Reports</div>
+    </div>
+  </div>
+  <nav class="navbar-links">
+    <a href="index.html">📊 Dashboard</a>
+    <a href="sales.html">🛒 Sales</a>
+    <a href="inventory.html">📦 Inventory</a>
+    <a href="expenses.html">💸 Expenses</a>
+    <a href="customers.html">👥 Customers</a>
+    <a href="suppliers.html">🚚 Suppliers</a>
+    <a href="register.html">🏧 Register</a>
+    <a href="journal.html">📝 Journal</a>
+    <a href="staff.html">👨‍💼 Staff</a>
+    <a href="budgets.html">💰 Budgets</a>
+    <a href="credits.html">💳 Credits</a>
+    <a href="reports.html" class="active">📈 Reports</a>
+    <a href="settings.html">⚙️ Settings</a>
+  </nav>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">📊 Dashboard</a>
+  <a href="sales.html">🛒 Sales</a>
+  <a href="inventory.html">📦 Inventory</a>
+  <a href="expenses.html">💸 Expenses</a>
+  <a href="customers.html">👥 Customers</a>
+  <a href="suppliers.html">🚚 Suppliers</a>
+  <a href="register.html">🏧 Register</a>
+  <a href="journal.html">📝 Journal</a>
+  <a href="staff.html">👨‍💼 Staff</a>
+  <a href="budgets.html">💰 Budgets</a>
+  <a href="credits.html">💳 Credits</a>
+  <a href="reports.html" class="active">📈 Reports</a>
+  <a href="settings.html">⚙️ Settings</a>
+</div>
+
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Reports & Analytics</h1>
+      <div class="page-sub">Visual insights into your business performance</div>
+    </div>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center">
+      <select id="dateRange" onchange="loadAll()" style="width:auto">
+        <option value="7">Last 7 Days</option>
+        <option value="14">Last 14 Days</option>
+        <option value="30" selected>Last 30 Days</option>
+        <option value="90">Last 90 Days</option>
+        <option value="365">Last 12 Months</option>
+        <option value="all">All Time</option>
+      </select>
+      <button class="btn btn-secondary" onclick="exportAllCSV()">📥 Export All</button>
+      <button class="share-btn whatsapp" onclick="shareReport()">📱 Share</button>
+      <button class="btn btn-secondary" onclick="fullBackup()">💾 Backup</button>
+      <button class="btn btn-secondary" onclick="triggerRestore()">🔄 Restore</button>
+      <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="doRestore(event)" />
+    </div>
+  </div>
+
+  <!-- SUMMARY KPIs -->
+  <div class="stats-grid" id="reportKPIs" style="margin-bottom:1.5rem"></div>
+
+  <!-- CHARTS ROW 1 -->
+  <div class="chart-grid">
+    <div class="card">
+      <h3 class="card-title">Revenue Over Time</h3>
+      <canvas id="revenueChart" height="220"></canvas>
+    </div>
+    <div class="card">
+      <h3 class="card-title">Sales by Category</h3>
+      <canvas id="categoryChart" height="220"></canvas>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW 2 -->
+  <div class="chart-grid">
+    <div class="card">
+      <h3 class="card-title">Payment Method Breakdown</h3>
+      <canvas id="paymentChart" height="220"></canvas>
+    </div>
+    <div class="card">
+      <h3 class="card-title">Units Sold Per Product (Top 10)</h3>
+      <canvas id="unitsChart" height="220"></canvas>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW 3 - NEW: Profit & Expense -->
+  <div class="chart-grid">
+    <div class="card">
+      <h3 class="card-title">📈 Profit vs Expenses</h3>
+      <canvas id="profitExpenseChart" height="220"></canvas>
+    </div>
+    <div class="card">
+      <h3 class="card-title">💸 Expense Categories</h3>
+      <canvas id="expenseCategoryChart" height="220"></canvas>
+    </div>
+  </div>
+
+  <!-- TOP PRODUCTS TABLE -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Top Products by Revenue</h3>
+      <button class="btn btn-secondary" style="font-size:0.78rem;padding:0.3rem 0.8rem" onclick="exportTopCSV()">📥 CSV</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Product</th>
+          <th>Category</th>
+          <th>Units Sold</th>
+          <th>Revenue</th>
+          <th>Profit</th>
+          <th>Margin</th>
+          <th>Transactions</th>
+        </tr>
+      </thead>
+      <tbody id="topProductsBody">
+        <tr><td colspan="8" class="empty-cell">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PROFIT & LOSS SUMMARY -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">💰 Profit & Loss Summary</h3>
+    </div>
+    <div id="plSummary" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem"></div>
+  </div>
+
+  <!-- ALL SALES HISTORY -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Sales History</h3>
+      <div style="display:flex;gap:0.5rem;align-items:center">
+        <input type="text" id="historySearch" placeholder="Search..." oninput="renderHistory()" style="width:180px" />
+        <button class="btn btn-secondary" style="font-size:0.78rem;padding:0.3rem 0.8rem" onclick="exportSalesCSV()">📥 CSV</button>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Invoice</th>
+          <th>Product</th>
+          <th>Qty</th>
+          <th>Unit Price</th>
+          <th>Total</th>
+          <th>Profit</th>
+          <th>Payment</th>
+          <th>Customer</th>
+        </tr>
+      </thead>
+      <tbody id="historyBody">
+        <tr><td colspan="9" class="empty-cell">Loading...</td></tr>
+      </tbody>
+    </table>
+    <div id="historyPager" style="display:flex;gap:0.5rem;margin-top:1rem;align-items:center;justify-content:center"></div>
+  </div>
+
+  <!-- STORAGE USAGE -->
+  <div class="card" style="background:rgba(0,229,160,0.03)">
+    <h3 class="card-title">💾 Storage Usage</h3>
+    <div id="storageInfo"></div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script src="js/storage.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  ST.init();
+  const cfg = ST.config();
+  document.getElementById('bizNameNav').textContent = cfg.businessName || 'My Store';
+
+  const COLORS = ['#00e5a0','#0077ff','#ff6b35','#ffd32a','#a855f7','#06b6d4','#f43f5e','#84cc16','#fb923c','#38bdf8'];
+  let charts = {};
+  let historyPage = 0;
+  const PAGE_SIZE = 20;
+
+  function getFilteredSales() {
+    const range = document.getElementById('dateRange').value;
+    const allSales = ST.sales();
+    if (range === 'all') return allSales;
+    const days = parseInt(range);
+    const cutoff = new Date(Date.now() - days * 86400000);
+    return allSales.filter(s => new Date(s.date) >= cutoff);
+  }
+
+  function getFilteredExpenses() {
+    const range = document.getElementById('dateRange').value;
+    const allExps = ST.expenses();
+    if (range === 'all') return allExps;
+    const days = parseInt(range);
+    const cutoff = new Date(Date.now() - days * 86400000);
+    return allExps.filter(e => new Date(e.date) >= cutoff);
+  }
+
+  function destroyChart(key) {
+    if (charts[key]) { charts[key].destroy(); delete charts[key]; }
+  }
+
+  window.loadAll = function () {
+    const sales = getFilteredSales();
+    const exps = getFilteredExpenses();
+
+    // KPIs
+    const totalRev = sales.reduce((a, s) => a + s.total, 0);
+    const totalProfit = sales.reduce((a, s) => a + (s.profit || 0), 0);
+    const totalUnits = sales.reduce((a, s) => a + s.qty, 0);
+    const totalExpenses = exps.reduce((a, e) => a + e.amount, 0);
+    const netProfit = totalProfit - totalExpenses;
+    const avgOrder = sales.length ? totalRev / sales.length : 0;
+
+    document.getElementById('reportKPIs').innerHTML = [
+      { label: 'Total Revenue', val: ST.fmt(totalRev), color: 'var(--accent)' },
+      { label: 'Gross Profit', val: ST.fmt(totalProfit), color: 'var(--accent2)' },
+      { label: 'Total Expenses', val: ST.fmt(totalExpenses), color: 'var(--danger)' },
+      { label: 'Net Profit', val: ST.fmt(netProfit), color: netProfit >= 0 ? '#a855f7' : 'var(--danger)' },
+      { label: 'Units Sold', val: totalUnits.toLocaleString(), color: 'var(--warning)' },
+      { label: 'Transactions', val: sales.length.toLocaleString(), color: '#06b6d4' },
+      { label: 'Avg. Order Value', val: ST.fmt(avgOrder), color: 'var(--accent3)' },
+      { label: 'Profit Margin', val: totalRev > 0 ? (totalProfit / totalRev * 100).toFixed(1) + '%' : '—', color: 'var(--accent)' }
+    ].map(k =>
+      '<div class="stat-card" style="border-top:3px solid ' + k.color + '">' +
+      '<div class="stat-label">' + k.label + '</div>' +
+      '<div class="stat-val" style="color:' + k.color + '">' + k.val + '</div>' +
+      '</div>'
+    ).join('');
+
+    // Revenue Over Time
+    destroyChart('revenue');
+    const range = document.getElementById('dateRange').value;
+    const days = range === 'all' ? 30 : Math.min(parseInt(range), 30);
+    const revLabels = [], revData = [], profitData = [];
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      const ds = d.toDateString();
+      revLabels.push(d.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' }));
+      revData.push(sales.filter(s => new Date(s.date).toDateString() === ds).reduce((a, s) => a + s.total, 0));
+      profitData.push(sales.filter(s => new Date(s.date).toDateString() === ds).reduce((a, s) => a + (s.profit || 0), 0));
+    }
+    charts.revenue = new Chart(document.getElementById('revenueChart'), {
+      type: 'line',
+      data: {
+        labels: revLabels,
+        datasets: [
+          { label: 'Revenue', data: revData, borderColor: '#00e5a0', backgroundColor: 'rgba(0,229,160,0.08)', borderWidth: 2, tension: 0.4, fill: true, pointBackgroundColor: '#00e5a0' },
+          { label: 'Profit', data: profitData, borderColor: '#a855f7', backgroundColor: 'rgba(168,85,247,0.05)', borderWidth: 2, tension: 0.4, fill: false, pointBackgroundColor: '#a855f7' }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#6b7a94' } } },
+        scales: {
+          y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6b7a94' } },
+          x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#6b7a94', maxRotation: 45, maxTicksLimit: 10 } }
+        }
+      }
+    });
+
+    // Category doughnut
+    destroyChart('category');
+    const byCat = {};
+    sales.forEach(s => { byCat[s.category || 'Uncategorised'] = (byCat[s.category || 'Uncategorised'] || 0) + s.total; });
+    charts.category = new Chart(document.getElementById('categoryChart'), {
+      type: 'doughnut',
+      data: { labels: Object.keys(byCat), datasets: [{ data: Object.values(byCat), backgroundColor: COLORS, borderWidth: 0 }] },
+      options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: '#6b7a94', padding: 12 } } } }
+    });
+
+    // Payment method bar
+    destroyChart('payment');
+    const byPay = {};
+    sales.forEach(s => { byPay[s.payMethod || 'Cash'] = (byPay[s.payMethod || 'Cash'] || 0) + s.total; });
+    charts.payment = new Chart(document.getElementById('paymentChart'), {
+      type: 'bar',
+      data: { labels: Object.keys(byPay), datasets: [{ label: 'Revenue', data: Object.values(byPay), backgroundColor: COLORS, borderRadius: 6, borderWidth: 0 }] },
+      options: {
+        responsive: true, plugins: { legend: { display: false } },
+        scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6b7a94' } }, x: { grid: { display: false }, ticks: { color: '#6b7a94' } } }
+      }
+    });
+
+    // Units sold horizontal bar (top 10)
+    destroyChart('units');
+    const byProd = {};
+    sales.forEach(s => {
+      if (!byProd[s.productName]) byProd[s.productName] = { qty: 0, rev: 0, profit: 0, count: 0, category: s.category || '' };
+      byProd[s.productName].qty += s.qty;
+      byProd[s.productName].rev += s.total;
+      byProd[s.productName].profit += (s.profit || 0);
+      byProd[s.productName].count += 1;
+    });
+    const top10 = Object.entries(byProd).sort((a, b) => b[1].qty - a[1].qty).slice(0, 10);
+    charts.units = new Chart(document.getElementById('unitsChart'), {
+      type: 'bar',
+      data: { labels: top10.map(e => e[0]), datasets: [{ label: 'Units Sold', data: top10.map(e => e[1].qty), backgroundColor: '#0077ff88', borderColor: '#0077ff', borderWidth: 1, borderRadius: 4 }] },
+      options: {
+        indexAxis: 'y', responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6b7a94' } }, y: { grid: { display: false }, ticks: { color: '#6b7a94' } } }
+      }
+    });
+
+    // NEW: Profit vs Expenses chart
+    destroyChart('profitExpense');
+    const expByDay = [];
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      const ds = d.toDateString();
+      expByDay.push(exps.filter(e => new Date(e.date).toDateString() === ds).reduce((a, e) => a + e.amount, 0));
+    }
+    charts.profitExpense = new Chart(document.getElementById('profitExpenseChart'), {
+      type: 'bar',
+      data: {
+        labels: revLabels,
+        datasets: [
+          { label: 'Profit', data: profitData, backgroundColor: 'rgba(0,229,160,0.6)', borderRadius: 4 },
+          { label: 'Expenses', data: expByDay, backgroundColor: 'rgba(255,71,87,0.6)', borderRadius: 4 }
+        ]
+      },
+      options: {
+        responsive: true, plugins: { legend: { labels: { color: '#6b7a94' } } },
+        scales: {
+          y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6b7a94' } },
+          x: { grid: { display: false }, ticks: { color: '#6b7a94', maxRotation: 45, maxTicksLimit: 10 } }
+        }
+      }
+    });
+
+    // NEW: Expense Categories chart
+    destroyChart('expenseCat');
+    const expByCat = {};
+    exps.forEach(e => { expByCat[e.category || 'Other'] = (expByCat[e.category || 'Other'] || 0) + e.amount; });
+    charts.expenseCat = new Chart(document.getElementById('expenseCategoryChart'), {
+      type: 'doughnut',
+      data: { labels: Object.keys(expByCat), datasets: [{ data: Object.values(expByCat), backgroundColor: COLORS, borderWidth: 0 }] },
+      options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: '#6b7a94', padding: 12 } } } }
+    });
+
+    // Top products table
+    const topAll = Object.entries(byProd).sort((a, b) => b[1].rev - a[1].rev);
+    document.getElementById('topProductsBody').innerHTML = topAll.length
+      ? topAll.map(([name, d], i) => {
+          const cat = d.category || '—';
+          const margin = d.rev > 0 && d.profit !== 0 ? (d.profit / d.rev * 100).toFixed(1) + '%' : '—';
+          return '<tr>' +
+            '<td><strong>#' + (i + 1) + '</strong></td>' +
+            '<td><strong>' + name + '</strong></td>' +
+            '<td><span class="badge badge-info">' + cat + '</span></td>' +
+            '<td>' + d.qty + '</td>' +
+            '<td>' + ST.fmt(d.rev) + '</td>' +
+            '<td style="color:' + (d.profit >= 0 ? 'var(--accent)' : 'var(--danger)') + '">' + ST.fmt(d.profit) + '</td>' +
+            '<td>' + margin + '</td>' +
+            '<td>' + d.count + '</td>' +
+            '</tr>';
+        }).join('')
+      : '<tr><td colspan="8" class="empty-cell">No sales data in this period</td></tr>';
+
+    // P&L Summary
+    document.getElementById('plSummary').innerHTML =
+      '<div style="padding:1rem;background:var(--surface2);border-radius:8px"><div class="stat-label">Revenue</div><div style="font-size:1.3rem;font-weight:800;color:var(--accent);font-family:Syne,sans-serif">' + ST.fmt(totalRev) + '</div><div style="font-size:0.8rem;color:var(--muted)">' + sales.length + ' transactions</div></div>' +
+      '<div style="padding:1rem;background:var(--surface2);border-radius:8px"><div class="stat-label">Cost of Goods</div><div style="font-size:1.3rem;font-weight:800;color:var(--danger);font-family:Syne,sans-serif">' + ST.fmt(totalRev - totalProfit) + '</div><div style="font-size:0.8rem;color:var(--muted)">Gross Profit: ' + ST.fmt(totalProfit) + '</div></div>' +
+      '<div style="padding:1rem;background:var(--surface2);border-radius:8px"><div class="stat-label">Operating Expenses</div><div style="font-size:1.3rem;font-weight:800;color:var(--warning);font-family:Syne,sans-serif">' + ST.fmt(totalExpenses) + '</div><div style="font-size:0.8rem;color:var(--muted)">' + exps.length + ' expense records</div></div>';
+
+    // Storage usage
+    const usage = ST.storageUsage();
+    document.getElementById('storageInfo').innerHTML =
+      '<div class="target-row">' +
+      '<div class="target-header"><span class="target-label">Browser Storage</span><span class="target-value">' + (usage.used / 1024).toFixed(1) + ' KB / 5 MB (' + usage.pct + '%)</span></div>' +
+      '<div class="progress-bar-container"><div class="progress-bar-fill ' + (parseFloat(usage.pct) > 70 ? 'red' : 'green') + '" style="width:' + usage.pct + '%"></div></div>' +
+      '</div>' +
+      '<div style="margin-top:0.5rem;font-size:0.82rem;color:var(--muted)">💡 Back up regularly to prevent data loss. Clear old data from Settings if storage runs low.</div>';
+
+    historyPage = 0;
+    renderHistory();
+  };
+
+  window.renderHistory = function () {
+    const sales = getFilteredSales();
+    const q = document.getElementById('historySearch').value.toLowerCase();
+    let filtered = [...sales].reverse();
+    if (q) filtered = filtered.filter(s =>
+      s.productName.toLowerCase().includes(q) ||
+      (s.customer || '').toLowerCase().includes(q) ||
+      (s.payMethod || '').toLowerCase().includes(q) ||
+      (s.invoiceNo || '').toLowerCase().includes(q)
+    );
+    const total = filtered.length;
+    const paged = filtered.slice(historyPage * PAGE_SIZE, (historyPage + 1) * PAGE_SIZE);
+    document.getElementById('historyBody').innerHTML = paged.length
+      ? paged.map(s =>
+          '<tr>' +
+          '<td style="font-size:0.78rem;color:var(--muted)">' + new Date(s.date).toLocaleString() + '</td>' +
+          '<td style="font-size:0.75rem;color:var(--muted);font-family:DM Mono,monospace">' + (s.invoiceNo || '—') + '</td>' +
+          '<td><strong>' + s.productName + '</strong></td>' +
+          '<td>' + s.qty + ' ' + (s.unit || '') + '</td>' +
+          '<td>' + ST.fmt(s.unitPrice) + '</td>' +
+          '<td><strong>' + ST.fmt(s.total) + '</strong></td>' +
+          '<td style="color:' + ((s.profit || 0) >= 0 ? 'var(--accent)' : 'var(--danger)') + '">' + ST.fmt(s.profit || 0) + '</td>' +
+          '<td><span class="badge badge-info">' + (s.payMethod || 'Cash') + '</span></td>' +
+          '<td>' + (s.customer || 'Walk-in') + '</td>' +
+          '</tr>'
+        ).join('')
+      : '<tr><td colspan="9" class="empty-cell">No sales found</td></tr>';
+
+    const pages = Math.ceil(total / PAGE_SIZE);
+    let pagerHTML = '<span style="color:var(--muted);font-size:0.8rem">' + total + ' records</span>';
+    if (pages > 1) {
+      pagerHTML += '&nbsp;&nbsp;';
+      if (historyPage > 0) pagerHTML += '<button class="btn btn-secondary" style="padding:0.3rem 0.7rem;font-size:0.78rem" onclick="changePage(-1)">← Prev</button> ';
+      pagerHTML += '<span style="font-size:0.8rem;color:var(--muted)">Page ' + (historyPage + 1) + ' / ' + pages + '</span> ';
+      if (historyPage < pages - 1) pagerHTML += '<button class="btn btn-secondary" style="padding:0.3rem 0.7rem;font-size:0.78rem" onclick="changePage(1)">Next →</button>';
+    }
+    document.getElementById('historyPager').innerHTML = pagerHTML;
+  };
+
+  window.changePage = function (dir) { historyPage += dir; renderHistory(); };
+
+  window.exportAllCSV = function () {
+    exportSalesCSV();
+    setTimeout(function() {
+      const prods = ST.products();
+      const header = 'Name,SKU,Category,Price,Cost Price,Stock,Unit,Stock Value';
+      const rows = prods.map(p => [p.name, p.sku || '', p.category || '', p.price, p.costPrice || 0, p.stock, p.unit || 'pcs', (p.price * p.stock).toFixed(2)]
+        .map(v => '"' + String(v) + '"').join(','));
+      dl([header, ...rows].join('\n'), 'inventory_' + new Date().toISOString().slice(0, 10) + '.csv', 'text/csv');
+    }, 500);
+    setTimeout(function() {
+      const exps = ST.expenses();
+      const header = 'Date,Description,Category,Amount,Payment,Note';
+      const rows = exps.map(e => [new Date(e.date).toLocaleString(), e.description, e.category || 'Other', e.amount, e.payMethod || 'Cash', e.note || '']
+        .map(v => '"' + String(v).replace(/"/g, '""') + '"').join(','));
+      dl([header, ...rows].join('\n'), 'expenses_' + new Date().toISOString().slice(0, 10) + '.csv', 'text/csv');
+      showToast('📥 All data exported');
+    }, 1000);
+  };
+
+  window.exportSalesCSV = function () {
+    const sales = ST.sales();
+    const header = 'Date,Invoice,Product,Category,Qty,Unit,Unit Price,Discount%,Tax,Total,Profit,Payment,Customer,Note';
+    const rows = sales.map(s => [
+      new Date(s.date).toLocaleString(), s.invoiceNo || '', s.productName, s.category || '', s.qty, s.unit || 'pcs',
+      s.unitPrice, s.discount || 0, (s.tax || 0).toFixed(2), s.total.toFixed(2), (s.profit || 0).toFixed(2),
+      s.payMethod, s.customer, s.note || ''
+    ].map(v => '"' + String(v).replace(/"/g, '""') + '"').join(','));
+    dl([header, ...rows].join('\n'), 'sales_' + new Date().toISOString().slice(0, 10) + '.csv', 'text/csv');
+    showToast('📥 Sales CSV downloaded');
+  };
+
+  window.exportTopCSV = function () {
+    const sales = getFilteredSales();
+    const byProd = {};
+    sales.forEach(s => {
+      if (!byProd[s.productName]) byProd[s.productName] = { qty: 0, rev: 0, profit: 0, count: 0 };
+      byProd[s.productName].qty += s.qty;
+      byProd[s.productName].rev += s.total;
+      byProd[s.productName].profit += (s.profit || 0);
+      byProd[s.productName].count += 1;
+    });
+    const rows = Object.entries(byProd).sort((a, b) => b[1].rev - a[1].rev)
+      .map(([name, d], i) => '"' + (i+1) + '","' + name + '","' + d.qty + '","' + d.rev.toFixed(2) + '","' + d.profit.toFixed(2) + '","' + d.count + '"');
+    dl(['Rank,Product,Units Sold,Revenue,Profit,Transactions', ...rows].join('\n'), 'top_products.csv', 'text/csv');
+  };
+
+  window.fullBackup = function () {
+    const data = {
+      version: '2.0.0',
+      exportedAt: new Date().toISOString(),
+      businessName: cfg.businessName,
+      config: ST.config(),
+      products: ST.products(),
+      sales: ST.sales(),
+      expenses: ST.expenses(),
+      customers: ST.customersData(),
+      register: ST.registerData(),
+      targets: ST.targets(),
+      activityLog: ST.activityLog()
+    };
+    dl(JSON.stringify(data, null, 2), 'saletrack_backup_' + new Date().toISOString().slice(0, 10) + '.json', 'application/json');
+    ST.logActivity('backup', 'Full backup downloaded');
+    showToast('💾 Full backup downloaded');
+  };
+
+  window.triggerRestore = function () { document.getElementById('restoreFile').click(); };
+
+  window.doRestore = function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function (ev) {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if (!data.products && !data.sales) { showToast('❌ Invalid backup file'); return; }
+        if (!confirm('This will REPLACE your current data with the backup. Continue?')) return;
+        if (data.config) ST.saveConfig(data.config);
+        if (data.products) ST.saveProducts(data.products);
+        if (data.sales) ST.saveSales(data.sales);
+        if (data.expenses) ST.saveExpenses(data.expenses);
+        if (data.customers) ST.saveCustomers(data.customers);
+        if (data.register) ST.saveRegister(data.register);
+        if (data.targets) ST.saveTargets(data.targets);
+        if (data.activityLog) localStorage.setItem('st_activity', JSON.stringify(data.activityLog));
+        showToast('✅ Backup restored! Reloading...');
+        ST.logActivity('backup', 'Data restored from backup');
+        setTimeout(() => location.reload(), 1500);
+      } catch (err) { showToast('❌ Could not read backup file'); }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
+
+  window.shareReport = function () {
+    const range = document.getElementById('dateRange').value;
+    const period = range === '7' ? 'week' : range === '30' ? 'month' : range === 'all' ? 'all' : 'week';
+    const summary = generateShareSummary(period);
+    shareWhatsApp(summary);
+  };
+
+  function dl(content, name, type) {
+    const a = document.createElement('a');
+    a.href = 'data:' + type + ';charset=utf-8,' + encodeURIComponent(content);
+    a.download = name; a.click();
+  }
+
+  loadAll();
+})();
+</script>
+<div class="brand-footer">
+  <div style="font-weight:700;color:var(--text);font-family:'Syne',sans-serif">HMG Concepts</div>
+  <div>Technology-Powered Business Intelligence</div>
+  <div style="margin-top:0.3rem"><a href="https://cssadewale.pages.dev" target="_blank">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev" target="_blank">hmgconcepts.pages.dev</a></div>
+  <div class="powered-by">Powered by HMG Enterprise — Adewale Samson Adeagbo — v3.0</div>
+</div>
+
+</body>
+</html>

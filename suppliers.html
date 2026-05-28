@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suppliers — HMG Enterprise</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-brand"><div class="brand-logo">HMG</div><div><div class="brand-name" id="bizNameNav">HMG Concepts</div><div class="brand-sub">Suppliers</div></div></div>
+  <nav class="navbar-links">
+    <a href="index.html">📊 Dashboard</a>
+    <a href="sales.html">🛒 Sales</a>
+    <a href="inventory.html">📦 Inventory</a>
+    <a href="expenses.html">💸 Expenses</a>
+    <a href="customers.html">👥 Customers</a>
+    <a href="suppliers.html" class="active">🚚 Suppliers</a>
+    <a href="register.html">🏧 Register</a>
+    <a href="journal.html">📝 Journal</a>
+    <a href="staff.html">👨‍💼 Staff</a>
+    <a href="budgets.html">💰 Budgets</a>
+    <a href="credits.html">💳 Credits</a>
+    <a href="reports.html">📈 Reports</a>
+    <a href="settings.html">⚙️ Settings</a>
+  </nav>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">📊 Dashboard</a>
+  <a href="sales.html">🛒 Sales</a>
+  <a href="inventory.html">📦 Inventory</a>
+  <a href="expenses.html">💸 Expenses</a>
+  <a href="customers.html">👥 Customers</a>
+  <a href="suppliers.html" class="active">🚚 Suppliers</a>
+  <a href="register.html">🏧 Register</a>
+  <a href="journal.html">📝 Journal</a>
+  <a href="staff.html">👨‍💼 Staff</a>
+  <a href="budgets.html">💰 Budgets</a>
+  <a href="credits.html">💳 Credits</a>
+  <a href="reports.html">📈 Reports</a>
+  <a href="settings.html">⚙️ Settings</a>
+</div>
+
+<div class="page">
+  <div class="page-header">
+    <div><h1 class="page-title">Suppliers</h1><div class="page-sub" id="supSummary">Loading...</div></div>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+      <button class="btn btn-secondary" onclick="exportSuppliersCSV()">📥 Export CSV</button>
+      <button class="btn btn-primary" onclick="openSupModal()">➕ Add Supplier</button>
+    </div>
+  </div>
+
+  <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+    <div class="stat-card"><div class="stat-label">Total Suppliers</div><div class="stat-val" id="totalSups">—</div></div>
+    <div class="stat-card"><div class="stat-label">Total Purchases</div><div class="stat-val" id="totalPurchases" style="color:var(--accent2)">—</div></div>
+    <div class="stat-card"><div class="stat-label">Categories</div><div class="stat-val" id="supCategories" style="color:#a855f7">—</div></div>
+  </div>
+
+  <div class="card" style="padding:1rem"><div class="filter-row">
+    <input type="text" id="supSearch" placeholder="🔍 Search suppliers..." oninput="renderSuppliers()" style="max-width:260px" />
+    <select id="supSort" onchange="renderSuppliers()"><option value="name">Sort: Name</option><option value="recent">Sort: Recent</option><option value="spent">Sort: Most Spent</option></select>
+  </div></div>
+
+  <div id="supplierList"></div>
+</div>
+
+<div class="brand-footer">
+  <div style="font-weight:700;color:var(--text);font-family:'Syne',sans-serif">HMG Concepts Enterprise</div>
+  <div>Technology-Powered Business Intelligence</div>
+  <div style="margin-top:0.3rem"><a href="https://cssadewale.pages.dev" target="_blank">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev" target="_blank">hmgconcepts.pages.dev</a> · <a href="https://hmgacademy.pages.dev" target="_blank">hmgacademy.pages.dev</a></div>
+  <div class="powered-by">Powered by HMG Enterprise — Adewale Samson Adeagbo — Enterprise v4.0</div>
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+<script src="js/storage.js"></script><script src="js/app.js"></script>
+<script>
+(function(){
+  ST.init();
+  document.getElementById('bizNameNav').textContent=ST.config().businessName||'HMG Concepts';
+
+  function updateStats(){
+    const all=ST.suppliers();
+    document.getElementById('totalSups').textContent=all.length;
+    document.getElementById('totalPurchases').textContent=ST.fmt(all.reduce((a,s)=>a+(s.totalSpent||0),0));
+    const cats=[...new Set(all.map(s=>s.category).filter(Boolean))];
+    document.getElementById('supCategories').textContent=cats.length;
+    document.getElementById('supSummary').textContent=all.length+' suppliers registered';
+  }
+
+  window.renderSuppliers=function(){
+    let all=ST.suppliers();
+    const q=document.getElementById('supSearch').value.toLowerCase(), sort=document.getElementById('supSort').value;
+    if(q) all=all.filter(s=>(s.name||'').toLowerCase().includes(q)||(s.contact||'').toLowerCase().includes(q)||(s.category||'').toLowerCase().includes(q));
+    all.sort((a,b)=>{
+      if(sort==='name') return (a.name||'').localeCompare(b.name||'');
+      if(sort==='recent') return new Date(b.createdAt||0)-new Date(a.createdAt||0);
+      if(sort==='spent') return (b.totalSpent||0)-(a.totalSpent||0);
+      return 0;
+    });
+    const list=document.getElementById('supplierList');
+    if(!all.length){list.innerHTML='<div class="card"><div class="empty-cell">No suppliers found. <a href="javascript:openSupModal()">Add your first supplier →</a></div></div>';return;}
+    list.innerHTML=all.map(s=>
+      '<div class="supplier-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:1rem">'+
+      '<div><div style="font-weight:700;font-size:0.95rem">'+(s.name||'Unnamed')+'</div>'+
+      '<div style="font-size:0.78rem;color:var(--muted)">'+(s.contact?s.contact+' · ':'')+(s.phone||'No phone')+'</div>'+
+      (s.category?'<span class="badge badge-info" style="margin-top:0.3rem">'+s.category+'</span>':'')+
+      '</div>'+
+      '<div style="text-align:right">'+
+      '<div style="color:var(--accent2);font-weight:700">'+ST.fmt(s.totalSpent||0)+'</div>'+
+      '<div style="font-size:0.72rem;color:var(--muted)">'+(s.totalOrders||0)+' orders</div>'+
+      '</div></div>'+
+      (s.email||s.address?'<div style="font-size:0.78rem;color:var(--muted);margin-top:0.5rem">'+(s.email?s.email+' · ':'')+(s.address||'')+'</div>':'')+
+      (s.notes?'<div style="font-size:0.78rem;color:var(--muted);margin-top:0.3rem;font-style:italic">'+s.notes+'</div>':'')+
+      '<div style="display:flex;gap:0.5rem;margin-top:0.75rem">'+
+      '<button class="btn-tiny" onclick="editSup(\''+s.id+'\')">✏️ Edit</button>'+
+      (s.phone?'<a class="share-btn whatsapp" style="font-size:0.72rem;padding:0.2rem 0.5rem" href="https://wa.me/'+s.phone.replace(/^0+/,'').replace(/\s/g,'')+'" target="_blank">📱 WhatsApp</a>':'')+
+      '<button class="btn-tiny btn-red" onclick="deleteSup(\''+s.id+'\')">🗑</button>'+
+      '</div></div>'
+    ).join('');
+  };
+
+  window.openSupModal=function(){
+    document.getElementById('supId').value='';
+    document.getElementById('supModalTitle').textContent='Add Supplier';
+    ['supName','supContact','supPhone','supEmail','supCategory','supAddress','supNotes'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('supModal').style.display='flex';
+  };
+
+  window.editSup=function(id){
+    const s=ST.suppliers().find(x=>x.id===id);if(!s)return;
+    document.getElementById('supId').value=s.id;
+    document.getElementById('supModalTitle').textContent='Edit Supplier';
+    document.getElementById('supName').value=s.name||'';
+    document.getElementById('supContact').value=s.contact||'';
+    document.getElementById('supPhone').value=s.phone||'';
+    document.getElementById('supEmail').value=s.email||'';
+    document.getElementById('supCategory').value=s.category||'';
+    document.getElementById('supAddress').value=s.address||'';
+    document.getElementById('supNotes').value=s.notes||'';
+    document.getElementById('supModal').style.display='flex';
+  };
+
+  window.saveSup=function(){
+    const name=document.getElementById('supName').value.trim();
+    if(!name){showToast('⚠️ Enter supplier name');return;}
+    ST.addOrUpdateSupplier({
+      id:document.getElementById('supId').value||null,
+      name, contact:document.getElementById('supContact').value.trim(),
+      phone:document.getElementById('supPhone').value.trim(), email:document.getElementById('supEmail').value.trim(),
+      category:document.getElementById('supCategory').value.trim(), address:document.getElementById('supAddress').value.trim(),
+      notes:document.getElementById('supNotes').value.trim()
+    });
+    showToast('✅ Supplier saved');
+    document.getElementById('supModal').style.display='none';
+    updateStats();renderSuppliers();
+  };
+
+  window.deleteSup=function(id){
+    if(!confirm('Delete this supplier?'))return;
+    ST.saveSuppliers(ST.suppliers().filter(s=>s.id!==id));
+    showToast('🗑 Supplier deleted');updateStats();renderSuppliers();
+  };
+
+  window.exportSuppliersCSV=function(){
+    const all=ST.suppliers(), header='Name,Contact,Phone,Email,Category,Address,Total Spent,Orders,Notes';
+    const rows=all.map(s=>[s.name,s.contact||'',s.phone||'',s.email||'',s.category||'',s.address||'',
+      (s.totalSpent||0).toFixed(2),s.totalOrders||0,s.notes||''].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','));
+    const csv=[header,...rows].join('\n');
+    const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+    a.download='suppliers_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+    showToast('📥 Suppliers CSV downloaded');
+  };
+
+  updateStats();renderSuppliers();
+})();
+</script>
+</body>
+</html>

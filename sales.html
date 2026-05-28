@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Record Sale — SaleTrack — HMG Enterprise</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">
+    <div class="brand-logo">HMG</div>
+    <div>
+      <div class="brand-name" id="bizNameNav">My Store</div>
+      <div class="brand-sub" id="bizTypeNav">Retail</div>
+    </div>
+  </div>
+  <nav class="navbar-links">
+    <a href="index.html">📊 Dashboard</a>
+    <a href="sales.html" class="active">🛒 Sales</a>
+    <a href="inventory.html">📦 Inventory</a>
+    <a href="expenses.html">💸 Expenses</a>
+    <a href="customers.html">👥 Customers</a>
+    <a href="suppliers.html">🚚 Suppliers</a>
+    <a href="register.html">🏧 Register</a>
+    <a href="journal.html">📝 Journal</a>
+    <a href="staff.html">👨‍💼 Staff</a>
+    <a href="budgets.html">💰 Budgets</a>
+    <a href="credits.html">💳 Credits</a>
+    <a href="reports.html">📈 Reports</a>
+    <a href="settings.html">⚙️ Settings</a>
+  </nav>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">📊 Dashboard</a>
+  <a href="sales.html" class="active">🛒 Sales</a>
+  <a href="inventory.html">📦 Inventory</a>
+  <a href="expenses.html">💸 Expenses</a>
+  <a href="customers.html">👥 Customers</a>
+  <a href="suppliers.html">🚚 Suppliers</a>
+  <a href="register.html">🏧 Register</a>
+  <a href="journal.html">📝 Journal</a>
+  <a href="staff.html">👨‍💼 Staff</a>
+  <a href="budgets.html">💰 Budgets</a>
+  <a href="credits.html">💳 Credits</a>
+  <a href="reports.html">📈 Reports</a>
+  <a href="settings.html">⚙️ Settings</a>
+</div>
+
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Record Sale</h1>
+      <div class="page-sub">Log each transaction as it happens</div>
+    </div>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+      <button class="btn btn-secondary" onclick="repeatLastSale()">🔄 Repeat Last</button>
+      <button class="btn btn-secondary" onclick="exportSalesCSV()">📥 Export CSV</button>
+      <button class="btn btn-secondary" onclick="clearTodaySales()">🗑 Clear Today</button>
+    </div>
+  </div>
+
+  <div class="two-col-layout">
+
+    <!-- SALE FORM -->
+    <div>
+      <div class="card">
+        <h3 class="card-title">New Transaction</h3>
+
+        <div class="form-group">
+          <label>Select Product *</label>
+          <select id="prodSelect" onchange="onProductSelect()">
+            <option value="">-- Choose a product --</option>
+          </select>
+          <div id="stockInfo" class="field-hint"></div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Quantity *</label>
+            <input type="number" id="qty" value="1" min="1" oninput="calcTotal()" />
+          </div>
+          <div class="form-group">
+            <label>Unit Price</label>
+            <input type="number" id="unitPrice" step="0.01" min="0" oninput="calcTotal()" />
+          </div>
+        </div>
+
+        <div class="form-row" id="costPriceRow">
+          <div class="form-group">
+            <label>Cost Price (for profit tracking)</label>
+            <input type="number" id="costPrice" step="0.01" min="0" placeholder="Optional" />
+          </div>
+          <div class="form-group">
+            <label>Discount (%)</label>
+            <input type="number" id="discount" value="0" min="0" max="100" oninput="calcTotal()" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Payment Method</label>
+            <select id="payMethod">
+              <option>Cash</option>
+              <option>Bank Transfer</option>
+              <option>Card (POS)</option>
+              <option>Mobile Money</option>
+              <option>Credit / Debt</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Customer Name</label>
+            <input type="text" id="customerName" placeholder="Walk-in customer" list="customerList" />
+            <datalist id="customerList"></datalist>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Note / Reference</label>
+          <input type="text" id="saleNote" placeholder="Optional note about this sale" />
+        </div>
+
+        <!-- TOTAL DISPLAY -->
+        <div class="total-box">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div class="total-label">TOTAL AMOUNT</div>
+              <div class="total-val" id="totalDisplay">—</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:0.75rem;color:var(--muted)">Profit</div>
+              <div id="profitDisplay" style="font-size:1rem;font-weight:700;color:var(--accent)">—</div>
+            </div>
+          </div>
+          <div id="taxLine" style="font-size:0.78rem;color:var(--muted);margin-top:0.4rem"></div>
+        </div>
+
+        <button class="btn btn-primary btn-full" onclick="recordSale()">✅ Record Sale</button>
+      </div>
+
+      <!-- QUICK SALE SHORTCUTS -->
+      <div class="card">
+        <h3 class="card-title">Quick Select (Top Products)</h3>
+        <div id="quickProducts" class="quick-products-grid"></div>
+      </div>
+
+      <!-- QUICK CALCULATOR -->
+      <div class="card">
+        <h3 class="card-title">🧮 Quick Calculator</h3>
+        <div class="calc-widget" style="max-width:100%">
+          <div class="calc-display" id="calcDisplay">0</div>
+          <div class="calc-buttons">
+            <button class="calc-btn" onclick="calcPress('C')">C</button>
+            <button class="calc-btn op" onclick="calcPress('±')">±</button>
+            <button class="calc-btn op" onclick="calcPress('%')">%</button>
+            <button class="calc-btn op" onclick="calcPress('/')">÷</button>
+            <button class="calc-btn" onclick="calcPress('7')">7</button>
+            <button class="calc-btn" onclick="calcPress('8')">8</button>
+            <button class="calc-btn" onclick="calcPress('9')">9</button>
+            <button class="calc-btn op" onclick="calcPress('*')">×</button>
+            <button class="calc-btn" onclick="calcPress('4')">4</button>
+            <button class="calc-btn" onclick="calcPress('5')">5</button>
+            <button class="calc-btn" onclick="calcPress('6')">6</button>
+            <button class="calc-btn op" onclick="calcPress('-')">−</button>
+            <button class="calc-btn" onclick="calcPress('1')">1</button>
+            <button class="calc-btn" onclick="calcPress('2')">2</button>
+            <button class="calc-btn" onclick="calcPress('3')">3</button>
+            <button class="calc-btn op" onclick="calcPress('+')">+</button>
+            <button class="calc-btn" onclick="calcPress('0')" style="grid-column:span 2">0</button>
+            <button class="calc-btn" onclick="calcPress('.')">.</button>
+            <button class="calc-btn eq" onclick="calcPress('=')">=</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TODAY'S SALES -->
+    <div>
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Today's Transactions</h3>
+          <div>
+            <span id="todayTotalBadge" class="badge badge-success"></span>
+          </div>
+        </div>
+        <div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--accent);margin-bottom:1rem" id="todayTotal">—</div>
+        <div id="todaySalesCount" style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Qty</th>
+              <th>Total</th>
+              <th>Pay</th>
+              <th>Time</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="todaySalesBody">
+            <tr><td colspan="6" class="empty-cell">No sales today yet</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- PAYMENT METHOD BREAKDOWN -->
+      <div class="card">
+        <h3 class="card-title">Payment Breakdown (Today)</h3>
+        <div id="payBreakdown" class="pay-breakdown"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RECEIPT MODAL -->
+<div class="modal-overlay" id="receiptModal" style="display:none">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Receipt</h3>
+      <button onclick="closeReceipt()" class="modal-close">✕</button>
+    </div>
+    <div id="receiptContent" class="receipt"></div>
+    <div style="display:flex;gap:0.75rem;margin-top:1rem;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="window.print()">🖨 Print</button>
+      <button class="share-btn whatsapp" onclick="shareReceiptWhatsApp()">📱 WhatsApp</button>
+      <button class="btn btn-secondary" onclick="closeReceipt()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script src="js/storage.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  ST.init();
+  const cfg = ST.config();
+  const currency = cfg.currency || '₦';
+
+  document.getElementById('bizNameNav').textContent = cfg.businessName || 'My Store';
+
+  let products = ST.products();
+  let lastReceiptText = '';
+
+  // Populate product select
+  const sel = document.getElementById('prodSelect');
+  function refreshProductDropdown() {
+    products = ST.products();
+    while (sel.options.length > 1) sel.remove(1);
+    products.filter(p => p.active !== false).forEach(p => {
+      const o = document.createElement('option');
+      o.value = p.id;
+      o.textContent = p.name + ' — ' + currency + p.price + ' (' + p.stock + ' ' + (p.unit || 'pcs') + ')';
+      if (p.stock <= 0) { o.textContent += ' [OUT]'; o.disabled = true; }
+      sel.appendChild(o);
+    });
+  }
+  refreshProductDropdown();
+
+  // Populate past customers for autocomplete
+  const sales = ST.sales();
+  const customers = [...new Set(sales.map(s => s.customer).filter(c => c && c !== 'Walk-in'))];
+  const dl = document.getElementById('customerList');
+  customers.forEach(c => { const o = document.createElement('option'); o.value = c; dl.appendChild(o); });
+
+  // Quick product buttons
+  const byProd = {};
+  sales.forEach(s => { byProd[s.productId] = (byProd[s.productId] || 0) + s.qty; });
+  const topIds = Object.entries(byProd).sort((a,b)=>b[1]-a[1]).slice(0,6).map(e=>e[0]);
+  const quickGrid = document.getElementById('quickProducts');
+  const quickProds = topIds.length ? products.filter(p=>topIds.includes(p.id)) : products.slice(0,6);
+  quickGrid.innerHTML = quickProds.map(p =>
+    '<button class="quick-prod-btn" onclick="quickSelect(\'' + p.id + '\')">' +
+    '<div style="font-weight:700;font-size:0.85rem">' + p.name + '</div>' +
+    '<div style="color:var(--accent);font-size:0.82rem">' + currency + p.price + '</div>' +
+    '<div style="color:var(--muted);font-size:0.72rem">' + p.stock + ' ' + p.unit + '</div>' +
+    '</button>'
+  ).join('');
+
+  window.quickSelect = function(id) {
+    document.getElementById('prodSelect').value = id;
+    onProductSelect();
+  };
+
+  window.onProductSelect = function () {
+    const p = products.find(x => x.id === sel.value);
+    if (p) {
+      document.getElementById('unitPrice').value = p.price;
+      document.getElementById('costPrice').value = p.costPrice || '';
+      document.getElementById('stockInfo').textContent = '📦 ' + p.stock + ' ' + (p.unit || 'pcs') + ' available';
+      document.getElementById('stockInfo').style.color = p.stock <= (cfg.lowStockThreshold || 10) ? 'var(--warning)' : 'var(--muted)';
+      calcTotal();
+    }
+  };
+
+  window.calcTotal = function () {
+    const qty = parseFloat(document.getElementById('qty').value) || 0;
+    const price = parseFloat(document.getElementById('unitPrice').value) || 0;
+    const cost = parseFloat(document.getElementById('costPrice').value) || 0;
+    const disc = parseFloat(document.getElementById('discount').value) || 0;
+    const subtotal = qty * price;
+    const discAmt = subtotal * disc / 100;
+    const taxRate = cfg.taxRate || 0;
+    const taxAmt = (subtotal - discAmt) * taxRate / 100;
+    const total = subtotal - discAmt + taxAmt;
+    const profit = cost > 0 ? total - (qty * cost) : null;
+
+    document.getElementById('totalDisplay').textContent = ST.fmt(total);
+    document.getElementById('profitDisplay').textContent = profit !== null ? ST.fmt(profit) : '—';
+    document.getElementById('profitDisplay').style.color = profit !== null ? (profit >= 0 ? 'var(--accent)' : 'var(--danger)') : 'var(--muted)';
+
+    if (taxRate > 0) {
+      document.getElementById('taxLine').textContent = 'Incl. ' + taxRate + '% tax: ' + currency + taxAmt.toFixed(2);
+    }
+  };
+
+  window.recordSale = function () {
+    const prodId = sel.value;
+    const qty = parseFloat(document.getElementById('qty').value) || 0;
+    const price = parseFloat(document.getElementById('unitPrice').value) || 0;
+    const disc = parseFloat(document.getElementById('discount').value) || 0;
+    const cost = parseFloat(document.getElementById('costPrice').value) || 0;
+    const taxRate = cfg.taxRate || 0;
+
+    if (!prodId) { showToast('⚠️ Select a product'); return; }
+    if (qty <= 0) { showToast('⚠️ Enter a valid quantity'); return; }
+    if (price <= 0) { showToast('⚠️ Enter a valid price'); return; }
+
+    products = ST.products();
+    const prod = products.find(p => p.id === prodId);
+    if (!prod) { showToast('❌ Product not found'); return; }
+    if (qty > prod.stock) { showToast('❌ Not enough stock! Only ' + prod.stock + ' available'); return; }
+
+    const subtotal = qty * price;
+    const discAmt = subtotal * disc / 100;
+    const taxAmt = (subtotal - discAmt) * taxRate / 100;
+    const total = subtotal - discAmt + taxAmt;
+
+    const sale = {
+      id: 'sale_' + Date.now(),
+      invoiceNo: 'INV-' + new Date().getFullYear() + '-' + String(ST.sales().length + 1).padStart(4, '0'),
+      productId: prodId,
+      productName: prod.name,
+      category: prod.category || '',
+      unit: prod.unit || 'pcs',
+      qty,
+      unitPrice: price,
+      costPrice: cost,
+      discount: disc,
+      tax: taxAmt,
+      total,
+      profit: cost > 0 ? total - (qty * cost) : 0,
+      payMethod: document.getElementById('payMethod').value,
+      customer: document.getElementById('customerName').value.trim() || 'Walk-in',
+      note: document.getElementById('saleNote').value.trim(),
+      date: new Date().toISOString()
+    };
+
+    // Save sale
+    const allSales = ST.sales();
+    allSales.push(sale);
+    ST.saveSales(allSales);
+
+    // Deduct stock
+    prod.stock -= qty;
+    ST.saveProducts(products);
+
+    // Update customer stats
+    ST.updateCustomerStats(sale.customer, total);
+
+    // Log activity
+    ST.logActivity('sale', 'Sold ' + sale.qty + 'x ' + sale.productName + ' for ' + ST.fmt(sale.total) + (sale.customer !== 'Walk-in' ? ' to ' + sale.customer : ''));
+
+    showToast('✅ Sale of ' + ST.fmt(total) + ' recorded!');
+    showReceipt(sale, prod);
+    refreshTodayPanel();
+    refreshProductDropdown();
+
+    // Reset form
+    document.getElementById('qty').value = 1;
+    document.getElementById('discount').value = 0;
+    document.getElementById('customerName').value = '';
+    document.getElementById('saleNote').value = '';
+    sel.value = '';
+    document.getElementById('totalDisplay').textContent = '—';
+    document.getElementById('profitDisplay').textContent = '—';
+    document.getElementById('stockInfo').textContent = '';
+  };
+
+  function showReceipt(sale, prod) {
+    const now = new Date();
+    lastReceiptText =
+      '🧾 *' + (cfg.businessName || 'My Store') + '*\n' +
+      (cfg.address ? '📍 ' + cfg.address + '\n' : '') +
+      (cfg.phone ? '📞 ' + cfg.phone + '\n' : '') +
+      '━━━━━━━━━━━━━━━━━━\n' +
+      'Invoice: ' + (sale.invoiceNo || sale.id) + '\n' +
+      'Date: ' + now.toLocaleString() + '\n' +
+      '━━━━━━━━━━━━━━━━━━\n' +
+      'Product: ' + sale.productName + '\n' +
+      'Quantity: ' + sale.qty + ' ' + sale.unit + '\n' +
+      'Unit Price: ' + ST.fmt(sale.unitPrice) + '\n' +
+      (sale.discount > 0 ? 'Discount: -' + sale.discount + '%\n' : '') +
+      (sale.tax > 0 ? 'Tax: ' + ST.fmt(sale.tax) + '\n' : '') +
+      '━━━━━━━━━━━━━━━━━━\n' +
+      '*TOTAL: ' + ST.fmt(sale.total) + '*\n' +
+      'Payment: ' + sale.payMethod + '\n' +
+      'Customer: ' + sale.customer + '\n' +
+      (sale.note ? 'Note: ' + sale.note + '\n' : '') +
+      '━━━━━━━━━━━━━━━━━━\n' +
+      'Thank you for your business! 🙏';
+
+    document.getElementById('receiptContent').innerHTML = `
+      <div style="text-align:center;margin-bottom:1rem">
+        <div style="font-family:Syne,sans-serif;font-size:1.2rem;font-weight:800">${cfg.businessName || 'My Store'}</div>
+        ${cfg.address ? '<div style="font-size:0.75rem;color:var(--muted)">' + cfg.address + '</div>' : ''}
+        ${cfg.phone ? '<div style="font-size:0.75rem;color:var(--muted)">' + cfg.phone + '</div>' : ''}
+        <div style="font-size:0.75rem;color:var(--muted);margin-top:0.3rem">${now.toLocaleString()}</div>
+        <div style="font-size:0.72rem;color:var(--muted)">Invoice: ${sale.invoiceNo || sale.id}</div>
+      </div>
+      <div class="receipt-row"><span>Product</span><span>${sale.productName}</span></div>
+      <div class="receipt-row"><span>Quantity</span><span>${sale.qty} ${sale.unit}</span></div>
+      <div class="receipt-row"><span>Unit Price</span><span>${ST.fmt(sale.unitPrice)}</span></div>
+      ${sale.discount > 0 ? '<div class="receipt-row"><span>Discount</span><span>-' + sale.discount + '%</span></div>' : ''}
+      ${sale.tax > 0 ? '<div class="receipt-row"><span>Tax</span><span>' + ST.fmt(sale.tax) + '</span></div>' : ''}
+      <div class="receipt-row receipt-total"><span>TOTAL</span><span>${ST.fmt(sale.total)}</span></div>
+      <div class="receipt-row"><span>Payment</span><span>${sale.payMethod}</span></div>
+      <div class="receipt-row"><span>Customer</span><span>${sale.customer}</span></div>
+      ${sale.note ? '<div class="receipt-row"><span>Note</span><span>' + sale.note + '</span></div>' : ''}
+      <div style="text-align:center;margin-top:1rem;font-size:0.75rem;color:var(--muted)">Thank you for your business!</div>
+    `;
+    document.getElementById('receiptModal').style.display = 'flex';
+  }
+
+  window.closeReceipt = function () {
+    document.getElementById('receiptModal').style.display = 'none';
+  };
+
+  window.shareReceiptWhatsApp = function () {
+    shareWhatsApp(lastReceiptText);
+  };
+
+  window.repeatLastSale = function () {
+    const allSales = ST.sales();
+    if (!allSales.length) { showToast('⚠️ No previous sales to repeat'); return; }
+    const last = allSales[allSales.length - 1];
+    const p = ST.products().find(x => x.id === last.productId);
+    if (!p) { showToast('❌ Product no longer exists'); return; }
+    sel.value = last.productId;
+    onProductSelect();
+    document.getElementById('qty').value = last.qty;
+    document.getElementById('discount').value = last.discount || 0;
+    document.getElementById('customerName').value = last.customer === 'Walk-in' ? '' : last.customer;
+    document.getElementById('payMethod').value = last.payMethod;
+    calcTotal();
+    showToast('🔄 Last sale loaded — review and submit');
+  };
+
+  function refreshTodayPanel() {
+    const allSales = ST.sales();
+    const todayStr = new Date().toDateString();
+    const todaySales = allSales.filter(s => new Date(s.date).toDateString() === todayStr);
+    const total = todaySales.reduce((a, s) => a + s.total, 0);
+
+    document.getElementById('todayTotal').textContent = ST.fmt(total);
+    document.getElementById('todaySalesCount').textContent = todaySales.length + ' transaction(s) today';
+    document.getElementById('todayTotalBadge').textContent = todaySales.length + ' sales';
+
+    const tbody = document.getElementById('todaySalesBody');
+    tbody.innerHTML = todaySales.length
+      ? [...todaySales].reverse().map(s =>
+          '<tr>' +
+          '<td><strong>' + s.productName + '</strong></td>' +
+          '<td>' + s.qty + '</td>' +
+          '<td>' + ST.fmt(s.total) + '</td>' +
+          '<td><span class="badge badge-info">' + s.payMethod + '</span></td>' +
+          '<td style="font-size:0.75rem;color:var(--muted)">' + new Date(s.date).toLocaleTimeString() + '</td>' +
+          '<td><button class="btn-tiny" onclick="deleteSale(\'' + s.id + '\')">✕</button></td>' +
+          '</tr>'
+        ).join('')
+      : '<tr><td colspan="6" class="empty-cell">No sales today yet</td></tr>';
+
+    // Payment breakdown
+    const byPay = {};
+    todaySales.forEach(s => { byPay[s.payMethod] = (byPay[s.payMethod] || 0) + s.total; });
+    document.getElementById('payBreakdown').innerHTML = Object.entries(byPay).length
+      ? Object.entries(byPay).map(([m, v]) =>
+          '<div class="pay-row"><span>' + m + '</span><strong>' + ST.fmt(v) + '</strong></div>'
+        ).join('')
+      : '<div style="color:var(--muted);font-size:0.85rem">No transactions yet</div>';
+  }
+
+  window.deleteSale = function (id) {
+    if (!confirm('Remove this sale? Stock will be restored.')) return;
+    const allSales = ST.sales();
+    const sale = allSales.find(s => s.id === id);
+    if (sale) {
+      const prods = ST.products();
+      const prod = prods.find(p => p.id === sale.productId);
+      if (prod) { prod.stock += sale.qty; ST.saveProducts(prods); }
+      ST.saveSales(allSales.filter(s => s.id !== id));
+      ST.logActivity('sale', 'Deleted sale: ' + sale.productName + ' (' + ST.fmt(sale.total) + ')');
+      showToast('🗑 Sale removed and stock restored');
+      refreshTodayPanel();
+      refreshProductDropdown();
+    }
+  };
+
+  window.clearTodaySales = function () {
+    if (!confirm('Clear ALL of today\'s sales? This cannot be undone.')) return;
+    const todayStr = new Date().toDateString();
+    const allSales = ST.sales();
+    const todaySales = allSales.filter(s => new Date(s.date).toDateString() === todayStr);
+    const prods = ST.products();
+    todaySales.forEach(s => {
+      const p = prods.find(x => x.id === s.productId);
+      if (p) p.stock += s.qty;
+    });
+    ST.saveProducts(prods);
+    ST.saveSales(allSales.filter(s => new Date(s.date).toDateString() !== todayStr));
+    showToast('🗑 Today\'s sales cleared');
+    refreshTodayPanel();
+    refreshProductDropdown();
+  };
+
+  window.exportSalesCSV = function () {
+    const allSales = ST.sales();
+    const header = 'Date,Invoice,Product,Category,Qty,Unit,Unit Price,Discount%,Tax,Total,Profit,Payment,Customer,Note';
+    const rows = allSales.map(s => [
+      new Date(s.date).toLocaleString(), s.invoiceNo || '', s.productName, s.category, s.qty, s.unit || 'pcs',
+      s.unitPrice, s.discount || 0, (s.tax || 0).toFixed(2),
+      s.total.toFixed(2), (s.profit || 0).toFixed(2),
+      s.payMethod, s.customer, s.note || ''
+    ].map(v => '"' + String(v).replace(/"/g, '""') + '"').join(','));
+    const csv = [header, ...rows].join('\n');
+    const a = document.createElement('a');
+    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+    a.download = 'sales_export_' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.click();
+    showToast('📥 CSV downloaded');
+  };
+
+  // ── Calculator ────────────────────────────────────
+  let calcStr = '0';
+  let calcNewNum = true;
+  window.calcPress = function(key) {
+    const display = document.getElementById('calcDisplay');
+    if (key === 'C') {
+      calcStr = '0'; calcNewNum = true;
+    } else if (key === '±') {
+      try { calcStr = String(-eval(calcStr)); } catch(e) {}
+    } else if (key === '=') {
+      try { calcStr = String(eval(calcStr)); } catch(e) { calcStr = 'Error'; }
+      calcNewNum = true;
+    } else if ('+-*/%'.includes(key)) {
+      calcStr += key; calcNewNum = true;
+    } else {
+      if (calcNewNum && key !== '.') { calcStr = key; calcNewNum = false; }
+      else { calcStr += key; }
+    }
+    display.textContent = calcStr;
+  };
+
+  calcTotal();
+  refreshTodayPanel();
+})();
+</script>
+<div class="brand-footer">
+  <div style="font-weight:700;color:var(--text);font-family:'Syne',sans-serif">HMG Concepts</div>
+  <div>Technology-Powered Business Intelligence</div>
+  <div style="margin-top:0.3rem"><a href="https://cssadewale.pages.dev" target="_blank">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev" target="_blank">hmgconcepts.pages.dev</a></div>
+  <div class="powered-by">Powered by HMG Enterprise — Adewale Samson Adeagbo — v3.0</div>
+</div>
+
+</body>
+</html>

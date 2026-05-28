@@ -1,0 +1,116 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Budgets — HMG Enterprise</title><link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="css/style.css"><link rel="manifest" href="manifest.json"></head>
+<body>
+<nav class="navbar"><div class="navbar-brand"><div class="brand-logo">HMG</div><div><div class="brand-name" id="bizNameNav">HMG Concepts</div><div class="brand-sub">Budgets</div></div></div>
+<nav class="navbar-links">
+    <a href="index.html">📊 Dashboard</a><a href="sales.html">🛒 Sales</a><a href="inventory.html">📦 Inventory</a><a href="expenses.html">💸 Expenses</a><a href="customers.html">👥 Customers</a><a href="suppliers.html">🚚 Suppliers</a><a href="register.html">🏧 Register</a><a href="journal.html">📝 Journal</a><a href="staff.html">👨‍💼 Staff</a><a href="budgets.html" class="active">💰 Budgets</a><a href="credits.html">💳 Credits</a><a href="reports.html">📈 Reports</a><a href="settings.html">⚙️ Settings</a>
+</nav><button class="hamburger" onclick="toggleMenu()">☰</button></nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">📊 Dashboard</a><a href="sales.html">🛒 Sales</a><a href="inventory.html">📦 Inventory</a><a href="expenses.html">💸 Expenses</a><a href="customers.html">👥 Customers</a><a href="suppliers.html">🚚 Suppliers</a><a href="register.html">🏧 Register</a><a href="journal.html">📝 Journal</a><a href="staff.html">👨‍💼 Staff</a><a href="budgets.html" class="active">💰 Budgets</a><a href="credits.html">💳 Credits</a><a href="reports.html">📈 Reports</a><a href="settings.html">⚙️ Settings</a>
+</div>
+
+<div class="page">
+  <div class="page-header"><div><h1 class="page-title">💰 Budget Manager</h1><div class="page-sub">Set monthly budgets by category and track spending</div></div>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap"><button class="btn btn-primary" onclick="openBudgetModal()">➕ New Budget</button></div></div>
+
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-label">Total Budget</div><div class="stat-val" id="totalBudget" style="color:var(--accent)">—</div></div>
+    <div class="stat-card"><div class="stat-label">Total Spent</div><div class="stat-val" id="totalSpent" style="color:var(--danger)">—</div></div>
+    <div class="stat-card"><div class="stat-label">Remaining</div><div class="stat-val" id="remaining" style="color:var(--accent2)">—</div></div>
+    <div class="stat-card"><div class="stat-label">Over Budget</div><div class="stat-val" id="overBudget" style="color:var(--warning)">—</div></div>
+  </div>
+
+  <div class="card"><div class="card-header"><h3 class="card-title">Budget vs Actual (This Month)</h3></div>
+  <div id="budgetBars"></div></div>
+
+  <div class="card"><table><thead><tr><th>Category</th><th>Budget</th><th>Spent</th><th>Remaining</th><th>% Used</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody id="budgetBody"><tr><td colspan="7" class="empty-cell">No budgets set. Create one above.</td></tr></tbody></table></div>
+</div>
+
+<div class="brand-footer"><div style="font-weight:700;color:var(--text);font-family:'Syne',sans-serif">HMG Concepts Enterprise</div><div>Technology-Powered Business Intelligence</div><div style="margin-top:0.3rem"><a href="https://cssadewale.pages.dev" target="_blank">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev" target="_blank">hmgconcepts.pages.dev</a></div><div class="powered-by">Powered by HMG Concepts — Adewale Samson Adeagbo — Enterprise v4.0</div></div>
+
+<div class="modal-overlay" id="budgetModal" style="display:none"><div class="modal" style="max-width:400px">
+  <div class="modal-header"><h3 id="bmTitle">Set Budget</h3><button onclick="document.getElementById('budgetModal').style.display='none'" class="modal-close">✕</button></div>
+  <div style="display:flex;flex-direction:column;gap:0.8rem">
+    <input type="hidden" id="bmId"/>
+    <div class="form-group"><label>Category *</label><select id="bmCat"><option>Rent</option><option>Utilities</option><option>Salaries</option><option>Transport</option><option>Supplies</option><option>Maintenance</option><option>Marketing</option><option>Tax</option><option>Insurance</option><option>Food</option><option>Miscellaneous</option><option>General/Total</option></select></div>
+    <div class="form-group"><label>Monthly Budget Amount *</label><input id="bmAmount" type="number" step="0.01" min="0" placeholder="0.00"/></div>
+    <div class="form-group"><label>Month</label><input id="bmMonth" type="month"/></div>
+    <button class="btn btn-primary btn-full" onclick="saveBudget()">💾 Save Budget</button>
+  </div>
+</div></div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+<script src="js/storage.js"></script><script src="js/app.js"></script>
+<script>
+(function(){
+  ST.init();document.getElementById('bizNameNav').textContent=ST.config().businessName||'HMG Concepts';
+  const now=new Date(),curMonth=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  document.getElementById('bmMonth').value=curMonth;
+
+  function getMonthExpenses(month){
+    const [y,m]=month.split('-').map(Number);
+    return ST.expenses().filter(e=>{const d=new Date(e.date);return d.getMonth()+1===m&&d.getFullYear()===y});
+  }
+
+  function updateAll(){
+    const all=ST.budgets().filter(b=>b.month===curMonth);
+    const monthExps=getMonthExpenses(curMonth);
+    const totalBudget=all.reduce((a,b)=>a+b.amount,0);
+
+    // Calculate spent per category
+    const byCat={};
+    monthExps.forEach(e=>{byCat[e.category||'Other']=(byCat[e.category||'Other']||0)+e.amount});
+    const totalSpent=monthExps.reduce((a,e)=>a+e.amount,0);
+
+    document.getElementById('totalBudget').textContent=ST.fmt(totalBudget);
+    document.getElementById('totalSpent').textContent=ST.fmt(totalSpent);
+    const rem=totalBudget-totalSpent;
+    document.getElementById('remaining').textContent=ST.fmt(rem);
+    document.getElementById('remaining').style.color=rem>=0?'var(--accent2)':'var(--danger)';
+    document.getElementById('overBudget').textContent=all.filter(b=>(byCat[b.category]||0)>b.amount).length;
+
+    // Budget bars
+    if(all.length){
+      const maxAmt=Math.max(...all.map(b=>Math.max(b.amount,byCat[b.category]||0)));
+      document.getElementById('budgetBars').innerHTML=all.map(b=>{
+        const spent=byCat[b.category]||0,pct=maxAmt>0?Math.max(2,b.amount/maxAmt*100):2,spentPct=b.amount>0?(spent/b.amount*100):0;
+        const color=spentPct>100?'red':spentPct>80?'purple':'green';
+        return '<div class="target-row"><div class="target-header"><span class="target-label">'+b.category+'</span><span class="target-value">'+ST.fmt(spent)+' / '+ST.fmt(b.amount)+' ('+spentPct.toFixed(0)+'%)</span></div>'+
+        '<div class="progress-bar-container" style="position:relative"><div class="progress-bar-fill '+color+'" style="width:'+Math.min(spentPct,100)+'%"></div></div></div>';
+      }).join('');
+    }else{document.getElementById('budgetBars').innerHTML='<div style="color:var(--muted);font-size:0.85rem;text-align:center;padding:1rem">No budgets for this month</div>'}
+
+    // Table
+    const tbody=document.getElementById('budgetBody');
+    if(!all.length){tbody.innerHTML='<tr><td colspan="7" class="empty-cell">No budgets set for '+curMonth+'</td></tr>';return}
+    tbody.innerHTML=all.map(b=>{
+      const spent=byCat[b.category]||0,rem=b.amount-spent,pct=b.amount>0?(spent/b.amount*100).toFixed(0):0;
+      const over=spent>b.amount;
+      return '<tr><td><strong>'+b.category+'</strong></td><td>'+ST.fmt(b.amount)+'</td><td style="color:'+(over?'var(--danger)':'var(--text)')+'">'+ST.fmt(spent)+'</td>'+
+      '<td style="color:'+(rem>=0?'var(--accent)':'var(--danger)')+'">'+ST.fmt(rem)+'</td>'+
+      '<td>'+pct+'%</td><td><span class="badge '+(over?'badge-danger':spent>b.amount*0.8?'badge-warn':'badge-success')+'">'+(over?'OVER':spent>b.amount*0.8?'WARNING':'OK')+'</span></td>'+
+      '<td><button class="btn-tiny" onclick="editBudget(\''+b.id+'\')">✏️</button> <button class="btn-tiny btn-red" onclick="deleteBudget(\''+b.id+'\')">🗑</button></td></tr>';
+    }).join('');
+  }
+
+  window.openBudgetModal=function(){
+    document.getElementById('bmId').value='';document.getElementById('bmTitle').textContent='Set Budget';
+    document.getElementById('bmAmount').value='';document.getElementById('budgetModal').style.display='flex';
+  };
+  window.editBudget=function(id){
+    const b=ST.budgets().find(x=>x.id===id);if(!b)return;
+    document.getElementById('bmId').value=b.id;document.getElementById('bmTitle').textContent='Edit Budget';
+    document.getElementById('bmCat').value=b.category;document.getElementById('bmAmount').value=b.amount;document.getElementById('bmMonth').value=b.month;
+    document.getElementById('budgetModal').style.display='flex';
+  };
+  window.saveBudget=function(){
+    const amt=parseFloat(document.getElementById('bmAmount').value);
+    if(!amt||amt<=0){showToast('⚠️ Enter budget amount');return}
+    ST.saveBudget({id:document.getElementById('bmId').value||null,category:document.getElementById('bmCat').value,amount:amt,month:document.getElementById('bmMonth').value});
+    ST.logActivity('budget','Budget set: '+document.getElementById('bmCat').value+' — '+ST.fmt(amt));
+    showToast('✅ Budget saved');document.getElementById('budgetModal').style.display='none';updateAll();
+  };
+  window.deleteBudget=function(id){if(!confirm('Delete this budget?'))return;ST.saveBudgets(ST.budgets().filter(b=>b.id!==id));showToast('🗑 Deleted');updateAll()};
+  updateAll();
+})();
+</script></body></html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventory — SaleTrack — HMG Enterprise</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">
+    <div class="brand-logo">HMG</div>
+    <div>
+      <div class="brand-name" id="bizNameNav">My Store</div>
+      <div class="brand-sub">Inventory</div>
+    </div>
+  </div>
+  <nav class="navbar-links">
+    <a href="index.html">📊 Dashboard</a>
+    <a href="sales.html">🛒 Sales</a>
+    <a href="inventory.html" class="active">📦 Inventory</a>
+    <a href="expenses.html">💸 Expenses</a>
+    <a href="customers.html">👥 Customers</a>
+    <a href="suppliers.html">🚚 Suppliers</a>
+    <a href="register.html">🏧 Register</a>
+    <a href="journal.html">📝 Journal</a>
+    <a href="staff.html">👨‍💼 Staff</a>
+    <a href="budgets.html">💰 Budgets</a>
+    <a href="credits.html">💳 Credits</a>
+    <a href="reports.html">📈 Reports</a>
+    <a href="settings.html">⚙️ Settings</a>
+  </nav>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">📊 Dashboard</a>
+  <a href="sales.html">🛒 Sales</a>
+  <a href="inventory.html" class="active">📦 Inventory</a>
+  <a href="expenses.html">💸 Expenses</a>
+  <a href="customers.html">👥 Customers</a>
+  <a href="suppliers.html">🚚 Suppliers</a>
+  <a href="register.html">🏧 Register</a>
+  <a href="journal.html">📝 Journal</a>
+  <a href="staff.html">👨‍💼 Staff</a>
+  <a href="budgets.html">💰 Budgets</a>
+  <a href="credits.html">💳 Credits</a>
+  <a href="reports.html">📈 Reports</a>
+  <a href="settings.html">⚙️ Settings</a>
+</div>
+
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Inventory</h1>
+      <div class="page-sub" id="invSummary">Loading...</div>
+    </div>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+      <button class="btn btn-secondary" onclick="exportInventoryCSV()">📥 Export CSV</button>
+      <button class="btn btn-primary" onclick="openAddModal()">➕ Add Product</button>
+    </div>
+  </div>
+
+  <!-- INVENTORY STATS -->
+  <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin-bottom:1.5rem">
+    <div class="stat-card"><div class="stat-label">Total Products</div><div class="stat-val" id="totalProducts">—</div></div>
+    <div class="stat-card"><div class="stat-label">Total Stock Units</div><div class="stat-val" id="totalUnits">—</div></div>
+    <div class="stat-card"><div class="stat-label">Stock Value (Retail)</div><div class="stat-val" id="invStockValue">—</div></div>
+    <div class="stat-card"><div class="stat-label">Stock Value (Cost)</div><div class="stat-val" id="invCostValue" style="color:var(--accent2)">—</div></div>
+    <div class="stat-card"><div class="stat-label">Low Stock Items</div><div class="stat-val" id="lowStockCount" style="color:var(--warning)">—</div></div>
+    <div class="stat-card"><div class="stat-label">Out of Stock</div><div class="stat-val" id="outStockCount" style="color:var(--danger)">—</div></div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="card" style="padding:1rem">
+    <div class="filter-row">
+      <input type="text" id="searchInput" placeholder="🔍 Search product name or SKU..." oninput="renderTable()" style="max-width:260px" />
+      <select id="catFilter" onchange="renderTable()">
+        <option value="">All Categories</option>
+      </select>
+      <select id="stockFilter" onchange="renderTable()">
+        <option value="">All Stock</option>
+        <option value="ok">In Stock</option>
+        <option value="low">Low Stock</option>
+        <option value="out">Out of Stock</option>
+      </select>
+      <select id="sortBy" onchange="renderTable()">
+        <option value="name">Sort: Name</option>
+        <option value="stock_asc">Sort: Stock ↑</option>
+        <option value="stock_desc">Sort: Stock ↓</option>
+        <option value="price_asc">Sort: Price ↑</option>
+        <option value="price_desc">Sort: Price ↓</option>
+        <option value="margin_desc">Sort: Margin ↓</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- INVENTORY TABLE -->
+  <div class="card">
+    <table id="inventoryTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Product Name</th>
+          <th>Category</th>
+          <th>Unit Price</th>
+          <th>Cost Price</th>
+          <th>Margin</th>
+          <th>Stock</th>
+          <th>Unit</th>
+          <th>Stock Value</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="inventoryBody">
+        <tr><td colspan="11" class="empty-cell">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- STOCK MOVEMENT HISTORY -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">📋 Stock Movement History</h3>
+      <span style="font-size:0.78rem;color:var(--muted)">Recent changes</span>
+    </div>
+    <div id="stockMovementFeed" class="activity-feed">
+      <div class="empty-cell">No stock movements recorded yet</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ADD / EDIT PRODUCT MODAL -->
+<div class="modal-overlay" id="productModal" style="display:none">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Add New Product</h3>
+      <button onclick="closeModal()" class="modal-close">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <input type="hidden" id="m_id" />
+      <div class="form-group"><label>Product Name *</label><input id="m_name" placeholder="e.g. Coca-Cola 1L" /></div>
+      <div class="form-row">
+        <div class="form-group"><label>Selling Price *</label><input id="m_price" type="number" step="0.01" min="0" placeholder="0.00" /></div>
+        <div class="form-group"><label>Cost Price (optional)</label><input id="m_cost" type="number" step="0.01" min="0" placeholder="0.00" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Stock Quantity *</label><input id="m_stock" type="number" min="0" placeholder="0" /></div>
+        <div class="form-group"><label>Unit of Measure</label>
+          <select id="m_unit">
+            <option>pcs</option><option>kg</option><option>g</option><option>litres</option>
+            <option>ml</option><option>bags</option><option>cartons</option>
+            <option>bundles</option><option>dozens</option><option>pairs</option>
+            <option>bottles</option><option>crates</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Category</label><select id="m_cat"></select></div>
+      <div class="form-group"><label>SKU / Product Code (optional)</label><input id="m_sku" placeholder="e.g. BEV-001" /></div>
+      <div class="form-group"><label>Reorder Level (alert when below this)</label><input id="m_reorder" type="number" min="0" placeholder="10" /></div>
+      <div style="display:flex;gap:0.75rem">
+        <button class="btn btn-primary" style="flex:1" onclick="saveProduct()">💾 Save Product</button>
+        <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESTOCK MODAL -->
+<div class="modal-overlay" id="restockModal" style="display:none">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header">
+      <h3>Restock Product</h3>
+      <button onclick="document.getElementById('restockModal').style.display='none'" class="modal-close">✕</button>
+    </div>
+    <div id="restockProdName" style="font-weight:700;margin-bottom:0.5rem"></div>
+    <div id="restockCurrent" style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem"></div>
+    <input type="hidden" id="rs_id" />
+    <div class="form-group" style="margin-bottom:1rem">
+      <label>Quantity to Add *</label>
+      <input type="number" id="rs_qty" min="1" placeholder="0" />
+    </div>
+    <div class="form-group" style="margin-bottom:1rem">
+      <label>New Cost Price (optional)</label>
+      <input type="number" id="rs_cost" step="0.01" min="0" placeholder="Leave blank to keep current" />
+    </div>
+    <div class="form-group" style="margin-bottom:1rem">
+      <label>Restock Note</label>
+      <input type="text" id="rs_note" placeholder="e.g. Purchased from supplier" />
+    </div>
+    <button class="btn btn-primary btn-full" onclick="confirmRestock()">✅ Confirm Restock</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script src="js/storage.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  ST.init();
+  const cfg = ST.config();
+  document.getElementById('bizNameNav').textContent = cfg.businessName || 'My Store';
+
+  let products = ST.products();
+  const threshold = cfg.lowStockThreshold || 10;
+
+  // Populate category filter and modal
+  const allCats = [...new Set(products.map(p => p.category).filter(Boolean))];
+  const catFilter = document.getElementById('catFilter');
+  const mCat = document.getElementById('m_cat');
+  allCats.forEach(c => {
+    [catFilter, mCat].forEach(el => {
+      const o = document.createElement('option'); o.value = c; o.textContent = c; el.appendChild(o);
+    });
+  });
+
+  // Stats
+  function updateStats() {
+    products = ST.products();
+    const low = products.filter(p => p.stock > 0 && p.stock <= threshold);
+    const out = products.filter(p => p.stock <= 0);
+    const totalUnits = products.reduce((a, p) => a + p.stock, 0);
+    const stockVal = products.reduce((a, p) => a + p.price * p.stock, 0);
+    const costVal = products.reduce((a, p) => a + (p.costPrice || 0) * p.stock, 0);
+    document.getElementById('totalProducts').textContent = products.length;
+    document.getElementById('totalUnits').textContent = totalUnits;
+    document.getElementById('invStockValue').textContent = ST.fmt(stockVal);
+    document.getElementById('invCostValue').textContent = ST.fmt(costVal);
+    document.getElementById('lowStockCount').textContent = low.length;
+    document.getElementById('outStockCount').textContent = out.length;
+    document.getElementById('invSummary').textContent = products.length + ' products, stock value ' + ST.fmt(stockVal);
+  }
+
+  window.renderTable = function () {
+    products = ST.products();
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const cf = document.getElementById('catFilter').value;
+    const sf = document.getElementById('stockFilter').value;
+    const sort = document.getElementById('sortBy').value;
+
+    let list = products.filter(p => {
+      if (q && !p.name.toLowerCase().includes(q) && !(p.sku || '').toLowerCase().includes(q)) return false;
+      if (cf && p.category !== cf) return false;
+      if (sf === 'ok' && p.stock <= threshold) return false;
+      if (sf === 'low' && !(p.stock > 0 && p.stock <= threshold)) return false;
+      if (sf === 'out' && p.stock > 0) return false;
+      return true;
+    });
+
+    list.sort((a, b) => {
+      if (sort === 'name') return a.name.localeCompare(b.name);
+      if (sort === 'stock_asc') return a.stock - b.stock;
+      if (sort === 'stock_desc') return b.stock - a.stock;
+      if (sort === 'price_asc') return a.price - b.price;
+      if (sort === 'price_desc') return b.price - a.price;
+      if (sort === 'margin_desc') {
+        const ma = a.costPrice > 0 ? (a.price - a.costPrice) / a.price : 0;
+        const mb = b.costPrice > 0 ? (b.price - b.costPrice) / b.price : 0;
+        return mb - ma;
+      }
+      return 0;
+    });
+
+    const tbody = document.getElementById('inventoryBody');
+    if (!list.length) {
+      tbody.innerHTML = '<tr><td colspan="11" class="empty-cell">No products match filters</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = list.map((p, i) => {
+      const isOut = p.stock <= 0;
+      const isLow = !isOut && p.stock <= threshold;
+      const badge = isOut ? '<span class="badge badge-danger">OUT</span>'
+        : isLow ? '<span class="badge badge-warn">LOW</span>'
+        : '<span class="badge badge-success">OK</span>';
+      const stockClass = isOut ? 'class="low-stock"' : isLow ? 'class="medium-stock"' : '';
+      const margin = p.costPrice > 0 ? ((p.price - p.costPrice) / p.price * 100).toFixed(0) + '%' : '—';
+      const marginColor = p.costPrice > 0 ? (parseFloat(margin) >= 30 ? 'var(--accent)' : parseFloat(margin) >= 15 ? 'var(--warning)' : 'var(--danger)') : 'var(--muted)';
+      return '<tr>' +
+        '<td style="color:var(--muted);font-size:0.78rem">' + (i + 1) + '</td>' +
+        '<td><strong>' + p.name + '</strong>' + (p.sku ? '<br><span style="font-size:0.7rem;color:var(--muted)">' + p.sku + '</span>' : '') + '</td>' +
+        '<td><span class="badge badge-info">' + (p.category || '—') + '</span></td>' +
+        '<td>' + ST.fmt(p.price) + '</td>' +
+        '<td style="color:var(--muted)">' + (p.costPrice ? ST.fmt(p.costPrice) : '—') + '</td>' +
+        '<td style="color:' + marginColor + ';font-weight:700;font-size:0.82rem">' + margin + '</td>' +
+        '<td ' + stockClass + '><strong>' + p.stock + '</strong></td>' +
+        '<td style="color:var(--muted)">' + (p.unit || 'pcs') + '</td>' +
+        '<td>' + ST.fmt(p.price * p.stock) + '</td>' +
+        '<td>' + badge + '</td>' +
+        '<td>' +
+        '<div style="display:flex;gap:0.4rem;flex-wrap:wrap">' +
+        '<button class="btn-tiny btn-green" onclick="openRestock(\'' + p.id + '\')">+ Stock</button>' +
+        '<button class="btn-tiny" onclick="openEdit(\'' + p.id + '\')">Edit</button>' +
+        '<button class="btn-tiny" onclick="duplicateProduct(\'' + p.id + '\')">📋</button>' +
+        '<button class="btn-tiny btn-red" onclick="toggleProduct(\'' + p.id + '\')">' + (p.active === false ? 'Enable' : 'Disable') + '</button>' +
+        '</div>' +
+        '</td>' +
+        '</tr>';
+    }).join('');
+  };
+
+  window.openAddModal = function () {
+    document.getElementById('modalTitle').textContent = 'Add New Product';
+    document.getElementById('m_id').value = '';
+    ['m_name', 'm_price', 'm_cost', 'm_stock', 'm_sku', 'm_reorder'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('productModal').style.display = 'flex';
+  };
+
+  window.openEdit = function (id) {
+    const p = ST.products().find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('modalTitle').textContent = 'Edit Product';
+    document.getElementById('m_id').value = p.id;
+    document.getElementById('m_name').value = p.name;
+    document.getElementById('m_price').value = p.price;
+    document.getElementById('m_cost').value = p.costPrice || '';
+    document.getElementById('m_stock').value = p.stock;
+    document.getElementById('m_unit').value = p.unit || 'pcs';
+    document.getElementById('m_cat').value = p.category || '';
+    document.getElementById('m_sku').value = p.sku || '';
+    document.getElementById('m_reorder').value = p.reorderLevel || '';
+    document.getElementById('productModal').style.display = 'flex';
+  };
+
+  window.saveProduct = function () {
+    const name = document.getElementById('m_name').value.trim();
+    const price = parseFloat(document.getElementById('m_price').value);
+    const stock = parseInt(document.getElementById('m_stock').value);
+    if (!name) { showToast('⚠️ Enter product name'); return; }
+    if (isNaN(price) || price < 0) { showToast('⚠️ Enter valid price'); return; }
+    if (isNaN(stock) || stock < 0) { showToast('⚠️ Enter valid stock quantity'); return; }
+
+    const prods = ST.products();
+    const existingId = document.getElementById('m_id').value;
+    if (existingId) {
+      const p = prods.find(x => x.id === existingId);
+      if (p) {
+        p.name = name; p.price = price; p.stock = stock;
+        p.costPrice = parseFloat(document.getElementById('m_cost').value) || 0;
+        p.unit = document.getElementById('m_unit').value;
+        p.category = document.getElementById('m_cat').value;
+        p.sku = document.getElementById('m_sku').value;
+        p.reorderLevel = parseInt(document.getElementById('m_reorder').value) || threshold;
+      }
+      ST.logActivity('product', 'Updated product: ' + name);
+      showToast('✅ Product updated');
+    } else {
+      prods.push({
+        id: 'p_' + Date.now(),
+        name, price, stock,
+        costPrice: parseFloat(document.getElementById('m_cost').value) || 0,
+        unit: document.getElementById('m_unit').value,
+        category: document.getElementById('m_cat').value,
+        sku: document.getElementById('m_sku').value,
+        reorderLevel: parseInt(document.getElementById('m_reorder').value) || threshold,
+        active: true
+      });
+      ST.logActivity('product', 'Added new product: ' + name);
+      showToast('✅ Product added');
+    }
+    ST.saveProducts(prods);
+    closeModal();
+    updateStats();
+    renderTable();
+  };
+
+  window.duplicateProduct = function (id) {
+    const p = ST.products().find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('m_id').value = '';
+    document.getElementById('m_name').value = p.name + ' (Copy)';
+    document.getElementById('m_price').value = p.price;
+    document.getElementById('m_cost').value = p.costPrice || '';
+    document.getElementById('m_stock').value = 0;
+    document.getElementById('m_unit').value = p.unit || 'pcs';
+    document.getElementById('m_cat').value = p.category || '';
+    document.getElementById('m_sku').value = '';
+    document.getElementById('m_reorder').value = p.reorderLevel || '';
+    document.getElementById('modalTitle').textContent = 'Duplicate Product';
+    document.getElementById('productModal').style.display = 'flex';
+  };
+
+  window.closeModal = function () {
+    document.getElementById('productModal').style.display = 'none';
+  };
+
+  window.openRestock = function (id) {
+    const p = ST.products().find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('rs_id').value = id;
+    document.getElementById('restockProdName').textContent = p.name;
+    document.getElementById('restockCurrent').textContent = 'Current stock: ' + p.stock + ' ' + (p.unit || 'pcs');
+    document.getElementById('rs_qty').value = '';
+    document.getElementById('rs_cost').value = '';
+    document.getElementById('rs_note').value = '';
+    document.getElementById('restockModal').style.display = 'flex';
+  };
+
+  window.confirmRestock = function () {
+    const id = document.getElementById('rs_id').value;
+    const qty = parseInt(document.getElementById('rs_qty').value) || 0;
+    if (qty <= 0) { showToast('⚠️ Enter quantity to add'); return; }
+    const prods = ST.products();
+    const p = prods.find(x => x.id === id);
+    if (p) {
+      p.stock += qty;
+      const newCost = parseFloat(document.getElementById('rs_cost').value);
+      if (!isNaN(newCost) && newCost > 0) p.costPrice = newCost;
+      ST.saveProducts(prods);
+      const note = document.getElementById('rs_note').value;
+      ST.logActivity('restock', 'Restocked ' + qty + ' ' + (p.unit || 'units') + ' of ' + p.name + (note ? ' (' + note + ')' : ''));
+      showToast('✅ Added ' + qty + ' ' + (p.unit || 'units') + ' to ' + p.name);
+      document.getElementById('restockModal').style.display = 'none';
+      updateStats(); renderTable(); loadMovements();
+    }
+  };
+
+  window.toggleProduct = function (id) {
+    const prods = ST.products();
+    const p = prods.find(x => x.id === id);
+    if (p) { p.active = p.active === false ? true : false; ST.saveProducts(prods); renderTable(); }
+  };
+
+  window.exportInventoryCSV = function () {
+    const prods = ST.products();
+    const header = 'Name,SKU,Category,Selling Price,Cost Price,Margin%,Stock,Unit,Stock Value,Status';
+    const rows = prods.map(p => [
+      p.name, p.sku || '', p.category || '', p.price, p.costPrice || 0,
+      p.costPrice > 0 ? ((p.price - p.costPrice) / p.price * 100).toFixed(1) : '',
+      p.stock, p.unit || 'pcs', (p.price * p.stock).toFixed(2),
+      p.stock <= 0 ? 'OUT' : p.stock <= threshold ? 'LOW' : 'OK'
+    ].map(v => '"' + String(v) + '"').join(','));
+    const csv = [header, ...rows].join('\n');
+    const a = document.createElement('a');
+    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+    a.download = 'inventory_' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.click();
+    showToast('📥 Inventory CSV downloaded');
+  };
+
+  // Stock Movement History
+  function loadMovements() {
+    const log = ST.activityLog().filter(a => a.type === 'restock' || (a.type === 'sale' && a.message.includes('Deleted')));
+    const recent = [...log].reverse().slice(0, 15);
+    const feed = document.getElementById('stockMovementFeed');
+    if (recent.length) {
+      feed.innerHTML = recent.map(a =>
+        '<div class="activity-item">' +
+        '<div class="activity-icon ' + a.type + '">' + (a.type === 'restock' ? '📦' : '🛒') + '</div>' +
+        '<div class="activity-text">' + a.message + '</div>' +
+        '<div class="activity-time">' + new Date(a.date).toLocaleString() + '</div>' +
+        '</div>'
+      ).join('');
+    }
+  }
+
+  updateStats();
+  renderTable();
+  loadMovements();
+})();
+</script>
+<div class="brand-footer">
+  <div style="font-weight:700;color:var(--text);font-family:'Syne',sans-serif">HMG Concepts</div>
+  <div>Technology-Powered Business Intelligence</div>
+  <div style="margin-top:0.3rem"><a href="https://cssadewale.pages.dev" target="_blank">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev" target="_blank">hmgconcepts.pages.dev</a></div>
+  <div class="powered-by">Powered by HMG Enterprise — Adewale Samson Adeagbo — v3.0</div>
+</div>
+
+</body>
+</html>

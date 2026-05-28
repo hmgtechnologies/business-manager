@@ -1,0 +1,150 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Credits — HMG Enterprise</title><link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="css/style.css"><link rel="manifest" href="manifest.json"></head>
+<body>
+<nav class="navbar"><div class="navbar-brand"><div class="brand-logo">HMG</div><div><div class="brand-name" id="bizNameNav">HMG Concepts</div><div class="brand-sub">Credits</div></div></div>
+<nav class="navbar-links">
+    <a href="index.html">📊 Dashboard</a><a href="sales.html">🛒 Sales</a><a href="inventory.html">📦 Inventory</a><a href="expenses.html">💸 Expenses</a><a href="customers.html">👥 Customers</a><a href="suppliers.html">🚚 Suppliers</a><a href="register.html">🏧 Register</a><a href="journal.html">📝 Journal</a><a href="staff.html">👨‍💼 Staff</a><a href="budgets.html">💰 Budgets</a><a href="credits.html" class="active">💳 Credits</a><a href="reports.html">📈 Reports</a><a href="settings.html">⚙️ Settings</a>
+</nav><button class="hamburger" onclick="toggleMenu()">☰</button></nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">📊 Dashboard</a><a href="sales.html">🛒 Sales</a><a href="inventory.html">📦 Inventory</a><a href="expenses.html">💸 Expenses</a><a href="customers.html">👥 Customers</a><a href="suppliers.html">🚚 Suppliers</a><a href="register.html">🏧 Register</a><a href="journal.html">📝 Journal</a><a href="staff.html">👨‍💼 Staff</a><a href="budgets.html">💰 Budgets</a><a href="credits.html" class="active">💳 Credits</a><a href="reports.html">📈 Reports</a><a href="settings.html">⚙️ Settings</a>
+</div>
+
+<div class="page">
+  <div class="page-header"><div><h1 class="page-title">💳 Credit / Debt Tracker</h1><div class="page-sub">Track credit sales and outstanding debts</div></div>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+      <button class="btn btn-secondary" onclick="exportCreditsCSV()">📥 Export</button>
+      <button class="btn btn-primary" onclick="openCreditModal()">➕ Record Credit Sale</button>
+    </div></div>
+
+  <div class="stats-grid">
+    <div class="stat-card" style="border-top:3px solid #f472b6"><div class="stat-label">Total Credit Given</div><div class="stat-val" id="totalCredit" style="color:#f472b6">—</div></div>
+    <div class="stat-card" style="border-top:3px solid var(--accent)"><div class="stat-label">Total Collected</div><div class="stat-val" id="totalCollected" style="color:var(--accent)">—</div></div>
+    <div class="stat-card" style="border-top:3px solid var(--danger)"><div class="stat-label">Outstanding</div><div class="stat-val" id="totalOutstanding" style="color:var(--danger)">—</div></div>
+    <div class="stat-card" style="border-top:3px solid var(--accent2)"><div class="stat-label">Overdue (7+ days)</div><div class="stat-val" id="overdueCount" style="color:var(--warning)">—</div></div>
+  </div>
+
+  <div class="card" style="padding:1rem"><div class="filter-row">
+    <select id="creditFilter" onchange="renderCredits()"><option value="all">All Credits</option><option value="pending">⏳ Pending</option><option value="paid">✅ Paid</option><option value="overdue">⚠️ Overdue</option></select>
+    <input type="text" id="creditSearch" placeholder="🔍 Search customer..." oninput="renderCredits()" style="max-width:220px"/>
+  </div></div>
+
+  <div id="creditsList"></div>
+</div>
+
+<div class="brand-footer"><div style="font-weight:700;color:var(--text);font-family:'Syne',sans-serif">HMG Concepts Enterprise</div><div>Technology-Powered Business Intelligence</div><div style="margin-top:0.3rem"><a href="https://cssadewale.pages.dev" target="_blank">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev" target="_blank">hmgconcepts.pages.dev</a></div><div class="powered-by">Powered by HMG Concepts — Adewale Samson Adeagbo — Enterprise v4.0</div></div>
+
+<div class="modal-overlay" id="creditModal" style="display:none"><div class="modal" style="max-width:460px">
+  <div class="modal-header"><h3>Record Credit Sale</h3><button onclick="document.getElementById('creditModal').style.display='none'" class="modal-close">✕</button></div>
+  <div style="display:flex;flex-direction:column;gap:0.8rem">
+    <div class="form-group"><label>Customer Name *</label><input id="crCustomer" placeholder="Customer name" list="custDL"/><datalist id="custDL"></datalist></div>
+    <div class="form-row"><div class="form-group"><label>Product</label><input id="crProduct" placeholder="Product sold"/></div>
+    <div class="form-group"><label>Total Amount *</label><input id="crAmount" type="number" step="0.01" min="0" placeholder="0.00"/></div></div>
+    <div class="form-row"><div class="form-group"><label>Due Date</label><input id="crDue" type="date"/></div>
+    <div class="form-group"><label>Phone (for WhatsApp)</label><input id="crPhone" type="tel" placeholder="080XXXXXXXX"/></div></div>
+    <div class="form-group"><label>Notes</label><input id="crNotes" placeholder="Optional note"/></div>
+    <button class="btn btn-primary btn-full" onclick="saveCredit()">💾 Record Credit</button>
+  </div>
+</div></div>
+
+<div class="modal-overlay" id="payModal" style="display:none"><div class="modal" style="max-width:350px">
+  <div class="modal-header"><h3>Record Payment</h3><button onclick="document.getElementById('payModal').style.display='none'" class="modal-close">✕</button></div>
+  <input type="hidden" id="payId"/>
+  <div id="payInfo" style="margin-bottom:0.8rem"></div>
+  <div class="form-group" style="margin-bottom:0.8rem"><label>Payment Amount *</label><input id="payAmt" type="number" step="0.01" min="0.01" placeholder="0.00"/></div>
+  <button class="btn btn-primary btn-full" onclick="confirmPayment()">✅ Record Payment</button>
+</div></div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+<script src="js/storage.js"></script><script src="js/app.js"></script>
+<script>
+(function(){
+  ST.init();document.getElementById('bizNameNav').textContent=ST.config().businessName||'HMG Concepts';
+
+  // Populate customer datalist
+  const custs=ST.customers();const dl=document.getElementById('custDL');
+  custs.forEach(c=>{const o=document.createElement('option');o.value=c.name;dl.appendChild(o)});
+
+  function updateStats(){
+    const all=ST.credits(),now=new Date();
+    const totalGiven=all.reduce((a,c)=>a+c.total,0);
+    const totalPaid=all.reduce((a,c)=>a+(c.paid||0),0);
+    const outstanding=totalGiven-totalPaid;
+    const overdue=all.filter(c=>c.status!=='paid'&&c.due&&new Date(c.due)<now);
+    document.getElementById('totalCredit').textContent=ST.fmt(totalGiven);
+    document.getElementById('totalCollected').textContent=ST.fmt(totalPaid);
+    document.getElementById('totalOutstanding').textContent=ST.fmt(outstanding);
+    document.getElementById('overdueCount').textContent=overdue.length+' credit(s)';
+  }
+
+  window.renderCredits=function(){
+    let all=ST.credits();const f=document.getElementById('creditFilter').value,q=document.getElementById('creditSearch').value.toLowerCase(),now=new Date();
+    if(f==='pending')all=all.filter(c=>c.status!=='paid');
+    else if(f==='paid')all=all.filter(c=>c.status==='paid');
+    else if(f==='overdue')all=all.filter(c=>c.status!=='paid'&&c.due&&new Date(c.due)<now);
+    if(q)all=all.filter(c=>(c.customer||'').toLowerCase().includes(q));
+    all=[...all].reverse();
+
+    const list=document.getElementById('creditsList');
+    if(!all.length){list.innerHTML='<div class="card"><div class="empty-cell">No credit records found</div></div>';return}
+    list.innerHTML=all.map(c=>{
+      const remaining=c.total-(c.paid||0),isOverdue=c.status!=='paid'&&c.due&&new Date(c.due)<now;
+      const pct=c.total>0?((c.paid||0)/c.total*100):0;
+      return '<div class="credit-row"><div style="flex:1;min-width:0">'+
+        '<div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap">'+
+        '<strong>'+c.customer+'</strong>'+
+        '<span class="badge '+(c.status==='paid'?'badge-success':isOverdue?'badge-danger':'badge-info')+'">'+(c.status==='paid'?'PAID':isOverdue?'OVERDUE':'PENDING')+'</span></div>'+
+        (c.productName?'<div style="font-size:0.78rem;color:var(--muted);margin-top:0.2rem">'+c.productName+'</div>':'')+
+        '<div style="margin-top:0.4rem"><div class="progress-bar-container" style="height:6px"><div class="progress-bar-fill '+(pct>=100?'green':'blue')+'" style="width:'+Math.min(pct,100)+'%"></div></div></div>'+
+        '<div style="font-size:0.7rem;color:var(--muted);margin-top:0.3rem;font-family:DM Mono,monospace">'+
+        new Date(c.date).toLocaleDateString()+(c.due?' · Due: '+new Date(c.due).toLocaleDateString():'')+
+        ' · '+(c.payments?c.payments.length:0)+' payment(s)</div></div>'+
+        '<div style="text-align:right;flex-shrink:0">'+
+        '<div style="font-weight:700;color:'+(remaining<=0?'var(--accent)':'#f472b6')+'">'+ST.fmt(remaining)+'</div>'+
+        '<div style="font-size:0.72rem;color:var(--muted)">of '+ST.fmt(c.total)+'</div>'+
+        (c.status!=='paid'?'<div style="display:flex;gap:0.3rem;margin-top:0.4rem;justify-content:flex-end">'+
+        '<button class="btn-tiny btn-green" onclick="openPay(\''+c.id+'\')">💰 Pay</button>'+
+        (c.phone?'<a class="share-btn whatsapp" style="font-size:0.68rem;padding:0.15rem 0.4rem" href="https://wa.me/'+c.phone.replace(/^0+/g,'')+'" target="_blank">📱</a>':'')+
+        '<button class="btn-tiny btn-red" onclick="deleteCredit(\''+c.id+'\')">🗑</button></div>':'')+
+        '</div></div>';
+    }).join('');
+  };
+
+  window.openCreditModal=function(){
+    ['crCustomer','crProduct','crAmount','crDue','crPhone','crNotes'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('creditModal').style.display='flex';
+  };
+  window.saveCredit=function(){
+    const customer=document.getElementById('crCustomer').value.trim();
+    const amount=parseFloat(document.getElementById('crAmount').value);
+    if(!customer){showToast('⚠️ Enter customer name');return}
+    if(!amount||amount<=0){showToast('⚠️ Enter amount');return}
+    ST.addCredit({customer,productName:document.getElementById('crProduct').value.trim(),total:amount,
+      due:document.getElementById('crDue').value||null,phone:document.getElementById('crPhone').value.trim(),
+      notes:document.getElementById('crNotes').value.trim()});
+    // Also update customer stats
+    ST.updateCustomerStats(customer,0); // Create customer entry if not exists
+    showToast('✅ Credit of '+ST.fmt(amount)+' recorded');
+    document.getElementById('creditModal').style.display='none';updateStats();renderCredits();
+  };
+  window.openPay=function(id){
+    const c=ST.credits().find(x=>x.id===id);if(!c)return;
+    document.getElementById('payId').value=id;
+    const remaining=c.total-(c.paid||0);
+    document.getElementById('payInfo').innerHTML='<div style="font-weight:700">'+c.customer+'</div><div style="color:var(--muted);font-size:0.82rem">Outstanding: '+ST.fmt(remaining)+' of '+ST.fmt(c.total)+'</div>';
+    document.getElementById('payAmt').value='';document.getElementById('payAmt').max=remaining;
+    document.getElementById('payModal').style.display='flex';
+  };
+  window.confirmPayment=function(){
+    const id=document.getElementById('payId').value,amt=parseFloat(document.getElementById('payAmt').value);
+    if(!amt||amt<=0){showToast('⚠️ Enter payment amount');return}
+    ST.addCreditPayment(id,amt);showToast('✅ Payment of '+ST.fmt(amt)+' recorded');
+    document.getElementById('payModal').style.display='none';updateStats();renderCredits();
+  };
+  window.deleteCredit=function(id){if(!confirm('Delete this credit record?'))return;ST.saveCredits(ST.credits().filter(c=>c.id!==id));showToast('🗑 Deleted');updateStats();renderCredits()};
+  window.exportCreditsCSV=function(){
+    const all=ST.credits(),h='Date,Customer,Product,Total,Paid,Outstanding,Status,Due Date,Phone';
+    const rows=all.map(c=>[new Date(c.date).toLocaleDateString(),c.customer,c.productName||'',c.total.toFixed(2),(c.paid||0).toFixed(2),(c.total-(c.paid||0)).toFixed(2),c.status||'pending',c.due||'',c.phone||''].map(v=>'"'+String(v)+'"').join(','));
+    const csv=[h,...rows].join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='credits_'+new Date().toISOString().slice(0,10)+'.csv';a.click();showToast('📥 CSV downloaded');
+  };
+  updateStats();renderCredits();
+})();
+</script></body></html>

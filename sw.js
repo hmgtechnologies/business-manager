@@ -1,0 +1,4 @@
+const C='hmg-enterprise-v4';const A=['./','./index.html','./sales.html','./inventory.html','./reports.html','./settings.html','./expenses.html','./customers.html','./suppliers.html','./register.html','./journal.html','./staff.html','./budgets.html','./credits.html','./css/style.css','./js/storage.js','./js/app.js','./manifest.json'];
+self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(A)));self.skipWaiting()});
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))));self.clients.claim()});
+self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(u.origin!==self.location.origin){e.respondWith(fetch(e.request).then(r=>{const c=r.clone();caches.open(C).then(ca=>ca.put(e.request,c));return r}).catch(()=>caches.match(e.request)));return}e.respondWith(caches.match(e.request).then(c=>c||fetch(e.request)))});

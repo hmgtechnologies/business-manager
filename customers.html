@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customers — SaleTrack — HMG Enterprise</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">
+    <div class="brand-logo">HMG</div>
+    <div>
+      <div class="brand-name" id="bizNameNav">My Store</div>
+      <div class="brand-sub">Customers</div>
+    </div>
+  </div>
+  <nav class="navbar-links">
+    <a href="index.html">📊 Dashboard</a>
+    <a href="sales.html">🛒 Sales</a>
+    <a href="inventory.html">📦 Inventory</a>
+    <a href="expenses.html">💸 Expenses</a>
+    <a href="customers.html" class="active">👥 Customers</a>
+    <a href="suppliers.html">🚚 Suppliers</a>
+    <a href="register.html">🏧 Register</a>
+    <a href="journal.html">📝 Journal</a>
+    <a href="staff.html">👨‍💼 Staff</a>
+    <a href="budgets.html">💰 Budgets</a>
+    <a href="credits.html">💳 Credits</a>
+    <a href="reports.html">📈 Reports</a>
+    <a href="settings.html">⚙️ Settings</a>
+  </nav>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">📊 Dashboard</a>
+  <a href="sales.html">🛒 Sales</a>
+  <a href="inventory.html">📦 Inventory</a>
+  <a href="expenses.html">💸 Expenses</a>
+  <a href="customers.html" class="active">👥 Customers</a>
+  <a href="suppliers.html">🚚 Suppliers</a>
+  <a href="register.html">🏧 Register</a>
+  <a href="journal.html">📝 Journal</a>
+  <a href="staff.html">👨‍💼 Staff</a>
+  <a href="budgets.html">💰 Budgets</a>
+  <a href="credits.html">💳 Credits</a>
+  <a href="reports.html">📈 Reports</a>
+  <a href="settings.html">⚙️ Settings</a>
+</div>
+
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Customers</h1>
+      <div class="page-sub" id="custSummary">Loading...</div>
+    </div>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+      <button class="btn btn-secondary" onclick="exportCustomersCSV()">📥 Export CSV</button>
+      <button class="btn btn-primary" onclick="openCustomerModal()">➕ Add Customer</button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
+    <div class="stat-card" style="border-top:3px solid var(--accent)">
+      <div class="stat-label">Total Customers</div>
+      <div class="stat-val" id="totalCustomers">—</div>
+    </div>
+    <div class="stat-card" style="border-top:3px solid var(--accent2)">
+      <div class="stat-label">Total Revenue (Named)</div>
+      <div class="stat-val" id="totalCustRevenue" style="color:var(--accent2)">—</div>
+    </div>
+    <div class="stat-card" style="border-top:3px solid #a855f7">
+      <div class="stat-label">Top Customer</div>
+      <div class="stat-val" id="topCustomer" style="font-size:1.1rem;color:#a855f7">—</div>
+    </div>
+    <div class="stat-card" style="border-top:3px solid var(--warning)">
+      <div class="stat-label">Repeat Customers</div>
+      <div class="stat-val" id="repeatCustomers" style="color:var(--warning)">—</div>
+    </div>
+  </div>
+
+  <!-- SEARCH & FILTER -->
+  <div class="card" style="padding:1rem">
+    <div class="filter-row">
+      <input type="text" id="custSearch" placeholder="🔍 Search name, phone, email..." oninput="renderCustomers()" style="max-width:280px" />
+      <select id="custSort" onchange="renderCustomers()">
+        <option value="spend">Sort: Highest Spend</option>
+        <option value="orders">Sort: Most Orders</option>
+        <option value="name">Sort: Name A-Z</option>
+        <option value="recent">Sort: Recent Purchase</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- CUSTOMER LIST -->
+  <div id="customerList"></div>
+
+</div>
+
+<!-- CUSTOMER DETAIL MODAL -->
+<div class="modal-overlay" id="custModal" style="display:none">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <h3 id="custModalTitle">Customer Details</h3>
+      <button onclick="document.getElementById('custModal').style.display='none'" class="modal-close">✕</button>
+    </div>
+    <div id="custModalContent"></div>
+  </div>
+</div>
+
+<!-- ADD/EDIT CUSTOMER MODAL -->
+<div class="modal-overlay" id="addCustModal" style="display:none">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <h3 id="addCustModalTitle">Add Customer</h3>
+      <button onclick="document.getElementById('addCustModal').style.display='none'" class="modal-close">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <input type="hidden" id="custId" />
+      <div class="form-group"><label>Full Name *</label><input id="custName" placeholder="Customer name" /></div>
+      <div class="form-row">
+        <div class="form-group"><label>Phone</label><input id="custPhone" type="tel" placeholder="080XXXXXXXX" /></div>
+        <div class="form-group"><label>Email</label><input id="custEmail" type="email" placeholder="email@example.com" /></div>
+      </div>
+      <div class="form-group"><label>Address</label><input id="custAddr" placeholder="Customer address" /></div>
+      <div class="form-group"><label>Notes</label><input id="custNotes" placeholder="Any notes about this customer" /></div>
+      <button class="btn btn-primary btn-full" onclick="saveCust()">💾 Save Customer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script src="js/storage.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  ST.init();
+  const cfg = ST.config();
+  document.getElementById('bizNameNav').textContent = cfg.businessName || 'My Store';
+
+  function updateStats() {
+    const custs = ST.customersData();
+    document.getElementById('totalCustomers').textContent = custs.length;
+    const totalSpend = custs.reduce((a,c) => a + (c.totalSpend || 0), 0);
+    document.getElementById('totalCustRevenue').textContent = ST.fmt(totalSpend);
+    const top = [...custs].sort((a,b) => (b.totalSpend||0) - (a.totalSpend||0))[0];
+    document.getElementById('topCustomer').textContent = top ? top.name : '—';
+    const repeat = custs.filter(c => (c.totalOrders || 0) > 1).length;
+    document.getElementById('repeatCustomers').textContent = repeat;
+    document.getElementById('custSummary').textContent = custs.length + ' customers registered';
+  }
+
+  window.renderCustomers = function () {
+    let custs = ST.customersData();
+    const q = document.getElementById('custSearch').value.toLowerCase();
+    const sort = document.getElementById('custSort').value;
+
+    if (q) custs = custs.filter(c =>
+      (c.name||'').toLowerCase().includes(q) ||
+      (c.phone||'').toLowerCase().includes(q) ||
+      (c.email||'').toLowerCase().includes(q)
+    );
+
+    custs.sort((a, b) => {
+      if (sort === 'spend') return (b.totalSpend||0) - (a.totalSpend||0);
+      if (sort === 'orders') return (b.totalOrders||0) - (a.totalOrders||0);
+      if (sort === 'name') return (a.name||'').localeCompare(b.name||'');
+      if (sort === 'recent') return new Date(b.lastPurchase||0) - new Date(a.lastPurchase||0);
+      return 0;
+    });
+
+    const list = document.getElementById('customerList');
+    if (!custs.length) {
+      list.innerHTML = '<div class="card"><div class="empty-cell">No customers found. <a href="javascript:openCustomerModal()">Add your first customer →</a></div></div>';
+      return;
+    }
+
+    list.innerHTML = custs.map(c => {
+      const initials = (c.name || '?').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+      return '<div class="customer-card" onclick="viewCustomer(\'' + c.id + '\')">' +
+        '<div class="customer-avatar">' + initials + '</div>' +
+        '<div class="customer-info">' +
+        '<div class="customer-name">' + (c.name || 'Unnamed') + '</div>' +
+        '<div class="customer-meta">' + (c.phone || 'No phone') + ' · ' + (c.totalOrders || 0) + ' orders</div>' +
+        '</div>' +
+        '<div class="customer-stats">' +
+        '<div style="color:var(--accent);font-weight:700;font-size:0.95rem">' + ST.fmt(c.totalSpend || 0) + '</div>' +
+        '<div style="font-size:0.7rem;color:var(--muted)">total spend</div>' +
+        '</div>' +
+        '</div>';
+    }).join('');
+  };
+
+  window.viewCustomer = function (id) {
+    const c = ST.customersData().find(x => x.id === id);
+    if (!c) return;
+    const sales = ST.sales().filter(s => s.customer && s.customer.toLowerCase() === c.name.toLowerCase());
+
+    document.getElementById('custModalTitle').textContent = c.name;
+    document.getElementById('custModalContent').innerHTML =
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.2rem">' +
+      '<div><div class="stat-label">Phone</div><div>' + (c.phone || '—') + '</div></div>' +
+      '<div><div class="stat-label">Email</div><div>' + (c.email || '—') + '</div></div>' +
+      '<div><div class="stat-label">Address</div><div>' + (c.address || '—') + '</div></div>' +
+      '<div><div class="stat-label">Total Spend</div><div style="font-weight:700;color:var(--accent)">' + ST.fmt(c.totalSpend || 0) + '</div></div>' +
+      '<div><div class="stat-label">Orders</div><div style="font-weight:700">' + (c.totalOrders || 0) + '</div></div>' +
+      '<div><div class="stat-label">Last Purchase</div><div>' + (c.lastPurchase ? new Date(c.lastPurchase).toLocaleDateString() : '—') + '</div></div>' +
+      '</div>' +
+      (c.notes ? '<div style="margin-bottom:1rem;padding:0.75rem;background:var(--surface2);border-radius:8px;font-size:0.85rem;color:var(--muted)"><strong>Notes:</strong> ' + c.notes + '</div>' : '') +
+      '<div style="display:flex;gap:0.75rem;margin-bottom:1rem">' +
+      '<button class="btn btn-secondary" onclick="editCustomer(\'' + c.id + '\')">✏️ Edit</button>' +
+      (c.phone ? '<a class="share-btn whatsapp" href="https://wa.me/' + c.phone.replace(/^0+/, '').replace(/\s/g, '') + '" target="_blank">📱 WhatsApp</a>' : '') +
+      '<button class="btn btn-danger btn-tiny" onclick="deleteCustomer(\'' + c.id + '\')">🗑 Delete</button>' +
+      '</div>' +
+      '<div class="card-title">Purchase History</div>' +
+      (sales.length
+        ? '<table><thead><tr><th>Date</th><th>Product</th><th>Total</th></tr></thead><tbody>' +
+          [...sales].reverse().slice(0, 20).map(s =>
+            '<tr><td style="font-size:0.8rem;color:var(--muted)">' + new Date(s.date).toLocaleDateString() + '</td>' +
+            '<td>' + s.productName + '</td>' +
+            '<td><strong>' + ST.fmt(s.total) + '</strong></td></tr>'
+          ).join('') + '</tbody></table>'
+        : '<div style="color:var(--muted);font-size:0.85rem">No purchase history yet</div>');
+    document.getElementById('custModal').style.display = 'flex';
+  };
+
+  window.openCustomerModal = function () {
+    document.getElementById('custId').value = '';
+    document.getElementById('addCustModalTitle').textContent = 'Add Customer';
+    ['custName','custPhone','custEmail','custAddr','custNotes'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('addCustModal').style.display = 'flex';
+  };
+
+  window.editCustomer = function (id) {
+    const c = ST.customersData().find(x => x.id === id);
+    if (!c) return;
+    document.getElementById('custModal').style.display = 'none';
+    document.getElementById('custId').value = c.id;
+    document.getElementById('addCustModalTitle').textContent = 'Edit Customer';
+    document.getElementById('custName').value = c.name || '';
+    document.getElementById('custPhone').value = c.phone || '';
+    document.getElementById('custEmail').value = c.email || '';
+    document.getElementById('custAddr').value = c.address || '';
+    document.getElementById('custNotes').value = c.notes || '';
+    document.getElementById('addCustModal').style.display = 'flex';
+  };
+
+  window.saveCust = function () {
+    const name = document.getElementById('custName').value.trim();
+    if (!name) { showToast('⚠️ Enter customer name'); return; }
+    const id = document.getElementById('custId').value;
+    ST.addOrUpdateCustomer({
+      id: id || null,
+      name: name,
+      phone: document.getElementById('custPhone').value.trim(),
+      email: document.getElementById('custEmail').value.trim(),
+      address: document.getElementById('custAddr').value.trim(),
+      notes: document.getElementById('custNotes').value.trim()
+    });
+    showToast('✅ Customer saved');
+    document.getElementById('addCustModal').style.display = 'none';
+    updateStats();
+    renderCustomers();
+  };
+
+  window.deleteCustomer = function (id) {
+    if (!confirm('Delete this customer? Their sales records will remain.')) return;
+    const all = ST.customersData().filter(c => c.id !== id);
+    ST.saveCustomers(all);
+    showToast('🗑 Customer deleted');
+    document.getElementById('custModal').style.display = 'none';
+    updateStats();
+    renderCustomers();
+  };
+
+  window.exportCustomersCSV = function () {
+    const custs = ST.customersData();
+    const header = 'Name,Phone,Email,Address,Total Spend,Total Orders,Last Purchase';
+    const rows = custs.map(c => [
+      c.name, c.phone || '', c.email || '', c.address || '',
+      (c.totalSpend || 0).toFixed(2), c.totalOrders || 0,
+      c.lastPurchase ? new Date(c.lastPurchase).toLocaleDateString() : ''
+    ].map(v => '"' + String(v).replace(/"/g, '""') + '"').join(','));
+    const csv = [header, ...rows].join('\n');
+    const a = document.createElement('a');
+    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+    a.download = 'customers_' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.click();
+    showToast('📥 Customers CSV downloaded');
+  };
+
+  updateStats();
+  renderCustomers();
+})();
+</script>
+<div class="brand-footer">
+  <div style="font-weight:700;color:var(--text);font-family:'Syne',sans-serif">HMG Concepts</div>
+  <div>Technology-Powered Business Intelligence</div>
+  <div style="margin-top:0.3rem"><a href="https://cssadewale.pages.dev" target="_blank">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev" target="_blank">hmgconcepts.pages.dev</a></div>
+  <div class="powered-by">Powered by HMG Enterprise — Adewale Samson Adeagbo — v3.0</div>
+</div>
+
+</body>
+</html>

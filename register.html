@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cash Register — SaleTrack — HMG Enterprise</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">
+    <div class="brand-logo">HMG</div>
+    <div>
+      <div class="brand-name" id="bizNameNav">My Store</div>
+      <div class="brand-sub">Cash Register</div>
+    </div>
+  </div>
+  <nav class="navbar-links">
+    <a href="index.html">📊 Dashboard</a>
+    <a href="sales.html">🛒 Sales</a>
+    <a href="inventory.html">📦 Inventory</a>
+    <a href="expenses.html">💸 Expenses</a>
+    <a href="customers.html">👥 Customers</a>
+    <a href="suppliers.html">🚚 Suppliers</a>
+    <a href="register.html" class="active">🏧 Register</a>
+    <a href="journal.html">📝 Journal</a>
+    <a href="staff.html">👨‍💼 Staff</a>
+    <a href="budgets.html">💰 Budgets</a>
+    <a href="credits.html">💳 Credits</a>
+    <a href="reports.html">📈 Reports</a>
+    <a href="settings.html">⚙️ Settings</a>
+  </nav>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">📊 Dashboard</a>
+  <a href="sales.html">🛒 Sales</a>
+  <a href="inventory.html">📦 Inventory</a>
+  <a href="expenses.html">💸 Expenses</a>
+  <a href="customers.html">👥 Customers</a>
+  <a href="suppliers.html">🚚 Suppliers</a>
+  <a href="register.html" class="active">🏧 Register</a>
+  <a href="journal.html">📝 Journal</a>
+  <a href="staff.html">👨‍💼 Staff</a>
+  <a href="budgets.html">💰 Budgets</a>
+  <a href="credits.html">💳 Credits</a>
+  <a href="reports.html">📈 Reports</a>
+  <a href="settings.html">⚙️ Settings</a>
+</div>
+
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Cash Register</h1>
+      <div class="page-sub">Manage your daily cash drawer</div>
+    </div>
+  </div>
+
+  <!-- CURRENT STATUS -->
+  <div class="card" style="text-align:center;padding:2rem">
+    <div id="regStatusDisplay"></div>
+  </div>
+
+  <div class="two-col-layout">
+
+    <!-- OPEN/CLOSE REGISTER -->
+    <div>
+      <div class="card" id="openCard" style="display:none">
+        <h3 class="card-title">🔓 Open Register</h3>
+        <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem">Start your business day by recording the starting cash in your drawer.</p>
+        <div class="form-group" style="margin-bottom:1rem">
+          <label>Starting Cash Amount</label>
+          <input type="number" id="startCash" step="0.01" min="0" placeholder="0.00" />
+        </div>
+        <div class="form-group" style="margin-bottom:1rem">
+          <label>Note (optional)</label>
+          <input type="text" id="startNote" placeholder="e.g. Monday opening" />
+        </div>
+        <button class="btn btn-primary btn-full" onclick="doOpenRegister()">🔓 Open Register</button>
+      </div>
+
+      <div class="card" id="closeCard" style="display:none">
+        <h3 class="card-title">🔒 Close Register</h3>
+        <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem">End your business day. Count the cash in your drawer.</p>
+
+        <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.2rem">
+          <div class="pay-row"><span>Starting Cash</span><strong id="closeStartCash">—</strong></div>
+          <div class="pay-row"><span>Today's Cash Sales</span><strong style="color:var(--accent)" id="closeCashSales">—</strong></div>
+          <div class="pay-row"><span>Today's Expenses (Cash)</span><strong style="color:var(--danger)" id="closeCashExpenses">—</strong></div>
+          <div class="pay-row" style="background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.2);border-radius:8px;padding:0.75rem">
+            <span style="font-weight:600">Expected Cash in Drawer</span>
+            <strong style="color:var(--info);font-size:1.1rem" id="closeExpected">—</strong>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:1rem">
+          <label>Actual Cash Counted</label>
+          <input type="number" id="actualCash" step="0.01" min="0" placeholder="Count and enter amount" oninput="calcDiscrepancy()" />
+        </div>
+        <div id="discrepancyDisplay" style="margin-bottom:1rem"></div>
+        <div class="form-group" style="margin-bottom:1rem">
+          <label>Note (optional)</label>
+          <input type="text" id="closeNote" placeholder="Any notes about today's register" />
+        </div>
+        <button class="btn btn-danger btn-full" onclick="doCloseRegister()">🔒 Close Register</button>
+      </div>
+
+      <!-- TODAY'S SUMMARY -->
+      <div class="card" id="todaySummaryCard" style="display:none">
+        <h3 class="card-title">📊 Today's Summary</h3>
+        <div id="todaySummary"></div>
+      </div>
+    </div>
+
+    <!-- REGISTER HISTORY -->
+    <div>
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">📋 Register History</h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Discrepancy</th>
+              <th>Note</th>
+            </tr>
+          </thead>
+          <tbody id="regHistoryBody">
+            <tr><td colspan="5" class="empty-cell">No register history yet</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- PAYMENT METHOD BREAKDOWN TODAY -->
+      <div class="card">
+        <h3 class="card-title">Today's Payment Breakdown</h3>
+        <div id="regPayBreakdown" class="pay-breakdown"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script src="js/storage.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  ST.init();
+  const cfg = ST.config();
+  document.getElementById('bizNameNav').textContent = cfg.businessName || 'My Store';
+
+  const regData = ST.registerData();
+  const lastEntry = [...regData].reverse().find(e => true);
+  const isRegOpen = lastEntry && lastEntry.type === 'open';
+
+  function updateUI() {
+    const regData = ST.registerData();
+    const lastEntry = [...regData].reverse().find(e => true);
+    const isRegOpen = lastEntry && lastEntry.type === 'open';
+
+    // Status display
+    if (isRegOpen) {
+      document.getElementById('regStatusDisplay').innerHTML =
+        '<div class="register-status open" style="display:inline-flex;font-size:1rem;margin-bottom:0.75rem"><span class="status-dot open"></span> Register is OPEN</div>' +
+        '<div style="font-size:0.85rem;color:var(--muted)">Opened at ' + new Date(lastEntry.date).toLocaleTimeString() + ' with ' + ST.fmt(lastEntry.amount) + '</div>';
+
+      document.getElementById('openCard').style.display = 'none';
+      document.getElementById('closeCard').style.display = 'block';
+      document.getElementById('todaySummaryCard').style.display = 'block';
+
+      // Calculate expected cash
+      const startingCash = lastEntry.amount;
+      const sales = ST.sales();
+      const todayStr = new Date().toDateString();
+      const todaySales = sales.filter(s => new Date(s.date).toDateString() === todayStr);
+      const cashSales = todaySales.filter(s => s.payMethod === 'Cash').reduce((a,s) => a + s.total, 0);
+      const exps = ST.expenses();
+      const cashExpenses = exps.filter(e => new Date(e.date).toDateString() === todayStr && (e.payMethod === 'Cash' || !e.payMethod)).reduce((a,e) => a + e.amount, 0);
+      const expected = startingCash + cashSales - cashExpenses;
+
+      document.getElementById('closeStartCash').textContent = ST.fmt(startingCash);
+      document.getElementById('closeCashSales').textContent = ST.fmt(cashSales);
+      document.getElementById('closeCashExpenses').textContent = ST.fmt(cashExpenses);
+      document.getElementById('closeExpected').textContent = ST.fmt(expected);
+
+      // Today's summary
+      const totalRev = todaySales.reduce((a,s) => a + s.total, 0);
+      const totalProfit = todaySales.reduce((a,s) => a + (s.profit||0), 0);
+      const totalExps = exps.filter(e => new Date(e.date).toDateString() === todayStr).reduce((a,e) => a + e.amount, 0);
+      document.getElementById('todaySummary').innerHTML =
+        '<div style="display:flex;flex-direction:column;gap:0.5rem">' +
+        '<div class="pay-row"><span>Total Sales</span><strong>' + todaySales.length + ' (' + ST.fmt(totalRev) + ')</strong></div>' +
+        '<div class="pay-row"><span>Gross Profit</span><strong style="color:var(--accent)">' + ST.fmt(totalProfit) + '</strong></div>' +
+        '<div class="pay-row"><span>All Expenses</span><strong style="color:var(--danger)">' + ST.fmt(totalExps) + '</strong></div>' +
+        '<div class="pay-row" style="background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);border-radius:8px;padding:0.75rem">' +
+        '<span style="font-weight:700">Net Profit</span><strong style="font-size:1.1rem;color:' + ((totalProfit - totalExps) >= 0 ? 'var(--accent)' : 'var(--danger)') + '">' + ST.fmt(totalProfit - totalExps) + '</strong></div>' +
+        '</div>';
+
+      // Payment breakdown
+      const byPay = {};
+      todaySales.forEach(s => { byPay[s.payMethod || 'Cash'] = (byPay[s.payMethod || 'Cash'] || 0) + s.total; });
+      document.getElementById('regPayBreakdown').innerHTML = Object.entries(byPay).length
+        ? Object.entries(byPay).map(([m,v]) => '<div class="pay-row"><span>' + m + '</span><strong>' + ST.fmt(v) + '</strong></div>').join('')
+        : '<div style="color:var(--muted);font-size:0.85rem">No transactions today</div>';
+
+    } else {
+      document.getElementById('regStatusDisplay').innerHTML =
+        '<div class="register-status closed" style="display:inline-flex;font-size:1rem;margin-bottom:0.75rem"><span class="status-dot closed"></span> Register is CLOSED</div>' +
+        '<div style="font-size:0.85rem;color:var(--muted)">Open the register to start recording</div>';
+      document.getElementById('openCard').style.display = 'block';
+      document.getElementById('closeCard').style.display = 'none';
+      document.getElementById('todaySummaryCard').style.display = 'none';
+    }
+
+    // Register history
+    const history = [...regData].reverse().slice(0, 20);
+    const tbody = document.getElementById('regHistoryBody');
+    if (history.length) {
+      tbody.innerHTML = history.map(e =>
+        '<tr>' +
+        '<td style="font-size:0.82rem;color:var(--muted)">' + new Date(e.date).toLocaleString() + '</td>' +
+        '<td><span class="badge ' + (e.type === 'open' ? 'badge-success' : 'badge-danger') + '">' + (e.type === 'open' ? 'OPEN' : 'CLOSE') + '</span></td>' +
+        '<td>' + ST.fmt(e.type === 'open' ? e.amount : e.actualCash) + '</td>' +
+        '<td style="color:' + ((e.discrepancy || 0) === 0 ? 'var(--accent)' : (e.discrepancy || 0) > 0 ? 'var(--accent)' : 'var(--danger)') + '">' +
+          (e.type === 'close' ? ((e.discrepancy || 0) === 0 ? '✅ Balanced' : ST.fmt(e.discrepancy)) : '—') + '</td>' +
+        '<td style="font-size:0.82rem;color:var(--muted)">' + (e.note || '—') + '</td>' +
+        '</tr>'
+      ).join('');
+    }
+  }
+
+  window.calcDiscrepancy = function () {
+    const expected = parseFloat(document.getElementById('closeExpected').textContent.replace(/[^0-9.-]/g, '')) || 0;
+    const actual = parseFloat(document.getElementById('actualCash').value) || 0;
+    const diff = actual - expected;
+    const display = document.getElementById('discrepancyDisplay');
+    if (document.getElementById('actualCash').value === '') {
+      display.innerHTML = '';
+      return;
+    }
+    if (diff === 0) {
+      display.innerHTML = '<div class="alert alert-success">✅ Cash drawer is balanced!</div>';
+    } else if (diff > 0) {
+      display.innerHTML = '<div class="alert alert-info">📈 Cash is over by ' + ST.fmt(diff) + '</div>';
+    } else {
+      display.innerHTML = '<div class="alert alert-danger">📉 Cash is short by ' + ST.fmt(Math.abs(diff)) + '</div>';
+    }
+  };
+
+  window.doOpenRegister = function () {
+    const amount = parseFloat(document.getElementById('startCash').value) || 0;
+    const note = document.getElementById('startNote').value.trim();
+    ST.openRegister(amount, note);
+    showToast('🔓 Register opened with ' + ST.fmt(amount));
+    updateUI();
+  };
+
+  window.doCloseRegister = function () {
+    const actualCash = parseFloat(document.getElementById('actualCash').value);
+    if (isNaN(actualCash)) { showToast('⚠️ Enter actual cash counted'); return; }
+
+    // Calculate expected
+    const regData = ST.registerData();
+    const lastOpen = [...regData].reverse().find(e => e.type === 'open');
+    const startingCash = lastOpen ? lastOpen.amount : 0;
+    const sales = ST.sales();
+    const todayStr = new Date().toDateString();
+    const todaySales = sales.filter(s => new Date(s.date).toDateString() === todayStr);
+    const cashSales = todaySales.filter(s => s.payMethod === 'Cash').reduce((a,s) => a + s.total, 0);
+    const exps = ST.expenses();
+    const cashExpenses = exps.filter(e => new Date(e.date).toDateString() === todayStr && (e.payMethod === 'Cash' || !e.payMethod)).reduce((a,e) => a + e.amount, 0);
+    const expected = startingCash + cashSales - cashExpenses;
+
+    const note = document.getElementById('closeNote').value.trim();
+    ST.closeRegister(expected, actualCash, note);
+
+    const disc = actualCash - expected;
+    showToast('🔒 Register closed. ' + (disc === 0 ? 'Balanced ✅' : 'Discrepancy: ' + ST.fmt(disc)));
+    updateUI();
+  };
+
+  updateUI();
+})();
+</script>
+<div class="brand-footer">
+  <div style="font-weight:700;color:var(--text);font-family:'Syne',sans-serif">HMG Concepts</div>
+  <div>Technology-Powered Business Intelligence</div>
+  <div style="margin-top:0.3rem"><a href="https://cssadewale.pages.dev" target="_blank">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev" target="_blank">hmgconcepts.pages.dev</a></div>
+  <div class="powered-by">Powered by HMG Enterprise — Adewale Samson Adeagbo — v3.0</div>
+</div>
+
+</body>
+</html>
