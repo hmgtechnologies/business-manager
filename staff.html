@@ -4,81 +4,174 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Staff — HMG Enterprise v5.0</title>
-  <link rel="stylesheet" href="css/style.css"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#6366f1">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6366f1">
 </head>
 <body>
-  <aside class="sidebar" id="sidebar"><div class="sidebar-header"><div class="sidebar-logo"><div class="logo-icon">🏪</div><span>HMG Enterprise</span></div><button class="sidebar-collapse-btn" onclick="toggleSidebar()">‹</button></div><nav class="sidebar-nav"><div class="nav-group"><div class="nav-group-title">Overview</div><a href="index.html" class="nav-item"><span class="nav-icon">📊</span><span class="nav-text">Dashboard</span></a><a href="reports.html" class="nav-item"><span class="nav-icon">📈</span><span class="nav-text">Reports</span></a></div><div class="nav-group"><div class="nav-group-title">Operations</div><a href="sales.html" class="nav-item"><span class="nav-icon">🛒</span><span class="nav-text">Sales</span></a><a href="inventory.html" class="nav-item"><span class="nav-icon">📦</span><span class="nav-text">Inventory</span></a><a href="expenses.html" class="nav-item"><span class="nav-icon">💸</span><span class="nav-text">Expenses</span></a><a href="register.html" class="nav-item"><span class="nav-icon">🏧</span><span class="nav-text">Register</span></a></div><div class="nav-group"><div class="nav-group-title">People</div><a href="customers.html" class="nav-item"><span class="nav-icon">👥</span><span class="nav-text">Customers</span></a><a href="suppliers.html" class="nav-item"><span class="nav-icon">🚚</span><span class="nav-text">Suppliers</span></a><a href="staff.html" class="nav-item active"><span class="nav-icon">👨‍💼</span><span class="nav-text">Staff</span></a></div><div class="nav-group"><div class="nav-group-title">Finance</div><a href="budgets.html" class="nav-item"><span class="nav-icon">💰</span><span class="nav-text">Budgets</span></a><a href="credits.html" class="nav-item"><span class="nav-icon">💳</span><span class="nav-text">Credits</span></a></div><div class="nav-group"><div class="nav-group-title">Tools</div><a href="journal.html" class="nav-item"><span class="nav-icon">📝</span><span class="nav-text">Journal</span></a><a href="settings.html" class="nav-item"><span class="nav-icon">⚙️</span><span class="nav-text">Settings</span></a></div></nav><div class="sidebar-footer"><div class="footer-dot"></div><div class="sidebar-footer-info">Enterprise v5.0</div></div></aside>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header"><div class="sidebar-logo"><div class="logo-icon">🏪</div><span>HMG Enterprise</span></div><button class="sidebar-collapse-btn" onclick="toggleSidebar()">‹</button></div>
+    <nav class="sidebar-nav">
+      <div class="nav-group"><div class="nav-group-title">Overview</div><a href="index.html" class="nav-item" data-page="index.html"><span class="nav-icon">📊</span><span class="nav-text">Dashboard</span></a><a href="reports.html" class="nav-item" data-page="reports.html"><span class="nav-icon">📈</span><span class="nav-text">Reports</span></a></div>
+      <div class="nav-group"><div class="nav-group-title">Operations</div><a href="sales.html" class="nav-item" data-page="sales.html"><span class="nav-icon">🛒</span><span class="nav-text">Sales</span></a><a href="inventory.html" class="nav-item" data-page="inventory.html"><span class="nav-icon">📦</span><span class="nav-text">Inventory</span></a><a href="expenses.html" class="nav-item" data-page="expenses.html"><span class="nav-icon">💸</span><span class="nav-text">Expenses</span></a><a href="register.html" class="nav-item" data-page="register.html"><span class="nav-icon">🏧</span><span class="nav-text">Register</span></a></div>
+      <div class="nav-group"><div class="nav-group-title">People</div><a href="customers.html" class="nav-item" data-page="customers.html"><span class="nav-icon">👥</span><span class="nav-text">Customers</span></a><a href="suppliers.html" class="nav-item" data-page="suppliers.html"><span class="nav-icon">🚚</span><span class="nav-text">Suppliers</span></a><a href="staff.html" class="nav-item active" data-page="staff.html"><span class="nav-icon">👨‍💼</span><span class="nav-text">Staff</span></a></div>
+      <div class="nav-group"><div class="nav-group-title">Finance</div><a href="budgets.html" class="nav-item" data-page="budgets.html"><span class="nav-icon">💰</span><span class="nav-text">Budgets</span></a><a href="credits.html" class="nav-item" data-page="credits.html"><span class="nav-icon">💳</span><span class="nav-text">Credits</span></a></div>
+      <div class="nav-group"><div class="nav-group-title">Tools</div><a href="journal.html" class="nav-item" data-page="journal.html"><span class="nav-icon">📝</span><span class="nav-text">Journal</span></a><a href="settings.html" class="nav-item" data-page="settings.html"><span class="nav-icon">⚙️</span><span class="nav-text">Settings</span></a></div>
+    </nav>
+    <div class="sidebar-footer"><div class="footer-dot"></div><div class="sidebar-footer-info">Enterprise v5.0</div></div>
+  </aside>
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
   <main class="main-content">
-    <header class="topbar"><button class="topbar-hamburger" onclick="toggleSidebar()">☰</button><div class="topbar-title">👨‍💼 Staff</div><div class="topbar-search"><input type="text" id="globalSearch" placeholder="Search…"></div><div class="topbar-actions"><button class="topbar-btn" id="notifBtn" onclick="toggleNotifPanel()">🔔<span class="notif-badge" id="notifBadge" style="display:none">0</span></button><div class="topbar-biz-name" id="bizNameNav">HMG Concepts</div></div></header>
-    <div class="search-panel" id="searchPanel"></div><div class="notif-panel" id="notifPanel"><div class="notif-panel-header"><span>Notifications</span><button class="btn btn-sm btn-ghost" onclick="ST.saveNotifications([]);renderNotifPanel();updateNotifBadge()">Clear all</button></div><div id="notifList"></div></div>
+    <header class="topbar">
+      <button class="topbar-hamburger" onclick="toggleSidebar()">☰</button>
+      <div class="topbar-title">👨‍💼 Staff</div>
+      <div class="topbar-search"><input type="text" id="globalSearch" placeholder="Search staff…"></div>
+      <div class="topbar-actions">
+        <button class="topbar-btn" id="notifBtn" onclick="toggleNotifPanel()">🔔<span class="notif-badge" id="notifBadge" style="display:none">0</span></button>
+        <div class="topbar-biz-name" id="bizNameNav">HMG Concepts</div>
+      </div>
+    </header>
+    <div class="search-panel" id="searchPanel"></div>
+    <div class="notif-panel" id="notifPanel"><div class="notif-panel-header"><span>Notifications</span><button class="btn btn-sm btn-ghost" onclick="ST.saveNotifications([]);renderNotifPanel();updateNotifBadge()">Clear all</button></div><div id="notifList"></div></div>
+
     <div class="page-content">
-      <div class="page-header"><div class="page-header-row"><div><h1>Staff Management</h1><p class="page-subtitle" id="staffSubtitle">Loading...</p></div><div class="page-header-actions"><button class="btn btn-outline btn-sm" onclick="exportCSV(ST.staff().map(s=>({name:s.name,role:s.role||'',phone:s.phone||'',email:s.email||'',salary:s.salary||0,totalSales:s.totalSales||0,totalRevenue:s.totalRevenue||0})),'staff.csv')">📥 Export</button><button class="btn btn-primary btn-sm" onclick="openModal('staffModal')">➕ Add Staff</button></div></div></div>
-      <div class="stats-row" id="staffStats"></div>
-      <div class="card"><div class="table-wrapper"><table class="data-table"><thead><tr><th>Name</th><th>Role</th><th>Phone</th><th>Sales</th><th>Revenue</th><th>Salary</th><th>Status</th><th>Actions</th></tr></thead><tbody id="staffBody"></tbody></table></div></div>
-      <div class="card mt-6"><div class="card-header"><span class="card-title">📊 Staff Performance (This Month)</span></div><div id="staffPerf"></div></div>
+      <div class="page-header">
+        <div class="page-header-row">
+          <div><h1>Staff Management</h1><p class="page-subtitle">Track employee performance and sales contributions</p></div>
+          <div class="page-header-actions">
+            <button class="btn btn-primary" onclick="openModal('staffModal')">+ Add Staff</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Staff List -->
+      <div class="card">
+        <div class="card-header"><span class="card-title">👥 All Staff Members</span><span id="staffCount" class="badge badge-primary">0</span></div>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Name</th><th>Role</th><th>Phone</th><th>Email</th><th>Total Sales</th><th>Total Revenue</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="staffTableBody">
+              <tr><td colspan="8" class="table-empty"><div class="empty-icon">👨‍💼</div><div class="empty-text">No staff members added yet</div><div class="empty-hint">Click "+ Add Staff" to get started</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-    <footer class="page-footer"><p>Powered by <strong>HMG Enterprise v5.0</strong></p></footer>
+
+    <footer class="page-footer"><p>Powered by <strong>HMG Enterprise v5.0</strong> — Technology-Powered Business Intelligence — <a href="https://cssadewale.pages.dev">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev">hmgconcepts.pages.dev</a></p></footer>
   </main>
-  <div class="modal-overlay" id="staffModal"><div class="modal"><div class="modal-header"><span class="modal-title" id="staffModalTitle">Add Staff</span><button class="modal-close" onclick="closeModal('staffModal')">✕</button></div><div class="modal-body"><input type="hidden" id="editStaffId"><div class="form-group"><label class="form-label">Name <span class="required">*</span></label><input type="text" id="sfName" class="form-input"></div><div class="form-row"><div class="form-group"><label class="form-label">Role</label><select id="sfRole" class="form-select"><option>Sales Associate</option><option>Cashier</option><option>Manager</option><option>Supervisor</option><option>Storekeeper</option><option>Accountant</option><option>Other</option></select></div><div class="form-group"><label class="form-label">Monthly Salary</label><input type="number" id="sfSalary" class="form-input" min="0"></div></div><div class="form-row"><div class="form-group"><label class="form-label">Phone</label><input type="text" id="sfPhone" class="form-input"></div><div class="form-group"><label class="form-label">Email</label><input type="email" id="sfEmail" class="form-input"></div></div><div class="form-group"><label class="form-label">Notes</label><textarea id="sfNotes" class="form-textarea" rows="2"></textarea></div></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('staffModal')">Cancel</button><button class="btn btn-primary" onclick="saveStaffMember()">💾 Save</button></div></div></div>
+
+  <!-- Add/Edit Staff Modal -->
+  <div class="modal-overlay" id="staffModal">
+    <div class="modal">
+      <div class="modal-header"><span class="modal-title" id="staffModalTitle">New Staff Member</span><button class="modal-close" onclick="closeModal('staffModal')">✕</button></div>
+      <div class="modal-body">
+        <input type="hidden" id="staffEditId">
+        <div class="form-group"><label class="form-label">Full Name <span class="required">*</span></label><input type="text" id="staffName" class="form-input" placeholder="Staff full name"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Role / Position</label><input type="text" id="staffRole" class="form-input" placeholder="e.g. Cashier, Sales Rep, Manager"></div>
+          <div class="form-group"><label class="form-label">Phone</label><input type="text" id="staffPhone" class="form-input" placeholder="Phone number"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Email</label><input type="email" id="staffEmail" class="form-input" placeholder="Email address"></div>
+          <div class="form-group"><label class="form-label">Hire Date</label><input type="date" id="staffHireDate" class="form-input"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Active Status</label>
+          <select id="staffActive" class="form-select"><option value="true">Active</option><option value="false">Inactive</option></select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('staffModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveStaffMember()">💾 Save Staff</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast-container" id="toastContainer"></div>
-  <script src="js/storage.js"></script><script src="js/app.js"></script>
+
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
   <script>
-  let allStaff=ST.staff();
-  function updateStats(){
-    const active=allStaff.filter(s=>s.isActive!==false);
-    const top=allStaff.sort((a,b)=>(b.totalRevenue||0)-(a.totalRevenue||0))[0];
-    document.getElementById('staffSubtitle').textContent=allStaff.length+' staff members';
-    document.getElementById('staffStats').innerHTML=
-      '<div class="stat-item"><div class="stat-value">'+allStaff.length+'</div><div class="stat-label">Total Staff</div></div>'+
-      '<div class="stat-item"><div class="stat-value">'+active.length+'</div><div class="stat-label">Active</div></div>'+
-      '<div class="stat-item"><div class="stat-value">'+(top?top.name:'—')+'</div><div class="stat-label">Top Performer</div></div>'+
-      '<div class="stat-item"><div class="stat-value">'+ST.fmt(allStaff.reduce((a,s)=>a+(s.totalRevenue||0),0))+'</div><div class="stat-label">Staff Revenue</div></div>';
-  }
   function renderStaff(){
-    if(!allStaff.length){document.getElementById('staffBody').innerHTML='<tr><td colspan="8" class="table-empty"><div class="empty-icon">👨‍💼</div><div class="empty-text">No staff found</div></td></tr>';return}
-    document.getElementById('staffBody').innerHTML=allStaff.map(s=>
-      '<tr><td><strong>'+s.name+'</strong></td><td><span class="tag">'+(s.role||'N/A')+'</span></td>'+
-      '<td>'+(s.phone||'—')+'</td><td>'+(s.totalSales||0)+'</td><td><strong>'+ST.fmt(s.totalRevenue||0)+'</strong></td>'+
-      '<td>'+ST.fmt(s.salary||0)+'</td>'+
-      '<td><span class="badge '+(s.isActive!==false?'badge-success':'badge-muted')+'">'+(s.isActive!==false?'Active':'Disabled')+'</span></td>'+
-      '<td><div class="table-actions"><button class="btn btn-sm btn-ghost" onclick="editStaff(\''+s.id+'\')">✏️</button>'+
-      '<button class="btn btn-sm btn-ghost" onclick="toggleStaff(\''+s.id+'\')">'+(s.isActive!==false?'🚫':'✅')+'</button></div></td></tr>'
+    const staff=ST.staff();
+    document.getElementById('staffCount').textContent=staff.length;
+    if(!staff.length){
+      document.getElementById('staffTableBody').innerHTML='<tr><td colspan="8" class="table-empty"><div class="empty-icon">👨‍💼</div><div class="empty-text">No staff members added yet</div><div class="empty-hint">Click "+ Add Staff" to get started</div></td></tr>';
+      return;
+    }
+    document.getElementById('staffTableBody').innerHTML=staff.map(m=>
+      '<tr><td><strong>'+m.name+'</strong></td><td>'+(m.role||'—')+'</td><td>'+(m.phone||'—')+'</td><td>'+(m.email||'—')+'</td>'+
+      '<td>'+(m.totalSales||0)+'</td><td>'+ST.fmt(m.totalRevenue||0)+'</td>'+
+      '<td><span class="badge '+(m.isActive!==false?'badge-success':'badge-muted')+'">'+(m.isActive!==false?'Active':'Inactive')+'</span></td>'+
+      '<td><div class="table-actions"><button class="btn btn-sm btn-ghost" onclick="editStaff(\''+m.id+'\')">✏️</button><button class="btn btn-sm btn-ghost text-danger" onclick="deleteStaff(\''+m.id+'\')">🗑</button></div></td></tr>'
     ).join('');
-    // Performance bars
-    const maxRev=Math.max(...allStaff.map(s=>s.totalRevenue||0),1);
-    document.getElementById('staffPerf').innerHTML=allStaff.filter(s=>s.isActive!==false).map(s=>{
-      const pct=(s.totalRevenue||0)/maxRev*100;
-      return'<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-weight:600">'+s.name+' <span class="text-muted">('+s.role+')</span></span><span class="text-primary">'+ST.fmt(s.totalRevenue||0)+'</span></div><div class="progress-bar"><div class="progress-bar-fill" style="width:'+pct+'%"></div></div></div>';
-    }).join('');
   }
+
+  function saveStaffMember(){
+    const name=document.getElementById('staffName').value.trim();
+    if(!name){showToast('Staff name is required','warning');return}
+    const member={
+      name,role:document.getElementById('staffRole').value.trim(),
+      phone:document.getElementById('staffPhone').value.trim(),
+      email:document.getElementById('staffEmail').value.trim(),
+      hireDate:document.getElementById('staffHireDate').value,
+      isActive:document.getElementById('staffActive').value==='true'
+    };
+    const editId=document.getElementById('staffEditId').value;
+    if(editId)member.id=editId;
+    ST.saveStaffMember(member);
+    ST.logActivity('staff',(editId?'Updated':'Added')+' staff: '+name);
+    showToast('Staff member '+(editId?'updated':'added')+'!','success');
+    closeModal('staffModal');
+    resetStaffForm();
+    renderStaff();
+  }
+
   function editStaff(id){
-    const s=allStaff.find(x=>x.id===id);if(!s)return;
-    document.getElementById('editStaffId').value=id;
-    document.getElementById('staffModalTitle').textContent='Edit: '+s.name;
-    document.getElementById('sfName').value=s.name;document.getElementById('sfRole').value=s.role||'Sales Associate';
-    document.getElementById('sfSalary').value=s.salary||0;document.getElementById('sfPhone').value=s.phone||'';
-    document.getElementById('sfEmail').value=s.email||'';document.getElementById('sfNotes').value=s.notes||'';
+    const m=ST.staff().find(x=>x.id===id);
+    if(!m)return;
+    document.getElementById('staffEditId').value=m.id;
+    document.getElementById('staffName').value=m.name||'';
+    document.getElementById('staffRole').value=m.role||'';
+    document.getElementById('staffPhone').value=m.phone||'';
+    document.getElementById('staffEmail').value=m.email||'';
+    document.getElementById('staffHireDate').value=m.hireDate?m.hireDate.slice(0,10):'';
+    document.getElementById('staffActive').value=m.isActive!==false?'true':'false';
+    document.getElementById('staffModalTitle').textContent='Edit Staff Member';
     openModal('staffModal');
   }
-  function saveStaffMember(){
-    const id=document.getElementById('editStaffId').value;
-    const name=document.getElementById('sfName').value.trim();
-    if(!name){showToast('Name required','warning');return}
-    const data={name,role:document.getElementById('sfRole').value,salary:parseFloat(document.getElementById('sfSalary').value)||0,
-      phone:document.getElementById('sfPhone').value,email:document.getElementById('sfEmail').value,notes:document.getElementById('sfNotes').value};
-    if(id)data.id=id;
-    ST.saveStaffMember(data);allStaff=ST.staff();
-    closeModal('staffModal');showToast('Staff saved!','success');
-    document.getElementById('editStaffId').value='';['sfName','sfPhone','sfEmail','sfNotes'].forEach(id=>document.getElementById(id).value='');
-    renderStaff();updateStats();
+
+  function deleteStaff(id){
+    const m=ST.staff().find(x=>x.id===id);
+    if(!m||!confirm('Delete staff member "'+m.name+'"? Their sales history will be preserved.'))return;
+    const all=ST.staff().filter(x=>x.id!==id);
+    ST.saveStaff(all);
+    ST.logActivity('staff','Deleted staff: '+m.name);
+    showToast('Staff member deleted','info');
+    renderStaff();
   }
-  function toggleStaff(id){
-    const s=allStaff.find(x=>x.id===id);if(!s)return;
-    s.isActive=s.isActive===false?true:false;ST.saveStaff(allStaff);
-    showToast(s.name+(s.isActive?' enabled':' disabled'),'info');renderStaff();updateStats();
+
+  function resetStaffForm(){
+    document.getElementById('staffEditId').value='';
+    document.getElementById('staffName').value='';
+    document.getElementById('staffRole').value='';
+    document.getElementById('staffPhone').value='';
+    document.getElementById('staffEmail').value='';
+    document.getElementById('staffHireDate').value='';
+    document.getElementById('staffActive').value='true';
+    document.getElementById('staffModalTitle').textContent='New Staff Member';
   }
-  updateStats();renderStaff();
+
+  // Override openModal to reset form when opening staff modal
+  const origOpenModal=openModal;
+  openModal=function(id){
+    if(id==='staffModal')resetStaffForm();
+    origOpenModal(id);
+  };
+
+  renderStaff();
   </script>
 </body>
 </html>

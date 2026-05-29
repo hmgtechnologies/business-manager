@@ -94,7 +94,6 @@
           <div class="kpi-icon primary">💰</div>
           <div class="kpi-label">Today's Revenue</div>
           <div class="kpi-value" id="kpiTodayRev">—</div>
-          <div id="kpiTodayRevChange"></div>
         </div>
         <div class="kpi-card">
           <div class="kpi-icon success">📈</div>
@@ -133,7 +132,7 @@
         </div>
       </div>
 
-      <!-- Health Score + Sales Targets + Register Status -->
+      <!-- Health Score + Sales Targets -->
       <div class="section-grid mb-6">
         <!-- Health Score -->
         <div class="card">
@@ -169,7 +168,7 @@
         </div>
       </div>
 
-      <!-- Monthly Comparison -->
+      <!-- Monthly Comparison + Alerts -->
       <div class="section-grid mb-6">
         <!-- Monthly Comparison -->
         <div class="card" id="monthlyComparison">
@@ -262,8 +261,9 @@
     let mcHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">';
     function mcCard(label,cur,prev,pctKey){
       const ch=mc.changes[pctKey];const up=parseFloat(ch)>=0;
+      // Use prev != null check (not just truthiness) so prev=0 still shows the change
       return'<div class="stat-item"><div class="stat-label">'+label+'</div><div class="stat-value">'+ST.fmt(cur)+'</div>'+
-        (prev?'<div class="kpi-change '+(up?'up':'down')+'">'+(up?'↑':'↓')+' '+Math.abs(ch)+'%</div>':'')+'</div>';
+        (prev!=null?'<div class="kpi-change '+(up?'up':'down')+'">'+(up?'↑':'↓')+' '+Math.abs(parseFloat(ch))+'%</div>':'')+'</div>';
     }
     mcHTML+=mcCard('Revenue',mc.current.revenue,mc.previous.revenue,'revenue');
     mcHTML+=mcCard('Net Profit',mc.current.netProfit,mc.previous.netProfit,'profit');

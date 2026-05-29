@@ -4,75 +4,174 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Suppliers — HMG Enterprise v5.0</title>
-  <link rel="stylesheet" href="css/style.css"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#6366f1">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6366f1">
 </head>
 <body>
-  <aside class="sidebar" id="sidebar"><div class="sidebar-header"><div class="sidebar-logo"><div class="logo-icon">🏪</div><span>HMG Enterprise</span></div><button class="sidebar-collapse-btn" onclick="toggleSidebar()">‹</button></div><nav class="sidebar-nav"><div class="nav-group"><div class="nav-group-title">Overview</div><a href="index.html" class="nav-item"><span class="nav-icon">📊</span><span class="nav-text">Dashboard</span></a><a href="reports.html" class="nav-item"><span class="nav-icon">📈</span><span class="nav-text">Reports</span></a></div><div class="nav-group"><div class="nav-group-title">Operations</div><a href="sales.html" class="nav-item"><span class="nav-icon">🛒</span><span class="nav-text">Sales</span></a><a href="inventory.html" class="nav-item"><span class="nav-icon">📦</span><span class="nav-text">Inventory</span></a><a href="expenses.html" class="nav-item"><span class="nav-icon">💸</span><span class="nav-text">Expenses</span></a><a href="register.html" class="nav-item"><span class="nav-icon">🏧</span><span class="nav-text">Register</span></a></div><div class="nav-group"><div class="nav-group-title">People</div><a href="customers.html" class="nav-item"><span class="nav-icon">👥</span><span class="nav-text">Customers</span></a><a href="suppliers.html" class="nav-item active"><span class="nav-icon">🚚</span><span class="nav-text">Suppliers</span></a><a href="staff.html" class="nav-item"><span class="nav-icon">👨‍💼</span><span class="nav-text">Staff</span></a></div><div class="nav-group"><div class="nav-group-title">Finance</div><a href="budgets.html" class="nav-item"><span class="nav-icon">💰</span><span class="nav-text">Budgets</span></a><a href="credits.html" class="nav-item"><span class="nav-icon">💳</span><span class="nav-text">Credits</span></a></div><div class="nav-group"><div class="nav-group-title">Tools</div><a href="journal.html" class="nav-item"><span class="nav-icon">📝</span><span class="nav-text">Journal</span></a><a href="settings.html" class="nav-item"><span class="nav-icon">⚙️</span><span class="nav-text">Settings</span></a></div></nav><div class="sidebar-footer"><div class="footer-dot"></div><div class="sidebar-footer-info">Enterprise v5.0</div></div></aside>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header"><div class="sidebar-logo"><div class="logo-icon">🏪</div><span>HMG Enterprise</span></div><button class="sidebar-collapse-btn" onclick="toggleSidebar()">‹</button></div>
+    <nav class="sidebar-nav">
+      <div class="nav-group"><div class="nav-group-title">Overview</div><a href="index.html" class="nav-item" data-page="index.html"><span class="nav-icon">📊</span><span class="nav-text">Dashboard</span></a><a href="reports.html" class="nav-item" data-page="reports.html"><span class="nav-icon">📈</span><span class="nav-text">Reports</span></a></div>
+      <div class="nav-group"><div class="nav-group-title">Operations</div><a href="sales.html" class="nav-item" data-page="sales.html"><span class="nav-icon">🛒</span><span class="nav-text">Sales</span></a><a href="inventory.html" class="nav-item" data-page="inventory.html"><span class="nav-icon">📦</span><span class="nav-text">Inventory</span></a><a href="expenses.html" class="nav-item" data-page="expenses.html"><span class="nav-icon">💸</span><span class="nav-text">Expenses</span></a><a href="register.html" class="nav-item" data-page="register.html"><span class="nav-icon">🏧</span><span class="nav-text">Register</span></a></div>
+      <div class="nav-group"><div class="nav-group-title">People</div><a href="customers.html" class="nav-item" data-page="customers.html"><span class="nav-icon">👥</span><span class="nav-text">Customers</span></a><a href="suppliers.html" class="nav-item active" data-page="suppliers.html"><span class="nav-icon">🚚</span><span class="nav-text">Suppliers</span></a><a href="staff.html" class="nav-item" data-page="staff.html"><span class="nav-icon">👨‍💼</span><span class="nav-text">Staff</span></a></div>
+      <div class="nav-group"><div class="nav-group-title">Finance</div><a href="budgets.html" class="nav-item" data-page="budgets.html"><span class="nav-icon">💰</span><span class="nav-text">Budgets</span></a><a href="credits.html" class="nav-item" data-page="credits.html"><span class="nav-icon">💳</span><span class="nav-text">Credits</span></a></div>
+      <div class="nav-group"><div class="nav-group-title">Tools</div><a href="journal.html" class="nav-item" data-page="journal.html"><span class="nav-icon">📝</span><span class="nav-text">Journal</span></a><a href="settings.html" class="nav-item" data-page="settings.html"><span class="nav-icon">⚙️</span><span class="nav-text">Settings</span></a></div>
+    </nav>
+    <div class="sidebar-footer"><div class="footer-dot"></div><div class="sidebar-footer-info">Enterprise v5.0</div></div>
+  </aside>
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
   <main class="main-content">
-    <header class="topbar"><button class="topbar-hamburger" onclick="toggleSidebar()">☰</button><div class="topbar-title">🚚 Suppliers</div><div class="topbar-search"><input type="text" id="globalSearch" placeholder="Search…"></div><div class="topbar-actions"><button class="topbar-btn" id="notifBtn" onclick="toggleNotifPanel()">🔔<span class="notif-badge" id="notifBadge" style="display:none">0</span></button><div class="topbar-biz-name" id="bizNameNav">HMG Concepts</div></div></header>
-    <div class="search-panel" id="searchPanel"></div><div class="notif-panel" id="notifPanel"><div class="notif-panel-header"><span>Notifications</span><button class="btn btn-sm btn-ghost" onclick="ST.saveNotifications([]);renderNotifPanel();updateNotifBadge()">Clear all</button></div><div id="notifList"></div></div>
+    <header class="topbar">
+      <button class="topbar-hamburger" onclick="toggleSidebar()">☰</button>
+      <div class="topbar-title">🚚 Suppliers</div>
+      <div class="topbar-search"><input type="text" id="globalSearch" placeholder="Search suppliers…"></div>
+      <div class="topbar-actions">
+        <button class="topbar-btn" id="notifBtn" onclick="toggleNotifPanel()">🔔<span class="notif-badge" id="notifBadge" style="display:none">0</span></button>
+        <div class="topbar-biz-name" id="bizNameNav">HMG Concepts</div>
+      </div>
+    </header>
+    <div class="search-panel" id="searchPanel"></div>
+    <div class="notif-panel" id="notifPanel"><div class="notif-panel-header"><span>Notifications</span><button class="btn btn-sm btn-ghost" onclick="ST.saveNotifications([]);renderNotifPanel();updateNotifBadge()">Clear all</button></div><div id="notifList"></div></div>
+
     <div class="page-content">
-      <div class="page-header"><div class="page-header-row"><div><h1>Supplier Management</h1><p class="page-subtitle" id="supSubtitle">Loading...</p></div><div class="page-header-actions"><button class="btn btn-outline btn-sm" onclick="exportCSV(ST.suppliers().map(s=>({company:s.company,contact:s.contact||'',phone:s.phone||'',email:s.email||'',category:s.category||'',address:s.address||'',totalSpent:s.totalSpent||0})),'suppliers.csv')">📥 Export CSV</button><button class="btn btn-primary btn-sm" onclick="openModal('supModal')">➕ Add Supplier</button></div></div></div>
-      <div class="stats-row" id="supStats"></div>
-      <div class="filter-bar"><input type="text" class="form-input" id="filterSup" placeholder="🔍 Search suppliers..." oninput="renderSuppliers()" style="min-width:200px"><select class="form-select" id="sortSup" onchange="renderSuppliers()"><option value="name">Name</option><option value="recent">Recent</option><option value="spent">Most Spent</option></select></div>
-      <div class="card"><div class="table-wrapper"><table class="data-table"><thead><tr><th>Company</th><th>Contact</th><th>Phone</th><th>Category</th><th>Total Spent</th><th>Notes</th><th>Actions</th></tr></thead><tbody id="supBody"></tbody></table></div></div>
+      <div class="page-header">
+        <div class="page-header-row">
+          <div><h1>Suppliers</h1><p class="page-subtitle">Manage your supply chain and vendor relationships</p></div>
+          <div class="page-header-actions">
+            <button class="btn btn-primary" onclick="openModal('supplierModal')">+ Add Supplier</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Suppliers List -->
+      <div class="card">
+        <div class="card-header"><span class="card-title">📋 All Suppliers</span><span id="supplierCount" class="badge badge-primary">0</span></div>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Company</th><th>Contact Person</th><th>Phone</th><th>Email</th><th>Products Supplied</th><th>Total Orders</th><th>Actions</th></tr></thead>
+            <tbody id="supplierTableBody">
+              <tr><td colspan="7" class="table-empty"><div class="empty-icon">🚚</div><div class="empty-text">No suppliers added yet</div><div class="empty-hint">Click "+ Add Supplier" to get started</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-    <footer class="page-footer"><p>Powered by <strong>HMG Enterprise v5.0</strong></p></footer>
+
+    <footer class="page-footer"><p>Powered by <strong>HMG Enterprise v5.0</strong> — Technology-Powered Business Intelligence — <a href="https://cssadewale.pages.dev">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev">hmgconcepts.pages.dev</a></p></footer>
   </main>
-  <div class="modal-overlay" id="supModal"><div class="modal modal-lg"><div class="modal-header"><span class="modal-title" id="supModalTitle">Add Supplier</span><button class="modal-close" onclick="closeModal('supModal')">✕</button></div><div class="modal-body"><input type="hidden" id="editSupId"><div class="form-row"><div class="form-group"><label class="form-label">Company Name <span class="required">*</span></label><input type="text" id="sCompany" class="form-input"></div><div class="form-group"><label class="form-label">Contact Person</label><input type="text" id="sContact" class="form-input"></div></div><div class="form-row"><div class="form-group"><label class="form-label">Phone</label><input type="text" id="sPhone" class="form-input"></div><div class="form-group"><label class="form-label">Email</label><input type="email" id="sEmail" class="form-input"></div></div><div class="form-row"><div class="form-group"><label class="form-label">Category</label><input type="text" id="sCategory" class="form-input" placeholder="e.g. Beverages, Food"></div><div class="form-group"><label class="form-label">Address</label><input type="text" id="sAddr" class="form-input"></div></div><div class="form-group"><label class="form-label">Notes (payment terms, delivery schedule)</label><textarea id="sNotes" class="form-textarea" rows="2"></textarea></div></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('supModal')">Cancel</button><button class="btn btn-primary" onclick="saveSup()">💾 Save</button></div></div></div>
+
+  <!-- Add Supplier Modal -->
+  <div class="modal-overlay" id="supplierModal">
+    <div class="modal">
+      <div class="modal-header"><span class="modal-title" id="supplierModalTitle">New Supplier</span><button class="modal-close" onclick="closeModal('supplierModal')">✕</button></div>
+      <div class="modal-body">
+        <input type="hidden" id="supEditId">
+        <div class="form-group"><label class="form-label">Company Name <span class="required">*</span></label><input type="text" id="supCompany" class="form-input" placeholder="Supplier company name"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Contact Person</label><input type="text" id="supContact" class="form-input" placeholder="Primary contact"></div>
+          <div class="form-group"><label class="form-label">Phone</label><input type="text" id="supPhone" class="form-input" placeholder="Phone number"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Email</label><input type="email" id="supEmail" class="form-input" placeholder="Email address"></div>
+          <div class="form-group"><label class="form-label">Products Supplied</label><input type="text" id="supProducts" class="form-input" placeholder="e.g. Beverages, Food"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Address</label><input type="text" id="supAddress" class="form-input" placeholder="Physical address"></div>
+        <div class="form-group"><label class="form-label">Notes</label><textarea id="supNotes" class="form-textarea" rows="2" placeholder="Payment terms, delivery schedule, etc."></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('supplierModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveSupplier()">💾 Save Supplier</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast-container" id="toastContainer"></div>
-  <script src="js/storage.js"></script><script src="js/app.js"></script>
+
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
   <script>
-  let allSups=ST.suppliers();
-  function updateStats(){
-    document.getElementById('supSubtitle').textContent=allSups.length+' suppliers registered';
-    const cats=[...new Set(allSups.map(s=>s.category).filter(Boolean))];
-    document.getElementById('supStats').innerHTML=
-      '<div class="stat-item"><div class="stat-value">'+allSups.length+'</div><div class="stat-label">Total Suppliers</div></div>'+
-      '<div class="stat-item"><div class="stat-value">'+ST.fmt(allSups.reduce((a,s)=>a+(s.totalSpent||0),0))+'</div><div class="stat-label">Total Purchases</div></div>'+
-      '<div class="stat-item"><div class="stat-value">'+cats.length+'</div><div class="stat-label">Categories</div></div>';
-  }
   function renderSuppliers(){
-    let items=[...allSups];const q=(document.getElementById('filterSup').value||'').toLowerCase();
-    const sort=document.getElementById('sortSup').value;
-    if(q)items=items.filter(s=>(s.company||'').toLowerCase().includes(q)||(s.contact||'').toLowerCase().includes(q));
-    if(sort==='name')items.sort((a,b)=>(a.company||'').localeCompare(b.company||''));
-    if(sort==='recent')items.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
-    if(sort==='spent')items.sort((a,b)=>(b.totalSpent||0)-(a.totalSpent||0));
-    if(!items.length){document.getElementById('supBody').innerHTML='<tr><td colspan="7" class="table-empty"><div class="empty-icon">🚚</div><div class="empty-text">No suppliers found</div><div class="empty-hint">Add your first supplier →</div></td></tr>';return}
-    document.getElementById('supBody').innerHTML=items.map(s=>
-      '<tr><td><strong>'+s.company+'</strong></td><td>'+(s.contact||'—')+'</td><td>'+(s.phone||'—')+'</td>'+
-      '<td><span class="tag">'+(s.category||'General')+'</span></td><td>'+ST.fmt(s.totalSpent||0)+'</td>'+
-      '<td class="text-muted" style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(s.notes||'—')+'</td>'+
-      '<td><div class="table-actions"><button class="btn btn-sm btn-ghost" onclick="editSup(\''+s.id+'\')">✏️</button>'+
-      (s.phone?'<button class="btn btn-sm btn-ghost" onclick="shareWhatsApp(\'Hi '+s.company+'\')">📱</button>':'')+
-      '</div></td></tr>'
+    const suppliers=ST.suppliers();
+    document.getElementById('supplierCount').textContent=suppliers.length;
+    if(!suppliers.length){
+      document.getElementById('supplierTableBody').innerHTML='<tr><td colspan="7" class="table-empty"><div class="empty-icon">🚚</div><div class="empty-text">No suppliers added yet</div><div class="empty-hint">Click "+ Add Supplier" to get started</div></td></tr>';
+      return;
+    }
+    document.getElementById('supplierTableBody').innerHTML=suppliers.map(s=>
+      '<tr><td><strong>'+s.company+'</strong></td><td>'+(s.contact||'—')+'</td><td>'+(s.phone||'—')+'</td><td>'+(s.email||'—')+'</td><td>'+(s.productsSupplied||'—')+'</td>'+
+      '<td>'+(s.totalOrders||0)+'</td>'+
+      '<td><div class="table-actions"><button class="btn btn-sm btn-ghost" onclick="editSupplier(\''+s.id+'\')">✏️</button><button class="btn btn-sm btn-ghost text-danger" onclick="deleteSupplier(\''+s.id+'\')">🗑</button></div></td></tr>'
     ).join('');
   }
-  function editSup(id){
-    const s=allSups.find(x=>x.id===id);if(!s)return;
-    document.getElementById('editSupId').value=id;
-    document.getElementById('supModalTitle').textContent='Edit: '+s.company;
-    document.getElementById('sCompany').value=s.company;document.getElementById('sContact').value=s.contact||'';
-    document.getElementById('sPhone').value=s.phone||'';document.getElementById('sEmail').value=s.email||'';
-    document.getElementById('sCategory').value=s.category||'';document.getElementById('sAddr').value=s.address||'';
-    document.getElementById('sNotes').value=s.notes||'';openModal('supModal');
+
+  function saveSupplier(){
+    const company=document.getElementById('supCompany').value.trim();
+    if(!company){showToast('Company name is required','warning');return}
+    const sup={
+      company,contact:document.getElementById('supContact').value.trim(),
+      phone:document.getElementById('supPhone').value.trim(),
+      email:document.getElementById('supEmail').value.trim(),
+      productsSupplied:document.getElementById('supProducts').value.trim(),
+      address:document.getElementById('supAddress').value.trim(),
+      notes:document.getElementById('supNotes').value.trim()
+    };
+    const editId=document.getElementById('supEditId').value;
+    if(editId)sup.id=editId;
+    ST.saveSupplier(sup);
+    ST.logActivity('supplier',(editId?'Updated':'Added')+' supplier: '+company);
+    showToast('Supplier '+(editId?'updated':'added')+'!','success');
+    closeModal('supplierModal');
+    resetSupplierForm();
+    renderSuppliers();
   }
-  function saveSup(){
-    const id=document.getElementById('editSupId').value;
-    const company=document.getElementById('sCompany').value.trim();
-    if(!company){showToast('Company name required','warning');return}
-    const data={company,contact:document.getElementById('sContact').value,phone:document.getElementById('sPhone').value,
-      email:document.getElementById('sEmail').value,category:document.getElementById('sCategory').value,
-      address:document.getElementById('sAddr').value,notes:document.getElementById('sNotes').value};
-    if(id)data.id=id;
-    ST.saveSupplier(data);allSups=ST.suppliers();
-    closeModal('supModal');showToast('Supplier saved!','success');
-    document.getElementById('editSupId').value='';['sCompany','sContact','sPhone','sEmail','sCategory','sAddr','sNotes'].forEach(id=>document.getElementById(id).value='');
-    renderSuppliers();updateStats();
+
+  function editSupplier(id){
+    const s=ST.suppliers().find(x=>x.id===id);
+    if(!s)return;
+    document.getElementById('supEditId').value=s.id;
+    document.getElementById('supCompany').value=s.company||'';
+    document.getElementById('supContact').value=s.contact||'';
+    document.getElementById('supPhone').value=s.phone||'';
+    document.getElementById('supEmail').value=s.email||'';
+    document.getElementById('supProducts').value=s.productsSupplied||'';
+    document.getElementById('supAddress').value=s.address||'';
+    document.getElementById('supNotes').value=s.notes||'';
+    document.getElementById('supplierModalTitle').textContent='Edit Supplier';
+    openModal('supplierModal');
   }
-  updateStats();renderSuppliers();
+
+  function deleteSupplier(id){
+    const s=ST.suppliers().find(x=>x.id===id);
+    if(!s||!confirm('Delete supplier "'+s.company+'"? This cannot be undone.'))return;
+    const all=ST.suppliers().filter(x=>x.id!==id);
+    ST.saveSuppliers(all);
+    ST.logActivity('supplier','Deleted supplier: '+s.company);
+    showToast('Supplier deleted','info');
+    renderSuppliers();
+  }
+
+  function resetSupplierForm(){
+    document.getElementById('supEditId').value='';
+    document.getElementById('supCompany').value='';
+    document.getElementById('supContact').value='';
+    document.getElementById('supPhone').value='';
+    document.getElementById('supEmail').value='';
+    document.getElementById('supProducts').value='';
+    document.getElementById('supAddress').value='';
+    document.getElementById('supNotes').value='';
+    document.getElementById('supplierModalTitle').textContent='New Supplier';
+  }
+
+  // Open modal for new supplier
+  const origOpenModal=openModal;
+  openModal=function(id){
+    if(id==='supplierModal')resetSupplierForm();
+    origOpenModal(id);
+  };
+
+  renderSuppliers();
   </script>
 </body>
 </html>
