@@ -1,359 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Expenses — SaleTrack — HMG Enterprise</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expenses — HMG Enterprise v5.0</title>
+  <link rel="stylesheet" href="css/style.css"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#6366f1">
 </head>
 <body>
+  <aside class="sidebar" id="sidebar"><div class="sidebar-header"><div class="sidebar-logo"><div class="logo-icon">🏪</div><span>HMG Enterprise</span></div><button class="sidebar-collapse-btn" onclick="toggleSidebar()">‹</button></div><nav class="sidebar-nav"><div class="nav-group"><div class="nav-group-title">Overview</div><a href="index.html" class="nav-item"><span class="nav-icon">📊</span><span class="nav-text">Dashboard</span></a><a href="reports.html" class="nav-item"><span class="nav-icon">📈</span><span class="nav-text">Reports</span></a></div><div class="nav-group"><div class="nav-group-title">Operations</div><a href="sales.html" class="nav-item"><span class="nav-icon">🛒</span><span class="nav-text">Sales</span></a><a href="inventory.html" class="nav-item"><span class="nav-icon">📦</span><span class="nav-text">Inventory</span></a><a href="expenses.html" class="nav-item active"><span class="nav-icon">💸</span><span class="nav-text">Expenses</span></a><a href="register.html" class="nav-item"><span class="nav-icon">🏧</span><span class="nav-text">Register</span></a></div><div class="nav-group"><div class="nav-group-title">People</div><a href="customers.html" class="nav-item"><span class="nav-icon">👥</span><span class="nav-text">Customers</span></a><a href="suppliers.html" class="nav-item"><span class="nav-icon">🚚</span><span class="nav-text">Suppliers</span></a><a href="staff.html" class="nav-item"><span class="nav-icon">👨‍💼</span><span class="nav-text">Staff</span></a></div><div class="nav-group"><div class="nav-group-title">Finance</div><a href="budgets.html" class="nav-item"><span class="nav-icon">💰</span><span class="nav-text">Budgets</span></a><a href="credits.html" class="nav-item"><span class="nav-icon">💳</span><span class="nav-text">Credits</span></a></div><div class="nav-group"><div class="nav-group-title">Tools</div><a href="journal.html" class="nav-item"><span class="nav-icon">📝</span><span class="nav-text">Journal</span></a><a href="settings.html" class="nav-item"><span class="nav-icon">⚙️</span><span class="nav-text">Settings</span></a></div></nav><div class="sidebar-footer"><div class="footer-dot"></div><div class="sidebar-footer-info">Enterprise v5.0</div></div></aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <main class="main-content">
+    <header class="topbar"><button class="topbar-hamburger" onclick="toggleSidebar()">☰</button><div class="topbar-title">💸 Expenses</div><div class="topbar-search"><input type="text" id="globalSearch" placeholder="Search…"></div><div class="topbar-actions"><button class="topbar-btn" id="notifBtn" onclick="toggleNotifPanel()">🔔<span class="notif-badge" id="notifBadge" style="display:none">0</span></button><div class="topbar-biz-name" id="bizNameNav">HMG Concepts</div></div></header>
+    <div class="search-panel" id="searchPanel"></div><div class="notif-panel" id="notifPanel"><div class="notif-panel-header"><span>Notifications</span><button class="btn btn-sm btn-ghost" onclick="ST.saveNotifications([]);renderNotifPanel();updateNotifBadge()">Clear all</button></div><div id="notifList"></div></div>
+    <div class="page-content">
+      <div class="page-header"><div class="page-header-row"><div><h1>Expense Tracker</h1><p class="page-subtitle">Track all business expenditures</p></div><div class="page-header-actions"><button class="btn btn-outline btn-sm" onclick="exportCSV(exportData(),'expenses.csv')">📥 Export CSV</button><button class="btn btn-primary btn-sm" onclick="openModal('expenseModal')">➕ Record Expense</button></div></div></div>
 
-<nav class="navbar">
-  <div class="navbar-brand">
-    <div class="brand-logo">HMG</div>
-    <div>
-      <div class="brand-name" id="bizNameNav">My Store</div>
-      <div class="brand-sub">Expenses</div>
-    </div>
-  </div>
-  <nav class="navbar-links">
-    <a href="index.html">📊 Dashboard</a>
-    <a href="sales.html">🛒 Sales</a>
-    <a href="inventory.html">📦 Inventory</a>
-    <a href="expenses.html" class="active">💸 Expenses</a>
-    <a href="customers.html">👥 Customers</a>
-    <a href="suppliers.html">🚚 Suppliers</a>
-    <a href="register.html">🏧 Register</a>
-    <a href="journal.html">📝 Journal</a>
-    <a href="staff.html">👨‍💼 Staff</a>
-    <a href="budgets.html">💰 Budgets</a>
-    <a href="credits.html">💳 Credits</a>
-    <a href="reports.html">📈 Reports</a>
-    <a href="settings.html">⚙️ Settings</a>
-  </nav>
-  <button class="hamburger" onclick="toggleMenu()">☰</button>
-</nav>
+      <div class="stats-row" id="expStats"></div>
 
-<div class="mobile-menu" id="mobileMenu">
-  <a href="index.html">📊 Dashboard</a>
-  <a href="sales.html">🛒 Sales</a>
-  <a href="inventory.html">📦 Inventory</a>
-  <a href="expenses.html" class="active">💸 Expenses</a>
-  <a href="customers.html">👥 Customers</a>
-  <a href="suppliers.html">🚚 Suppliers</a>
-  <a href="register.html">🏧 Register</a>
-  <a href="journal.html">📝 Journal</a>
-  <a href="staff.html">👨‍💼 Staff</a>
-  <a href="budgets.html">💰 Budgets</a>
-  <a href="credits.html">💳 Credits</a>
-  <a href="reports.html">📈 Reports</a>
-  <a href="settings.html">⚙️ Settings</a>
-</div>
-
-<div class="page">
-
-  <div class="page-header">
-    <div>
-      <h1 class="page-title">Expenses</h1>
-      <div class="page-sub">Track all business expenditures</div>
-    </div>
-    <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
-      <button class="btn btn-secondary" onclick="exportExpensesCSV()">📥 Export CSV</button>
-      <button class="btn btn-primary" onclick="openExpenseModal()">➕ Record Expense</button>
-    </div>
-  </div>
-
-  <!-- STATS -->
-  <div class="stats-grid">
-    <div class="stat-card" style="border-top:3px solid var(--danger)">
-      <div class="stat-label">Today's Expenses</div>
-      <div class="stat-val" id="todayExpTotal" style="color:var(--danger)">—</div>
-      <div class="stat-sub" id="todayExpCount">Loading...</div>
-    </div>
-    <div class="stat-card" style="border-top:3px solid var(--warning)">
-      <div class="stat-label">This Week</div>
-      <div class="stat-val" id="weekExpTotal" style="color:var(--warning)">—</div>
-      <div class="stat-sub" id="weekExpCount">Loading...</div>
-    </div>
-    <div class="stat-card" style="border-top:3px solid #a855f7">
-      <div class="stat-label">This Month</div>
-      <div class="stat-val" id="monthExpTotal" style="color:#a855f7">—</div>
-      <div class="stat-sub" id="monthExpCount">Loading...</div>
-    </div>
-    <div class="stat-card" style="border-top:3px solid var(--accent)">
-      <div class="stat-label">All Time Total</div>
-      <div class="stat-val" id="allTimeExpTotal">—</div>
-      <div class="stat-sub" id="allTimeExpCount">Loading...</div>
-    </div>
-  </div>
-
-  <!-- CATEGORY BREAKDOWN -->
-  <div class="two-col-layout">
-    <div class="card">
-      <h3 class="card-title">Expense by Category (This Month)</h3>
-      <div id="catBreakdown" class="pay-breakdown"></div>
-    </div>
-
-    <div class="card">
-      <h3 class="card-title">💡 Net Profit Calculator (This Month)</h3>
-      <div style="display:flex;flex-direction:column;gap:0.75rem">
-        <div class="pay-row"><span>💰 Gross Revenue</span><strong id="netRevenue">—</strong></div>
-        <div class="pay-row"><span>💵 Gross Profit</span><strong id="netGrossProfit">—</strong></div>
-        <div class="pay-row"><span>💸 Total Expenses</span><strong style="color:var(--danger)" id="netExpenses">—</strong></div>
-        <div class="pay-row" style="background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);border-radius:8px;padding:0.75rem">
-          <span style="font-weight:700">📈 Net Profit</span>
-          <strong id="netProfitVal" style="font-size:1.1rem">—</strong>
-        </div>
+      <div class="section-grid mb-6">
+        <div class="card"><div class="card-header"><span class="card-title">📊 Category Breakdown (This Month)</span></div><div id="categoryBreakdown"><div class="text-center text-muted" style="padding:20px">No expenses this month</div></div></div>
+        <div class="card"><div class="card-header"><span class="card-title">💡 Net Profit Calculator (This Month)</span></div><div id="netProfitCalc"></div></div>
       </div>
-    </div>
-  </div>
 
-  <!-- FILTERS -->
-  <div class="card" style="padding:1rem">
-    <div class="filter-row">
-      <input type="text" id="expSearch" placeholder="🔍 Search expenses..." oninput="renderExpenses()" style="max-width:240px" />
-      <select id="expCatFilter" onchange="renderExpenses()">
-        <option value="">All Categories</option>
-        <option>Rent</option><option>Utilities</option><option>Salaries</option><option>Transport</option>
-        <option>Supplies</option><option>Maintenance</option><option>Marketing</option><option>Tax</option>
-        <option>Insurance</option><option>Food</option><option>Miscellaneous</option>
-      </select>
-      <select id="expDateFilter" onchange="renderExpenses()">
-        <option value="all">All Time</option>
-        <option value="today">Today</option>
-        <option value="week">This Week</option>
-        <option value="month" selected>This Month</option>
-        <option value="quarter">Last 90 Days</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- EXPENSES TABLE -->
-  <div class="card">
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Description</th>
-          <th>Category</th>
-          <th>Amount</th>
-          <th>Payment</th>
-          <th>Note</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="expensesBody">
-        <tr><td colspan="7" class="empty-cell">Loading...</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-</div>
-
-<!-- ADD EXPENSE MODAL -->
-<div class="modal-overlay" id="expenseModal" style="display:none">
-  <div class="modal" style="max-width:480px">
-    <div class="modal-header">
-      <h3>Record Expense</h3>
-      <button onclick="document.getElementById('expenseModal').style.display='none'" class="modal-close">✕</button>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:1rem">
-      <div class="form-group">
-        <label>Description *</label>
-        <input type="text" id="expDesc" placeholder="e.g. Shop rent for June" />
+      <div class="filter-bar">
+        <select class="form-select" id="filterCat" onchange="renderExpenses()"><option value="">All Categories</option><option>Rent</option><option>Utilities</option><option>Salaries</option><option>Transport</option><option>Supplies</option><option>Maintenance</option><option>Marketing</option><option>Tax</option><option>Insurance</option><option>Food</option><option>Miscellaneous</option></select>
+        <select class="form-select" id="filterPeriod" onchange="renderExpenses()"><option value="">All Time</option><option value="today">Today</option><option value="week">This Week</option><option value="month">This Month</option><option value="90d">Last 90 Days</option></select>
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Amount *</label>
-          <input type="number" id="expAmount" step="0.01" min="0" placeholder="0.00" />
-        </div>
-        <div class="form-group">
-          <label>Date</label>
-          <input type="date" id="expDate" />
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Category</label>
-          <select id="expCat">
-            <option>Rent</option><option>Utilities</option><option>Salaries</option><option>Transport</option>
-            <option>Supplies</option><option>Maintenance</option><option>Marketing</option><option>Tax</option>
-            <option>Insurance</option><option>Food</option><option>Miscellaneous</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Payment Method</label>
-          <select id="expPay">
-            <option>Cash</option><option>Bank Transfer</option><option>Card</option><option>Mobile Money</option><option>Cheque</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Note (optional)</label>
-        <input type="text" id="expNote" placeholder="Additional details" />
-      </div>
-      <button class="btn btn-primary btn-full" onclick="saveExpense()">💾 Record Expense</button>
+
+      <div class="card"><div class="table-wrapper"><table class="data-table"><thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th><th>Payment</th><th>Note</th><th>Actions</th></tr></thead><tbody id="expBody"><tr><td colspan="7" class="table-empty"><div class="empty-icon">💸</div><div class="empty-text">No expenses found</div></td></tr></tbody></table></div></div>
     </div>
-  </div>
-</div>
+    <footer class="page-footer"><p>Powered by <strong>HMG Enterprise v5.0</strong></p></footer>
+  </main>
 
-<div class="toast" id="toast"><span id="toastMsg"></span></div>
+  <div class="modal-overlay" id="expenseModal"><div class="modal"><div class="modal-header"><span class="modal-title">➕ Record Expense</span><button class="modal-close" onclick="closeModal('expenseModal')">✕</button></div><div class="modal-body"><div class="form-group"><label class="form-label">Description <span class="required">*</span></label><input type="text" id="expDesc" class="form-input" placeholder="e.g. Monthly rent"></div><div class="form-row"><div class="form-group"><label class="form-label">Amount <span class="required">*</span></label><input type="number" id="expAmount" class="form-input" min="0"></div><div class="form-group"><label class="form-label">Category</label><select id="expCat" class="form-select"><option>Rent</option><option>Utilities</option><option>Salaries</option><option>Transport</option><option>Supplies</option><option>Maintenance</option><option>Marketing</option><option>Tax</option><option>Insurance</option><option>Food</option><option>Miscellaneous</option></select></div></div><div class="form-row"><div class="form-group"><label class="form-label">Payment Method</label><select id="expPay" class="form-select"><option>Cash</option><option>Bank Transfer</option><option>Card</option><option>Mobile Money</option></select></div><div class="form-group"><label class="form-label">Date</label><input type="date" id="expDate" class="form-input"></div></div><div class="form-group"><label class="form-label">Note</label><input type="text" id="expNote" class="form-input" placeholder="Optional"></div></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('expenseModal')">Cancel</button><button class="btn btn-primary" onclick="addExpense()">💸 Record Expense</button></div></div></div>
+  <div class="toast-container" id="toastContainer"></div>
 
-<script src="js/storage.js"></script>
-<script src="js/app.js"></script>
-<script>
-(function () {
-  ST.init();
-  const cfg = ST.config();
-  document.getElementById('bizNameNav').textContent = cfg.businessName || 'My Store';
-  document.getElementById('expDate').value = new Date().toISOString().slice(0, 10);
-
-  function getFiltered(all) {
-    const f = document.getElementById('expDateFilter').value;
-    const now = new Date();
-    if (f === 'today') return all.filter(e => new Date(e.date).toDateString() === now.toDateString());
-    if (f === 'week') { const wa = new Date(now - 7*86400000); return all.filter(e => new Date(e.date) >= wa); }
-    if (f === 'month') return all.filter(e => { const d = new Date(e.date); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); });
-    if (f === 'quarter') { const qa = new Date(now - 90*86400000); return all.filter(e => new Date(e.date) >= qa); }
-    return all;
+  <script src="js/storage.js"></script><script src="js/app.js"></script>
+  <script>
+  document.getElementById('expDate').value=new Date().toISOString().slice(0,10);
+  const allExps=ST.expenses();
+  function getFiltered(){
+    let items=[...allExps];const cat=document.getElementById('filterCat').value;const period=document.getElementById('filterPeriod').value;
+    if(cat)items=items.filter(e=>e.category===cat);
+    if(period==='today')items=items.filter(e=>isToday(e.date));
+    if(period==='week')items=items.filter(e=>isThisWeek(e.date));
+    if(period==='month')items=items.filter(e=>isThisMonth(e.date));
+    if(period==='90d')items=items.filter(e=>new Date(e.date)>=new Date(Date.now()-90*86400000));
+    return items;
   }
-
-  function updateStats() {
-    const all = ST.expenses();
-    const now = new Date();
-    const todayExp = all.filter(e => new Date(e.date).toDateString() === now.toDateString());
-    const weekExp = all.filter(e => new Date(e.date) >= new Date(now - 7*86400000));
-    const monthExp = all.filter(e => { const d = new Date(e.date); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); });
-
-    document.getElementById('todayExpTotal').textContent = ST.fmt(todayExp.reduce((a,e)=>a+e.amount,0));
-    document.getElementById('todayExpCount').textContent = todayExp.length + ' expense(s) today';
-    document.getElementById('weekExpTotal').textContent = ST.fmt(weekExp.reduce((a,e)=>a+e.amount,0));
-    document.getElementById('weekExpCount').textContent = weekExp.length + ' expenses this week';
-    document.getElementById('monthExpTotal').textContent = ST.fmt(monthExp.reduce((a,e)=>a+e.amount,0));
-    document.getElementById('monthExpCount').textContent = monthExp.length + ' expenses this month';
-    document.getElementById('allTimeExpTotal').textContent = ST.fmt(all.reduce((a,e)=>a+e.amount,0));
-    document.getElementById('allTimeExpCount').textContent = all.length + ' total expenses';
-
+  function updateStats(){
+    const today=allExps.filter(e=>isToday(e.date));const week=allExps.filter(e=>isThisWeek(e.date));const month=allExps.filter(e=>isThisMonth(e.date));
+    document.getElementById('expStats').innerHTML=
+      '<div class="stat-item"><div class="stat-value">'+ST.fmt(sum(today,'amount'))+'</div><div class="stat-label">Today</div></div>'+
+      '<div class="stat-item"><div class="stat-value">'+ST.fmt(sum(week,'amount'))+'</div><div class="stat-label">This Week</div></div>'+
+      '<div class="stat-item"><div class="stat-value">'+ST.fmt(sum(month,'amount'))+'</div><div class="stat-label">This Month</div></div>'+
+      '<div class="stat-item"><div class="stat-value">'+ST.fmt(sum(allExps,'amount'))+'</div><div class="stat-label">All Time</div></div>';
     // Category breakdown
-    const byCat = {};
-    monthExp.forEach(e => { byCat[e.category || 'Other'] = (byCat[e.category || 'Other'] || 0) + e.amount; });
-    const sorted = Object.entries(byCat).sort((a,b) => b[1] - a[1]);
-    document.getElementById('catBreakdown').innerHTML = sorted.length
-      ? sorted.map(([cat, val]) =>
-          '<div class="pay-row"><span>' + cat + '</span><strong>' + ST.fmt(val) + '</strong></div>'
-        ).join('')
-      : '<div style="color:var(--muted);font-size:0.85rem">No expenses this month</div>';
-
-    // Net profit calculator
-    const sales = ST.sales();
-    const monthSales = sales.filter(s => { const d = new Date(s.date); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); });
-    const revenue = monthSales.reduce((a,s) => a + s.total, 0);
-    const grossProfit = monthSales.reduce((a,s) => a + (s.profit || 0), 0);
-    const expTotal = monthExp.reduce((a,e) => a + e.amount, 0);
-    const net = grossProfit - expTotal;
-
-    document.getElementById('netRevenue').textContent = ST.fmt(revenue);
-    document.getElementById('netGrossProfit').textContent = ST.fmt(grossProfit);
-    document.getElementById('netExpenses').textContent = ST.fmt(expTotal);
-    document.getElementById('netProfitVal').textContent = ST.fmt(net);
-    document.getElementById('netProfitVal').style.color = net >= 0 ? 'var(--accent)' : 'var(--danger)';
-  }
-
-  window.renderExpenses = function () {
-    const all = ST.expenses();
-    const filtered = getFiltered(all);
-    const q = document.getElementById('expSearch').value.toLowerCase();
-    const cf = document.getElementById('expCatFilter').value;
-    let list = filtered;
-    if (q) list = list.filter(e => (e.description||'').toLowerCase().includes(q) || (e.note||'').toLowerCase().includes(q));
-    if (cf) list = list.filter(e => e.category === cf);
-    list = [...list].reverse();
-
-    const tbody = document.getElementById('expensesBody');
-    if (!list.length) {
-      tbody.innerHTML = '<tr><td colspan="7" class="empty-cell">No expenses found</td></tr>';
-      return;
+    const monthExps=allExps.filter(e=>isThisMonth(e.date));const cats={};
+    monthExps.forEach(e=>{cats[e.category]=(cats[e.category]||0)+e.amount});
+    const totalExpMonth=sum(monthExps,'amount');
+    if(Object.keys(cats).length){
+      document.getElementById('categoryBreakdown').innerHTML=Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([c,v])=>{
+        const pct=totalExpMonth>0?(v/totalExpMonth*100).toFixed(0):0;
+        return'<div style="margin-bottom:10px"><div class="progress-label"><span>'+c+'</span><span>'+ST.fmt(v)+' ('+pct+'%)</span></div><div class="progress-bar"><div class="progress-bar-fill warning" style="width:'+pct+'%"></div></div></div>';
+      }).join('');
     }
-    tbody.innerHTML = list.map(e =>
-      '<tr>' +
-      '<td style="font-size:0.82rem;color:var(--muted)">' + new Date(e.date).toLocaleDateString() + '</td>' +
-      '<td><strong>' + e.description + '</strong></td>' +
-      '<td><span class="badge badge-info">' + (e.category || 'Other') + '</span></td>' +
-      '<td style="color:var(--danger);font-weight:700">' + ST.fmt(e.amount) + '</td>' +
-      '<td><span class="badge badge-accent">' + (e.payMethod || 'Cash') + '</span></td>' +
-      '<td style="color:var(--muted);font-size:0.82rem">' + (e.note || '—') + '</td>' +
-      '<td><button class="btn-tiny btn-red" onclick="deleteExpense(\'' + e.id + '\')">✕</button></td>' +
-      '</tr>'
+    // Net profit calculator
+    const sales=ST.sales();const monthSales=sales.filter(s=>isThisMonth(s.date));
+    const rev=sum(monthSales,'total');const gp=sum(monthSales,'profit');const expTotal=totalExpMonth;
+    document.getElementById('netProfitCalc').innerHTML=
+      '<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)"><span class="text-muted">💰 Gross Revenue</span><strong>'+ST.fmt(rev)+'</strong></div>'+
+      '<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)"><span class="text-muted">💵 Gross Profit</span><strong class="text-success">'+ST.fmt(gp)+'</strong></div>'+
+      '<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)"><span class="text-muted">💸 Total Expenses</span><strong class="text-warning">'+ST.fmt(expTotal)+'</strong></div>'+
+      '<div style="display:flex;justify-content:space-between;padding:14px 0;margin-top:4px"><span style="font-weight:700">📈 Net Profit</span><strong style="font-size:1.3rem;color:'+(gp-expTotal>=0?'var(--success)':'var(--danger)')+'">'+ST.fmt(gp-expTotal)+'</strong></div>';
+  }
+  function renderExpenses(){
+    const items=getFiltered();
+    if(!items.length){document.getElementById('expBody').innerHTML='<tr><td colspan="7" class="table-empty"><div class="empty-icon">💸</div><div class="empty-text">No expenses found</div></td></tr>';return}
+    document.getElementById('expBody').innerHTML=[...items].reverse().map(e=>
+      '<tr><td class="text-muted">'+formatDate(e.date)+'</td><td><strong>'+e.description+'</strong></td>'+
+      '<td><span class="tag">'+e.category+'</span></td><td><strong>'+ST.fmt(e.amount)+'</strong></td>'+
+      '<td><span class="tag">'+(e.paymentMethod||'Cash')+'</span></td><td class="text-muted">'+(e.note||'—')+'</td>'+
+      '<td><button class="btn btn-sm btn-ghost text-danger" onclick="deleteExp(\''+e.id+'\')">🗑</button></td></tr>'
     ).join('');
-  };
-
-  window.openExpenseModal = function () {
-    document.getElementById('expDesc').value = '';
-    document.getElementById('expAmount').value = '';
-    document.getElementById('expNote').value = '';
-    document.getElementById('expDate').value = new Date().toISOString().slice(0, 10);
-    document.getElementById('expenseModal').style.display = 'flex';
-  };
-
-  window.saveExpense = function () {
-    const desc = document.getElementById('expDesc').value.trim();
-    const amount = parseFloat(document.getElementById('expAmount').value);
-    if (!desc) { showToast('⚠️ Enter description'); return; }
-    if (isNaN(amount) || amount <= 0) { showToast('⚠️ Enter valid amount'); return; }
-
-    ST.addExpense({
-      description: desc,
-      amount: amount,
-      date: document.getElementById('expDate').value
-        ? new Date(document.getElementById('expDate').value + 'T12:00:00').toISOString()
-        : new Date().toISOString(),
-      category: document.getElementById('expCat').value,
-      payMethod: document.getElementById('expPay').value,
-      note: document.getElementById('expNote').value.trim()
-    });
-
-    showToast('✅ Expense of ' + ST.fmt(amount) + ' recorded');
-    document.getElementById('expenseModal').style.display = 'none';
-    updateStats();
-    renderExpenses();
-  };
-
-  window.deleteExpense = function (id) {
-    if (!confirm('Delete this expense?')) return;
-    const all = ST.expenses().filter(e => e.id !== id);
-    ST.saveExpenses(all);
-    ST.logActivity('expense', 'Deleted expense record');
-    showToast('🗑 Expense deleted');
-    updateStats();
-    renderExpenses();
-  };
-
-  window.exportExpensesCSV = function () {
-    const all = ST.expenses();
-    const header = 'Date,Description,Category,Amount,Payment,Note';
-    const rows = all.map(e => [
-      new Date(e.date).toLocaleString(), e.description, e.category || 'Other', e.amount,
-      e.payMethod || 'Cash', e.note || ''
-    ].map(v => '"' + String(v).replace(/"/g, '""') + '"').join(','));
-    const csv = [header, ...rows].join('\n');
-    const a = document.createElement('a');
-    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-    a.download = 'expenses_' + new Date().toISOString().slice(0, 10) + '.csv';
-    a.click();
-    showToast('📥 Expenses CSV downloaded');
-  };
-
-  updateStats();
-  renderExpenses();
-})();
-</script>
-<div class="brand-footer">
-  <div style="font-weight:700;color:var(--text);font-family:'Syne',sans-serif">HMG Concepts</div>
-  <div>Technology-Powered Business Intelligence</div>
-  <div style="margin-top:0.3rem"><a href="https://cssadewale.pages.dev" target="_blank">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev" target="_blank">hmgconcepts.pages.dev</a></div>
-  <div class="powered-by">Powered by HMG Enterprise — Adewale Samson Adeagbo — v3.0</div>
-</div>
-
+  }
+  function addExpense(){
+    const desc=document.getElementById('expDesc').value.trim();
+    const amt=parseFloat(document.getElementById('expAmount').value)||0;
+    if(!desc){showToast('Description required','warning');return}
+    if(amt<=0){showToast('Amount must be greater than 0','warning');return}
+    const e={description:desc,amount:amt,category:document.getElementById('expCat').value,
+      paymentMethod:document.getElementById('expPay').value,note:document.getElementById('expNote').value,
+      date:document.getElementById('expDate').value?new Date(document.getElementById('expDate').value).toISOString():new Date().toISOString()};
+    ST.addExpense(e);allExps.push(e);
+    closeModal('expenseModal');showToast('Expense recorded!','success');
+    document.getElementById('expDesc').value='';document.getElementById('expAmount').value='';document.getElementById('expNote').value='';
+    renderExpenses();updateStats();
+  }
+  function deleteExp(id){
+    const i=allExps.findIndex(e=>e.id===id);if(i>=0)allExps.splice(i,1);
+    ST.saveExpenses(allExps);renderExpenses();updateStats();showToast('Expense deleted','info');
+  }
+  function exportData(){return allExps.map(e=>({date:formatDate(e.date),description:e.description,category:e.category,amount:e.amount,payment:e.paymentMethod||'Cash',note:e.note||''}))}
+  updateStats();renderExpenses();
+  </script>
 </body>
 </html>

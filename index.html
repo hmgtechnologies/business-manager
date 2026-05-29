@@ -1,209 +1,376 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HMG Enterprise — Dashboard — HMG Enterprise</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
-<link rel="manifest" href="manifest.json">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — HMG Enterprise v5.0</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6366f1">
 </head>
-<body>
-<nav class="navbar">
-  <div class="navbar-brand">
-    <div class="brand-logo">HMG</div>
-    <div><div class="brand-name" id="bizNameNav">HMG Concepts</div><div class="brand-sub" id="bizTypeNav">Multi-industry Solutions</div></div>
-  </div>
-  <nav class="navbar-links">
-    <a href="index.html" class="active">📊 Dashboard</a>
-    <a href="sales.html">🛒 Sales</a>
-    <a href="inventory.html">📦 Inventory</a>
-    <a href="expenses.html">💸 Expenses</a>
-    <a href="customers.html">👥 Customers</a>
-    <a href="suppliers.html">🚚 Suppliers</a>
-    <a href="register.html">🏧 Register</a>
-    <a href="journal.html">📝 Journal</a>
-    <a href="staff.html">👨‍💼 Staff</a>
-    <a href="budgets.html">💰 Budgets</a>
-    <a href="credits.html">💳 Credits</a>
-    <a href="reports.html">📈 Reports</a>
-    <a href="settings.html">⚙️ Settings</a>
-  </nav>
-  <button class="hamburger" onclick="toggleMenu()">☰</button>
-</nav>
-<div class="mobile-menu" id="mobileMenu">
-  <a href="index.html" class="active">📊 Dashboard</a>
-  <a href="sales.html">🛒 Sales</a>
-  <a href="inventory.html">📦 Inventory</a>
-  <a href="expenses.html">💸 Expenses</a>
-  <a href="customers.html">👥 Customers</a>
-  <a href="suppliers.html">🚚 Suppliers</a>
-  <a href="register.html">🏧 Register</a>
-  <a href="journal.html">📝 Journal</a>
-  <a href="staff.html">👨‍💼 Staff</a>
-  <a href="budgets.html">💰 Budgets</a>
-  <a href="credits.html">💳 Credits</a>
-  <a href="reports.html">📈 Reports</a>
-  <a href="settings.html">⚙️ Settings</a>
-</div>
+<body data-page="dashboard">
 
-<div class="page">
-  <div class="page-header">
-    <div>
-      <h1 class="page-title">Dashboard</h1>
-      <div class="page-sub" id="greetingMsg">Welcome back</div>
-    </div>
-    <div style="display:flex;gap:0.5rem;align-items:flex-start;flex-wrap:wrap">
-      <div style="text-align:right">
-        <div style="font-size:0.8rem;color:var(--muted)" id="currentDate"></div>
-        <div style="font-size:0.75rem;color:var(--muted)" id="currentTime"></div>
+  <!-- ─── SIDEBAR ──────────────────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon">🏪</div>
+        <span>HMG Enterprise</span>
       </div>
-      <div id="registerStatusBadge"></div>
+      <button class="sidebar-collapse-btn" onclick="toggleSidebar()" title="Toggle sidebar">‹</button>
     </div>
-  </div>
-
-  <!-- KPI STATS -->
-  <div class="stats-grid">
-    <div class="stat-card" style="border-top:3px solid var(--accent)"><div class="stat-label">Today's Revenue</div><div class="stat-val" id="todayRevenue">—</div><div class="stat-sub" id="todaySalesCount">Loading...</div></div>
-    <div class="stat-card" style="border-top:3px solid var(--accent2)"><div class="stat-label">This Week</div><div class="stat-val" id="weekRevenue">—</div><div class="stat-sub" id="weekSalesCount">Loading...</div></div>
-    <div class="stat-card" style="border-top:3px solid #a855f7"><div class="stat-label">This Month</div><div class="stat-val" id="monthRevenue">—</div><div class="stat-sub" id="monthSalesCount">Loading...</div></div>
-    <div class="stat-card" style="border-top:3px solid var(--accent3)"><div class="stat-label">Today's Profit</div><div class="stat-val" id="todayProfit" style="color:#a855f7">—</div><div class="stat-sub">Gross profit today</div></div>
-    <div class="stat-card" style="border-top:3px solid var(--danger)"><div class="stat-label">Today's Expenses</div><div class="stat-val" id="todayExpenses" style="color:var(--danger)">—</div><div class="stat-sub" id="todayExpensesSub">Loading...</div></div>
-    <div class="stat-card" style="border-top:3px solid var(--warning)"><div class="stat-label">Total Revenue</div><div class="stat-val" id="totalRevenue">—</div><div class="stat-sub" id="totalSalesCount">Loading...</div></div>
-    <div class="stat-card" style="border-top:3px solid var(--accent)"><div class="stat-label">Stock Value</div><div class="stat-val" id="stockValue">—</div><div class="stat-sub" id="stockItems">Loading...</div></div>
-    <div class="stat-card" style="border-top:3px solid var(--danger)"><div class="stat-label">Low / Out of Stock</div><div class="stat-val" id="lowStockVal" style="color:var(--danger)">—</div><div class="stat-sub" id="lowStockSub">Loading...</div></div>
-  </div>
-
-  <!-- BUSINESS HEALTH SCORE -->
-  <div class="card">
-    <div class="card-header">
-      <h3 class="card-title">🏥 Business Health Score</h3>
-      <span style="font-size:0.78rem;color:var(--muted)">Auto-calculated from your data</span>
+    <nav class="sidebar-nav">
+      <div class="nav-group">
+        <div class="nav-group-title">Overview</div>
+        <a href="index.html" class="nav-item active" data-page="index.html"><span class="nav-icon">📊</span><span class="nav-text">Dashboard</span></a>
+        <a href="reports.html" class="nav-item" data-page="reports.html"><span class="nav-icon">📈</span><span class="nav-text">Reports</span></a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">Operations</div>
+        <a href="sales.html" class="nav-item" data-page="sales.html"><span class="nav-icon">🛒</span><span class="nav-text">Sales</span></a>
+        <a href="inventory.html" class="nav-item" data-page="inventory.html"><span class="nav-icon">📦</span><span class="nav-text">Inventory</span></a>
+        <a href="expenses.html" class="nav-item" data-page="expenses.html"><span class="nav-icon">💸</span><span class="nav-text">Expenses</span></a>
+        <a href="register.html" class="nav-item" data-page="register.html"><span class="nav-icon">🏧</span><span class="nav-text">Register</span></a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">People</div>
+        <a href="customers.html" class="nav-item" data-page="customers.html"><span class="nav-icon">👥</span><span class="nav-text">Customers</span></a>
+        <a href="suppliers.html" class="nav-item" data-page="suppliers.html"><span class="nav-icon">🚚</span><span class="nav-text">Suppliers</span></a>
+        <a href="staff.html" class="nav-item" data-page="staff.html"><span class="nav-icon">👨‍💼</span><span class="nav-text">Staff</span></a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">Finance</div>
+        <a href="budgets.html" class="nav-item" data-page="budgets.html"><span class="nav-icon">💰</span><span class="nav-text">Budgets</span></a>
+        <a href="credits.html" class="nav-item" data-page="credits.html"><span class="nav-icon">💳</span><span class="nav-text">Credits</span></a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">Tools</div>
+        <a href="journal.html" class="nav-item" data-page="journal.html"><span class="nav-icon">📝</span><span class="nav-text">Journal</span></a>
+        <a href="settings.html" class="nav-item" data-page="settings.html"><span class="nav-icon">⚙️</span><span class="nav-text">Settings</span></a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="footer-dot"></div>
+      <div class="sidebar-footer-info">Enterprise v5.0</div>
     </div>
-    <div style="display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:center">
-      <div>
-        <div class="health-score-ring" id="healthRing" style="background:conic-gradient(var(--accent) 0% 75%, var(--surface2) 75% 100%)">
-          <div style="width:74px;height:74px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center">
-            <span class="health-score-val" id="healthScore" style="color:var(--accent)">75</span>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- ─── MAIN CONTENT ─────────────────────────────────────────── -->
+  <main class="main-content">
+    <header class="topbar">
+      <button class="topbar-hamburger" onclick="toggleSidebar()">☰</button>
+      <div class="topbar-title">📊 Dashboard</div>
+      <div class="topbar-search">
+        <input type="text" id="globalSearch" placeholder="Search products, customers, suppliers…">
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-btn" id="notifBtn" onclick="toggleNotifPanel()">🔔<span class="notif-badge" id="notifBadge" style="display:none">0</span></button>
+        <div class="topbar-biz-name" id="bizNameNav">HMG Concepts</div>
+      </div>
+    </header>
+
+    <!-- Search Panel -->
+    <div class="search-panel" id="searchPanel"></div>
+    <!-- Notification Panel -->
+    <div class="notif-panel" id="notifPanel">
+      <div class="notif-panel-header"><span>Notifications</span><button class="btn btn-sm btn-ghost" onclick="ST.saveNotifications([]);renderNotifPanel();updateNotifBadge()">Clear all</button></div>
+      <div id="notifList"></div>
+    </div>
+
+    <div class="page-content">
+      <!-- Greeting -->
+      <div class="page-header">
+        <h1 id="greeting">Good morning, Owner</h1>
+        <p class="page-subtitle">Here's your business overview for today</p>
+      </div>
+
+      <!-- Data Health Alerts -->
+      <div id="healthAlerts"></div>
+
+      <!-- KPI Cards -->
+      <div class="kpi-grid" id="kpiGrid">
+        <div class="kpi-card">
+          <div class="kpi-icon primary">💰</div>
+          <div class="kpi-label">Today's Revenue</div>
+          <div class="kpi-value" id="kpiTodayRev">—</div>
+          <div id="kpiTodayRevChange"></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon success">📈</div>
+          <div class="kpi-label">Today's Profit</div>
+          <div class="kpi-value" id="kpiTodayProfit">—</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon warning">💸</div>
+          <div class="kpi-label">Today's Expenses</div>
+          <div class="kpi-value" id="kpiTodayExp">—</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon primary">📊</div>
+          <div class="kpi-label">This Week</div>
+          <div class="kpi-value" id="kpiWeekRev">—</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon primary">📅</div>
+          <div class="kpi-label">This Month</div>
+          <div class="kpi-value" id="kpiMonthRev">—</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon success">💵</div>
+          <div class="kpi-label">All-Time Revenue</div>
+          <div class="kpi-value" id="kpiTotalRev">—</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon warning">📦</div>
+          <div class="kpi-label">Stock Value</div>
+          <div class="kpi-value" id="kpiStockVal">—</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon danger">💳</div>
+          <div class="kpi-label">Outstanding Credits</div>
+          <div class="kpi-value" id="kpiCredits">—</div>
+        </div>
+      </div>
+
+      <!-- Health Score + Sales Targets + Register Status -->
+      <div class="section-grid mb-6">
+        <!-- Health Score -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🏥 Business Health Score</span>
+            <span class="badge badge-info">Auto-calculated</span>
+          </div>
+          <div class="health-score" id="healthScoreArea">
+            <div class="text-center text-muted" style="padding:20px">Calculating…</div>
           </div>
         </div>
-        <div class="health-score-label">Health Score</div>
+        <!-- Sales Targets -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🎯 Sales Targets</span>
+            <a href="settings.html" class="btn btn-sm btn-outline">Edit →</a>
+          </div>
+          <div id="targetsArea">
+            <div class="text-center text-muted" style="padding:20px">No targets set</div>
+          </div>
+        </div>
       </div>
-      <div id="healthBreakdown" style="display:flex;flex-direction:column;gap:0.5rem"></div>
+
+      <!-- Quick Actions -->
+      <div class="card mb-6">
+        <div class="card-header"><span class="card-title">⚡ Quick Actions</span></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a href="sales.html" class="btn btn-success">🛒 Record Sale</a>
+          <a href="inventory.html" class="btn btn-outline">📦 Restock Item</a>
+          <a href="expenses.html" class="btn btn-outline">💸 Log Expense</a>
+          <a href="journal.html" class="btn btn-outline">📝 Add Note</a>
+          <button class="btn btn-outline" onclick="shareWhatsApp(generateShareSummary('today'))">📱 Share Today</button>
+        </div>
+      </div>
+
+      <!-- Monthly Comparison -->
+      <div class="section-grid mb-6">
+        <!-- Monthly Comparison -->
+        <div class="card" id="monthlyComparison">
+          <div class="card-header">
+            <span class="card-title">📊 Monthly Comparison</span>
+            <span class="badge badge-primary">vs Last Month</span>
+          </div>
+          <div id="comparisonArea"></div>
+        </div>
+        <!-- Register Status + Alerts -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🔔 Alerts & Status</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px" id="registerStatusBadge"></div>
+          <div id="stockAlerts"></div>
+          <div id="creditAlerts"></div>
+        </div>
+      </div>
+
+      <!-- Recent Sales + Top Products -->
+      <div class="section-grid mb-6">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🛒 Recent Sales</span>
+            <a href="sales.html" class="btn btn-sm btn-outline">View All →</a>
+          </div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Product</th><th>Qty</th><th>Total</th><th>Profit</th><th>Payment</th><th>Time</th></tr></thead>
+              <tbody id="recentSalesBody">
+                <tr><td colspan="6" class="table-empty"><div class="empty-icon">🛒</div><div class="empty-text">No sales yet</div><div class="empty-hint"><a href="sales.html">Record your first sale →</a></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🏆 Top Products Today</span>
+          </div>
+          <div id="topProductsToday">
+            <div class="text-center text-muted" style="padding:30px"><div style="font-size:2rem">🏆</div>No sales today yet</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity Feed -->
+      <div class="card mb-6">
+        <div class="card-header">
+          <span class="card-title">📋 Recent Activity</span>
+          <span class="text-muted" style="font-size:0.8rem">Last 10 events</span>
+        </div>
+        <div id="activityFeed">
+          <div class="text-center text-muted" style="padding:20px">No activity yet</div>
+        </div>
+      </div>
+
     </div>
-  </div>
 
-  <!-- SALES TARGETS -->
-  <div class="card" id="targetsCard" style="display:none">
-    <div class="card-header"><h3 class="card-title">🎯 Sales Targets</h3><a href="settings.html" style="font-size:0.8rem;color:var(--accent);text-decoration:none">Edit →</a></div>
-    <div id="targetsArea"></div>
-  </div>
+    <footer class="page-footer">
+      <p>Powered by <strong>HMG Enterprise v5.0</strong> — Technology-Powered Business Intelligence — <a href="https://cssadewale.pages.dev">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev">hmgconcepts.pages.dev</a></p>
+    </footer>
+  </main>
 
-  <div id="alertsArea"></div>
+  <div class="toast-container" id="toastContainer"></div>
 
-  <div class="quick-actions">
-    <a href="sales.html" class="qa-btn qa-primary">➕ Record Sale</a>
-    <a href="inventory.html" class="qa-btn qa-secondary">📦 Restock Item</a>
-    <a href="expenses.html" class="qa-btn qa-secondary">💸 Log Expense</a>
-    <a href="journal.html" class="qa-btn qa-secondary">📝 Add Note</a>
-    <button class="qa-btn qa-secondary" onclick="shareReport('today')">📱 Share Today</button>
-  </div>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+  (function(){
+    const sales=ST.sales(),exps=ST.expenses(),products=ST.products();
+    const todaySales=sales.filter(s=>isToday(s.date));
+    const weekSales=sales.filter(s=>isThisWeek(s.date));
+    const monthSales=sales.filter(s=>isThisMonth(s.date));
+    const todayExps=exps.filter(e=>isToday(e.date));
 
-  <div class="dashboard-grid">
-    <div class="card" style="grid-column:span 2">
-      <div class="card-header"><h3 class="card-title">Recent Sales</h3><a href="sales.html" style="font-size:0.8rem;color:var(--accent);text-decoration:none">View All →</a></div>
-      <table><thead><tr><th>Product</th><th>Qty</th><th>Total</th><th>Profit</th><th>Payment</th><th>Customer</th><th>Time</th></tr></thead>
-      <tbody id="recentSalesBody"><tr><td colspan="7" class="empty-cell">No sales recorded yet. <a href="sales.html">Record your first sale →</a></td></tr></tbody></table>
-    </div>
+    // KPIs
+    document.getElementById('kpiTodayRev').textContent=ST.fmt(sum(todaySales,'total'));
+    document.getElementById('kpiTodayProfit').textContent=ST.fmt(sum(todaySales,'profit'));
+    document.getElementById('kpiTodayExp').textContent=ST.fmt(sum(todayExps,'amount'));
+    document.getElementById('kpiWeekRev').textContent=ST.fmt(sum(weekSales,'total'));
+    document.getElementById('kpiMonthRev').textContent=ST.fmt(sum(monthSales,'total'));
+    document.getElementById('kpiTotalRev').textContent=ST.fmt(sum(sales,'total'));
+    document.getElementById('kpiStockVal').textContent=ST.fmt(products.reduce((a,p)=>a+p.price*p.stock,0));
+    const outstanding=ST.credits().filter(c=>c.status!=='paid').reduce((a,c)=>a+(c.total-(c.paid||0)),0);
+    document.getElementById('kpiCredits').textContent=ST.fmt(outstanding);
 
-    <div class="card">
-      <div class="card-header"><h3 class="card-title">Top Products Today</h3></div>
-      <div id="topProductsToday"><div class="empty-cell">No sales today yet</div></div>
-    </div>
+    // Monthly comparison
+    const mc=ST.monthlyComparison();
+    let mcHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">';
+    function mcCard(label,cur,prev,pctKey){
+      const ch=mc.changes[pctKey];const up=parseFloat(ch)>=0;
+      return'<div class="stat-item"><div class="stat-label">'+label+'</div><div class="stat-value">'+ST.fmt(cur)+'</div>'+
+        (prev?'<div class="kpi-change '+(up?'up':'down')+'">'+(up?'↑':'↓')+' '+Math.abs(ch)+'%</div>':'')+'</div>';
+    }
+    mcHTML+=mcCard('Revenue',mc.current.revenue,mc.previous.revenue,'revenue');
+    mcHTML+=mcCard('Net Profit',mc.current.netProfit,mc.previous.netProfit,'profit');
+    mcHTML+=mcCard('Transactions',mc.current.transactions,mc.previous.transactions,'transactions');
+    mcHTML+=mcCard('Avg Order',mc.current.avgOrder,mc.previous.avgOrder,'avgOrder');
+    mcHTML+='</div>';
+    document.getElementById('comparisonArea').innerHTML=mcHTML;
 
-    <div class="card">
-      <div class="card-header"><h3 class="card-title">Stock Alerts</h3><a href="inventory.html" style="font-size:0.8rem;color:var(--accent);text-decoration:none">Manage →</a></div>
-      <div id="stockAlertsList"><div class="empty-cell">All stock levels healthy ✅</div></div>
-    </div>
+    // Health Score
+    const hs=ST.healthScore();
+    const hsClass=hs.score>=70?'good':hs.score>=40?'warning':'danger';
+    document.getElementById('healthScoreArea').innerHTML=
+      '<div class="health-score-circle '+hsClass+'">'+hs.score+'</div>'+
+      '<div class="health-metrics">'+
+      '<div class="health-metric"><span class="health-metric-label">Profit Margin</span><span class="health-metric-value text-primary">'+hs.details.marginPct+'%</span></div>'+
+      '<div class="health-metric"><span class="health-metric-label">Stock Health</span><span class="health-metric-value text-success">'+hs.details.stockHealth+'%</span></div>'+
+      '<div class="health-metric"><span class="health-metric-label">Avg Daily Revenue</span><span class="health-metric-value">'+ST.fmt(hs.details.avgDailyRev)+'</span></div>'+
+      '<div class="health-metric"><span class="health-metric-label">Net Position</span><span class="health-metric-value '+(hs.details.netPos>=0?'text-success':'text-danger')+'">'+ST.fmt(hs.details.netPos)+'</span></div>'+
+      '</div>';
 
-    <div class="card" style="grid-column:span 2">
-      <div class="card-header"><h3 class="card-title">📋 Recent Activity</h3><span style="font-size:0.78rem;color:var(--muted)">Last 10 events</span></div>
-      <div id="activityFeed" class="activity-feed"><div class="empty-cell">No activity yet</div></div>
-    </div>
-  </div>
-</div>
+    // Data Health Alerts
+    const dh=ST.dataHealthCheck();
+    let alertsHTML='';
+    dh.issues.forEach(i=>{
+      const cls=i.severity==='danger'?'alert-danger':i.severity==='warning'?'alert-warning':'alert-info';
+      const icon=i.severity==='danger'?'🚨':i.severity==='warning'?'⚠️':'💡';
+      alertsHTML+='<div class="alert '+cls+'"><span class="alert-icon">'+icon+'</span><span>'+i.msg+'</span></div>';
+    });
+    document.getElementById('healthAlerts').innerHTML=alertsHTML;
 
-<!-- Footer -->
-<div class="brand-footer">
-  <div style="font-weight:700;color:var(--text);font-family:'Syne',sans-serif">HMG Concepts Enterprise</div>
-  <div>Technology-Powered Business Intelligence</div>
-  <div style="margin-top:0.3rem"><a href="https://cssadewale.pages.dev" target="_blank">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev" target="_blank">hmgconcepts.pages.dev</a> · <a href="https://hmgacademy.pages.dev" target="_blank">hmgacademy.pages.dev</a></div>
-  <div class="powered-by">Powered by HMG Enterprise — Adewale Samson Adeagbo — Enterprise v4.0</div>
-</div>';}
-    if(targets.weekly>0){const p=Math.min(100,sum(weekSales)/targets.weekly*100);h+='<div class="target-row"><div class="target-header"><span class="target-label">Weekly</span><span class="target-value">'+ST.fmt(sum(weekSales))+' / '+ST.fmt(targets.weekly)+' ('+p.toFixed(0)+'%)</span></div><div class="progress-bar-container"><div class="progress-bar-fill blue" style="width:'+p+'%"></div></div></div>';}
-    if(targets.monthly>0){const p=Math.min(100,sum(monthSales)/targets.monthly*100);h+='<div class="target-row"><div class="target-header"><span class="target-label">Monthly</span><span class="target-value">'+ST.fmt(sum(monthSales))+' / '+ST.fmt(targets.monthly)+' ('+p.toFixed(0)+'%)</span></div><div class="progress-bar-container"><div class="progress-bar-fill purple" style="width:'+p+'%"></div></div></div>';}
-    document.getElementById('targetsArea').innerHTML=h;
-  }
+    // Sales Targets
+    const targets=ST.targets();
+    let tHTML='';
+    if(targets.daily>0){
+      const p=Math.min(100,sum(todaySales,'total')/targets.daily*100);
+      tHTML+='<div class="mb-4"><div class="progress-label"><span>Daily Target</span><span>'+ST.fmt(sum(todaySales,'total'))+' / '+ST.fmt(targets.daily)+' ('+p.toFixed(0)+'%)</span></div><div class="progress-bar"><div class="progress-bar-fill '+(p>=100?'success':p>=70?'warning':'')+'" style="width:'+p+'%"></div></div></div>';
+    }
+    if(targets.weekly>0){
+      const p=Math.min(100,sum(weekSales,'total')/targets.weekly*100);
+      tHTML+='<div class="mb-4"><div class="progress-label"><span>Weekly Target</span><span>'+ST.fmt(sum(weekSales,'total'))+' / '+ST.fmt(targets.weekly)+' ('+p.toFixed(0)+'%)</span></div><div class="progress-bar"><div class="progress-bar-fill '+(p>=100?'success':p>=70?'warning':'')+'" style="width:'+p+'%"></div></div></div>';
+    }
+    if(targets.monthly>0){
+      const p=Math.min(100,sum(monthSales,'total')/targets.monthly*100);
+      tHTML+='<div class="mb-4"><div class="progress-label"><span>Monthly Target</span><span>'+ST.fmt(sum(monthSales,'total'))+' / '+ST.fmt(targets.monthly)+' ('+p.toFixed(0)+'%)</span></div><div class="progress-bar"><div class="progress-bar-fill '+(p>=100?'success':p>=70?'warning':'')+'" style="width:'+p+'%"></div></div></div>';
+    }
+    if(!tHTML)tHTML='<div class="text-center text-muted" style="padding:20px">No targets set. <a href="settings.html">Configure targets →</a></div>';
+    document.getElementById('targetsArea').innerHTML=tHTML;
 
-  // Register status
-  const regData=ST.registerData(), lastReg=[...regData].reverse().find(r=>true), isRegOpen=lastReg&&lastReg.type==='open';
-  document.getElementById('registerStatusBadge').innerHTML=isRegOpen
-    ?'<div class="register-status open"><span class="status-dot open"></span> Register Open</div>'
-    :'<div class="register-status closed"><span class="status-dot closed"></span> Register Closed</div>';
+    // Register Status
+    const regData=ST.registerData();
+    const lastReg=[...regData].reverse().find(r=>true);
+    const isRegOpen=lastReg&&lastReg.type==='open';
+    document.getElementById('registerStatusBadge').innerHTML=isRegOpen
+      ?'<span class="badge badge-success">🟢 Register Open</span>'
+      :'<span class="badge badge-muted">🔴 Register Closed</span>';
 
-  // Alerts
-  let alertsHTML='';
-  if(outItems.length) alertsHTML+='<div class="alert alert-danger">⛔ <strong>Out of Stock:</strong> '+outItems.map(p=>p.name).join(', ')+'</div>';
-  if(lowItems.length) alertsHTML+='<div class="alert alert-warning">⚠️ <strong>Low Stock:</strong> '+lowItems.map(p=>p.name+' ('+p.stock+')').join(' | ')+'</div>';
-  const usage=ST.storageUsage();
-  if(parseFloat(usage.pct)>70) alertsHTML+='<div class="alert alert-warning">💾 Storage: '+usage.pct+'% used. Back up and clear old data.</div>';
-  document.getElementById('alertsArea').innerHTML=alertsHTML;
+    // Stock Alerts
+    const outItems=products.filter(p=>p.active&&p.stock===0);
+    const lowItems=products.filter(p=>p.active&&p.stock>0&&p.stock<=(p.reorderLevel||10));
+    let stockHTML='';
+    if(outItems.length)stockHTML+='<div class="alert alert-danger"><span class="alert-icon">⛔</span><span><strong>Out of Stock:</strong> '+outItems.map(p=>p.name).join(', ')+'</span></div>';
+    if(lowItems.length)stockHTML+='<div class="alert alert-warning"><span class="alert-icon">⚠️</span><span><strong>Low Stock:</strong> '+lowItems.map(p=>p.name+' ('+p.stock+')').join(' | ')+'</span></div>';
+    if(!stockHTML)stockHTML='<div class="text-muted" style="font-size:0.85rem">All stock levels healthy ✅</div>';
+    document.getElementById('stockAlerts').innerHTML=stockHTML;
 
-  // Recent sales
-  const recent=[...sales].reverse().slice(0,12);
-  if(recent.length){
-    document.getElementById('recentSalesBody').innerHTML=recent.map(s=>
-      '<tr><td><strong>'+s.productName+'</strong></td><td>'+s.qty+(s.unit?' '+s.unit:'')+'</td>'+
-      '<td><strong>'+ST.fmt(s.total)+'</strong></td>'+
-      '<td style="color:'+((s.profit||0)>=0?'var(--accent)':'var(--danger)')+'">'+ST.fmt(s.profit||0)+'</td>'+
-      '<td><span class="badge badge-info">'+(s.payMethod||'Cash')+'</span></td>'+
-      '<td>'+(s.customer||'Walk-in')+'</td>'+
-      '<td style="color:var(--muted);font-size:0.78rem">'+new Date(s.date).toLocaleTimeString()+'</td></tr>'
-    ).join('');
-  }
+    // Credit alerts
+    const overdue=ST.credits().filter(c=>c.status==='pending'&&c.dueDate&&new Date(c.dueDate)<new Date());
+    let creditHTML='';
+    if(overdue.length)creditHTML+='<div class="alert alert-danger mt-2"><span class="alert-icon">💳</span><span><strong>'+overdue.length+' overdue credit(s)</strong> need follow-up</span></div>';
+    document.getElementById('creditAlerts').innerHTML=creditHTML;
 
-  // Top products
-  const byProd={};
-  todaySales.forEach(s=>{if(!byProd[s.productName])byProd[s.productName]={qty:0,rev:0};byProd[s.productName].qty+=s.qty;byProd[s.productName].rev+=s.total;});
-  const topToday=Object.entries(byProd).sort((a,b)=>b[1].rev-a[1].rev).slice(0,5);
-  if(topToday.length){
-    document.getElementById('topProductsToday').innerHTML=topToday.map(([n,d],i)=>
-      '<div class="top-item"><div><span class="rank-badge">#'+(i+1)+'</span> <strong>'+n+'</strong></div>'+
-      '<div style="text-align:right"><div style="color:var(--accent);font-weight:700">'+ST.fmt(d.rev)+'</div><div style="font-size:0.75rem;color:var(--muted)">'+d.qty+' units</div></div></div>'
-    ).join('');
-  }
+    // Recent Sales
+    const recent=[...sales].reverse().slice(0,10);
+    if(recent.length){
+      document.getElementById('recentSalesBody').innerHTML=recent.map(s=>
+        '<tr><td><strong>'+s.productName+'</strong></td><td>'+s.qty+(s.unit?' '+s.unit:'')+'</td>'+
+        '<td><strong>'+ST.fmt(s.total)+'</strong></td><td>'+ST.fmt(s.profit||0)+'</td>'+
+        '<td><span class="tag">'+(s.payMethod||'Cash')+'</span></td>'+
+        '<td class="text-muted">'+formatTime(s.date)+'</td></tr>'
+      ).join('');
+    }
 
-  // Stock alerts
-  const allAlerts=[...outItems.map(p=>({...p,status:'out'})),...lowItems.map(p=>({...p,status:'low'}))];
-  if(allAlerts.length){
-    document.getElementById('stockAlertsList').innerHTML=allAlerts.map(p=>
-      '<div class="stock-alert-row"><div><strong>'+p.name+'</strong><div style="font-size:0.75rem;color:var(--muted)">'+p.category+'</div></div>'+
-      '<div><span class="badge '+(p.status==='out'?'badge-danger':'badge-warn')+'">'+(p.status==='out'?'OUT':p.stock+' left')+'</span></div></div>'
-    ).join('');
-  }
+    // Top Products Today
+    const byProd={};
+    todaySales.forEach(s=>{if(!byProd[s.productName])byProd[s.productName]={qty:0,rev:0};byProd[s.productName].qty+=s.qty;byProd[s.productName].rev+=s.total});
+    const topToday=Object.entries(byProd).sort((a,b)=>b[1].rev-a[1].rev).slice(0,5);
+    if(topToday.length){
+      document.getElementById('topProductsToday').innerHTML='<div style="display:flex;flex-direction:column;gap:10px">'+
+        topToday.map(([n,d],i)=>
+          '<div style="display:flex;align-items:center;gap:12px;padding:10px;background:var(--surface-2);border-radius:var(--radius)">'+
+          '<div style="width:28px;height:28px;border-radius:50%;background:var(--primary-bg);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:var(--primary-light)">'+(i+1)+'</div>'+
+          '<div style="flex:1"><div style="font-weight:600">'+n+'</div><div class="text-muted" style="font-size:0.78rem">'+d.qty+' units</div></div>'+
+          '<div style="font-weight:700">'+ST.fmt(d.rev)+'</div></div>'
+        ).join('')+'</div>';
+    }
 
-  // Activity feed
-  const actLog=ST.activityLog(), recentAct=[...actLog].reverse().slice(0,10);
-  const iconMap={sale:'🛒',restock:'📦',expense:'💸',register:'🏧',product:'📋',setting:'⚙️',backup:'💾',supplier:'🚚'};
-  if(recentAct.length){
-    document.getElementById('activityFeed').innerHTML=recentAct.map(a=>
-      '<div class="activity-item"><div class="activity-icon '+(a.type||'setting')+'">'+(iconMap[a.type]||'📋')+'</div>'+
-      '<div class="activity-text">'+a.message+'</div><div class="activity-time">'+new Date(a.date).toLocaleTimeString()+'</div></div>'
-    ).join('');
-  }
-
-  window.shareReport=function(period){shareWhatsApp(generateShareSummary(period));};
-})();
-</script>
+    // Activity Feed
+    const actLog=ST.activityLog(),recentAct=[...actLog].reverse().slice(0,10);
+    const iconMap={sale:'🛒',restock:'📦',expense:'💸',register:'🏧',product:'📋',setting:'⚙️',backup:'💾',supplier:'🚚',credit:'💳'};
+    if(recentAct.length){
+      document.getElementById('activityFeed').innerHTML=recentAct.map(a=>
+        '<div class="activity-item"><div class="activity-icon '+(a.type||'')+'">'+(iconMap[a.type]||'📋')+'</div>'+
+        '<div class="activity-body"><div class="activity-text">'+a.message+'</div>'+
+        '<div class="activity-time">'+timeAgo(a.date)+'</div></div></div>'
+      ).join('');
+    }
+  })();
+  </script>
 </body>
 </html>

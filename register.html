@@ -1,302 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cash Register — SaleTrack — HMG Enterprise</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — HMG Enterprise v5.0</title>
+  <link rel="stylesheet" href="css/style.css"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#6366f1">
 </head>
 <body>
+  <aside class="sidebar" id="sidebar"><div class="sidebar-header"><div class="sidebar-logo"><div class="logo-icon">🏪</div><span>HMG Enterprise</span></div><button class="sidebar-collapse-btn" onclick="toggleSidebar()">‹</button></div><nav class="sidebar-nav"><div class="nav-group"><div class="nav-group-title">Overview</div><a href="index.html" class="nav-item"><span class="nav-icon">📊</span><span class="nav-text">Dashboard</span></a><a href="reports.html" class="nav-item"><span class="nav-icon">📈</span><span class="nav-text">Reports</span></a></div><div class="nav-group"><div class="nav-group-title">Operations</div><a href="sales.html" class="nav-item"><span class="nav-icon">🛒</span><span class="nav-text">Sales</span></a><a href="inventory.html" class="nav-item"><span class="nav-icon">📦</span><span class="nav-text">Inventory</span></a><a href="expenses.html" class="nav-item"><span class="nav-icon">💸</span><span class="nav-text">Expenses</span></a><a href="register.html" class="nav-item active"><span class="nav-icon">🏧</span><span class="nav-text">Register</span></a></div><div class="nav-group"><div class="nav-group-title">People</div><a href="customers.html" class="nav-item"><span class="nav-icon">👥</span><span class="nav-text">Customers</span></a><a href="suppliers.html" class="nav-item"><span class="nav-icon">🚚</span><span class="nav-text">Suppliers</span></a><a href="staff.html" class="nav-item"><span class="nav-icon">👨‍💼</span><span class="nav-text">Staff</span></a></div><div class="nav-group"><div class="nav-group-title">Finance</div><a href="budgets.html" class="nav-item"><span class="nav-icon">💰</span><span class="nav-text">Budgets</span></a><a href="credits.html" class="nav-item"><span class="nav-icon">💳</span><span class="nav-text">Credits</span></a></div><div class="nav-group"><div class="nav-group-title">Tools</div><a href="journal.html" class="nav-item"><span class="nav-icon">📝</span><span class="nav-text">Journal</span></a><a href="settings.html" class="nav-item"><span class="nav-icon">⚙️</span><span class="nav-text">Settings</span></a></div></nav><div class="sidebar-footer"><div class="footer-dot"></div><div class="sidebar-footer-info">Enterprise v5.0</div></div></aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <main class="main-content">
+    <header class="topbar"><button class="topbar-hamburger" onclick="toggleSidebar()">☰</button><div class="topbar-title">🏧 Register</div><div class="topbar-search"><input type="text" id="globalSearch" placeholder="Search…"></div><div class="topbar-actions"><button class="topbar-btn" id="notifBtn" onclick="toggleNotifPanel()">🔔<span class="notif-badge" id="notifBadge" style="display:none">0</span></button><div class="topbar-biz-name" id="bizNameNav">HMG Concepts</div></div></header>
+    <div class="search-panel" id="searchPanel"></div><div class="notif-panel" id="notifPanel"><div class="notif-panel-header"><span>Notifications</span><button class="btn btn-sm btn-ghost" onclick="ST.saveNotifications([]);renderNotifPanel();updateNotifBadge()">Clear all</button></div><div id="notifList"></div></div>
+    <div class="page-content">
+      <div class="page-header"><h1>Cash Register</h1><p class="page-subtitle">Manage your daily cash drawer</p></div>
 
-<nav class="navbar">
-  <div class="navbar-brand">
-    <div class="brand-logo">HMG</div>
-    <div>
-      <div class="brand-name" id="bizNameNav">My Store</div>
-      <div class="brand-sub">Cash Register</div>
-    </div>
-  </div>
-  <nav class="navbar-links">
-    <a href="index.html">📊 Dashboard</a>
-    <a href="sales.html">🛒 Sales</a>
-    <a href="inventory.html">📦 Inventory</a>
-    <a href="expenses.html">💸 Expenses</a>
-    <a href="customers.html">👥 Customers</a>
-    <a href="suppliers.html">🚚 Suppliers</a>
-    <a href="register.html" class="active">🏧 Register</a>
-    <a href="journal.html">📝 Journal</a>
-    <a href="staff.html">👨‍💼 Staff</a>
-    <a href="budgets.html">💰 Budgets</a>
-    <a href="credits.html">💳 Credits</a>
-    <a href="reports.html">📈 Reports</a>
-    <a href="settings.html">⚙️ Settings</a>
-  </nav>
-  <button class="hamburger" onclick="toggleMenu()">☰</button>
-</nav>
+      <div class="alert alert-info mb-6" id="regStatus"><span class="alert-icon">ℹ️</span><span>Register is <strong>CLOSED</strong>. Open it to start recording.</span></div>
 
-<div class="mobile-menu" id="mobileMenu">
-  <a href="index.html">📊 Dashboard</a>
-  <a href="sales.html">🛒 Sales</a>
-  <a href="inventory.html">📦 Inventory</a>
-  <a href="expenses.html">💸 Expenses</a>
-  <a href="customers.html">👥 Customers</a>
-  <a href="suppliers.html">🚚 Suppliers</a>
-  <a href="register.html" class="active">🏧 Register</a>
-  <a href="journal.html">📝 Journal</a>
-  <a href="staff.html">👨‍💼 Staff</a>
-  <a href="budgets.html">💰 Budgets</a>
-  <a href="credits.html">💳 Credits</a>
-  <a href="reports.html">📈 Reports</a>
-  <a href="settings.html">⚙️ Settings</a>
-</div>
-
-<div class="page">
-
-  <div class="page-header">
-    <div>
-      <h1 class="page-title">Cash Register</h1>
-      <div class="page-sub">Manage your daily cash drawer</div>
-    </div>
-  </div>
-
-  <!-- CURRENT STATUS -->
-  <div class="card" style="text-align:center;padding:2rem">
-    <div id="regStatusDisplay"></div>
-  </div>
-
-  <div class="two-col-layout">
-
-    <!-- OPEN/CLOSE REGISTER -->
-    <div>
-      <div class="card" id="openCard" style="display:none">
-        <h3 class="card-title">🔓 Open Register</h3>
-        <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem">Start your business day by recording the starting cash in your drawer.</p>
-        <div class="form-group" style="margin-bottom:1rem">
-          <label>Starting Cash Amount</label>
-          <input type="number" id="startCash" step="0.01" min="0" placeholder="0.00" />
+      <div class="section-grid">
+        <div class="card" id="openCard">
+          <div class="card-header"><span class="card-title">🔓 Open Register</span></div>
+          <p class="text-muted mb-4" style="font-size:0.85rem">Start your business day by recording the starting cash in your drawer.</p>
+          <div class="form-group"><label class="form-label">Starting Cash Amount</label><input type="number" id="startCash" class="form-input" min="0" placeholder="0"></div>
+          <div class="form-group"><label class="form-label">Note (optional)</label><input type="text" id="startNote" class="form-input" placeholder="e.g. Morning float"></div>
+          <button class="btn btn-success btn-lg w-full" onclick="doOpen()">🔓 Open Register</button>
         </div>
-        <div class="form-group" style="margin-bottom:1rem">
-          <label>Note (optional)</label>
-          <input type="text" id="startNote" placeholder="e.g. Monday opening" />
-        </div>
-        <button class="btn btn-primary btn-full" onclick="doOpenRegister()">🔓 Open Register</button>
-      </div>
 
-      <div class="card" id="closeCard" style="display:none">
-        <h3 class="card-title">🔒 Close Register</h3>
-        <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem">End your business day. Count the cash in your drawer.</p>
-
-        <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.2rem">
-          <div class="pay-row"><span>Starting Cash</span><strong id="closeStartCash">—</strong></div>
-          <div class="pay-row"><span>Today's Cash Sales</span><strong style="color:var(--accent)" id="closeCashSales">—</strong></div>
-          <div class="pay-row"><span>Today's Expenses (Cash)</span><strong style="color:var(--danger)" id="closeCashExpenses">—</strong></div>
-          <div class="pay-row" style="background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.2);border-radius:8px;padding:0.75rem">
-            <span style="font-weight:600">Expected Cash in Drawer</span>
-            <strong style="color:var(--info);font-size:1.1rem" id="closeExpected">—</strong>
+        <div class="card" id="closeCard">
+          <div class="card-header"><span class="card-title">🔒 Close Register</span></div>
+          <div style="display:grid;gap:8px;margin-bottom:16px">
+            <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--surface-2);border-radius:var(--radius)"><span class="text-muted">Starting Cash</span><strong id="closeStart">—</strong></div>
+            <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--surface-2);border-radius:var(--radius)"><span class="text-muted">Today's Cash Sales</span><strong id="closeSales" class="text-success">—</strong></div>
+            <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--surface-2);border-radius:var(--radius)"><span class="text-muted">Cash Expenses</span><strong id="closeExp" class="text-danger">—</strong></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--primary-bg);border-radius:var(--radius);border:1px solid var(--primary-border)"><span style="font-weight:700">Expected Cash</span><strong id="closeExpected" class="text-primary">—</strong></div>
           </div>
+          <div class="form-group"><label class="form-label">Actual Cash Counted</label><input type="number" id="actualCash" class="form-input" min="0" placeholder="Count cash in drawer"></div>
+          <div class="form-group"><label class="form-label">Note (optional)</label><input type="text" id="closeNote" class="form-input"></div>
+          <button class="btn btn-danger btn-lg w-full" onclick="doClose()">🔒 Close Register</button>
         </div>
-
-        <div class="form-group" style="margin-bottom:1rem">
-          <label>Actual Cash Counted</label>
-          <input type="number" id="actualCash" step="0.01" min="0" placeholder="Count and enter amount" oninput="calcDiscrepancy()" />
-        </div>
-        <div id="discrepancyDisplay" style="margin-bottom:1rem"></div>
-        <div class="form-group" style="margin-bottom:1rem">
-          <label>Note (optional)</label>
-          <input type="text" id="closeNote" placeholder="Any notes about today's register" />
-        </div>
-        <button class="btn btn-danger btn-full" onclick="doCloseRegister()">🔒 Close Register</button>
       </div>
 
-      <!-- TODAY'S SUMMARY -->
-      <div class="card" id="todaySummaryCard" style="display:none">
-        <h3 class="card-title">📊 Today's Summary</h3>
-        <div id="todaySummary"></div>
+      <div class="section-grid mt-6">
+        <div class="card"><div class="card-header"><span class="card-title">📋 Register History</span></div><div class="table-wrapper"><table class="data-table"><thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Discrepancy</th><th>Note</th></tr></thead><tbody id="regHistory"><tr><td colspan="5" class="table-empty">No register history yet</td></tr></tbody></table></div></div>
+        <div class="card"><div class="card-header"><span class="card-title">📊 Today's Payment Breakdown</span></div><div id="payBreakdown"><div class="text-center text-muted" style="padding:20px">No transactions yet</div></div></div>
       </div>
     </div>
+    <footer class="page-footer"><p>Powered by <strong>HMG Enterprise v5.0</strong></p></footer>
+  </main>
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="js/storage.js"></script><script src="js/app.js"></script>
+  <script>
+  const regData=ST.registerData();
+  const lastReg=[...regData].reverse().find(r=>true);
+  const isRegOpen=lastReg&&lastReg.type==='open';
 
-    <!-- REGISTER HISTORY -->
-    <div>
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">📋 Register History</h3>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Type</th>
-              <th>Amount</th>
-              <th>Discrepancy</th>
-              <th>Note</th>
-            </tr>
-          </thead>
-          <tbody id="regHistoryBody">
-            <tr><td colspan="5" class="empty-cell">No register history yet</td></tr>
-          </tbody>
-        </table>
-      </div>
+  function calcCloseFigures(){
+    const opens=regData.filter(r=>r.type==='open'&&isToday(r.date));
+    const startCash=opens.length?opens[opens.length-1].amount:0;
+    const todayCashSales=ST.sales().filter(s=>isToday(s.date)&&(s.payMethod||'Cash')==='Cash').reduce((a,s)=>a+s.total,0);
+    const todayCashExp=ST.expenses().filter(e=>isToday(e.date)&&(e.paymentMethod||'Cash')==='Cash').reduce((a,e)=>a+e.amount,0);
+    const expected=startCash+todayCashSales-todayCashExp;
+    document.getElementById('closeStart').textContent=ST.fmt(startCash);
+    document.getElementById('closeSales').textContent=ST.fmt(todayCashSales);
+    document.getElementById('closeExp').textContent=ST.fmt(todayCashExp);
+    document.getElementById('closeExpected').textContent=ST.fmt(expected);
+    return expected;
+  }
 
-      <!-- PAYMENT METHOD BREAKDOWN TODAY -->
-      <div class="card">
-        <h3 class="card-title">Today's Payment Breakdown</h3>
-        <div id="regPayBreakdown" class="pay-breakdown"></div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<div class="toast" id="toast"><span id="toastMsg"></span></div>
-
-<script src="js/storage.js"></script>
-<script src="js/app.js"></script>
-<script>
-(function () {
-  ST.init();
-  const cfg = ST.config();
-  document.getElementById('bizNameNav').textContent = cfg.businessName || 'My Store';
-
-  const regData = ST.registerData();
-  const lastEntry = [...regData].reverse().find(e => true);
-  const isRegOpen = lastEntry && lastEntry.type === 'open';
-
-  function updateUI() {
-    const regData = ST.registerData();
-    const lastEntry = [...regData].reverse().find(e => true);
-    const isRegOpen = lastEntry && lastEntry.type === 'open';
-
-    // Status display
-    if (isRegOpen) {
-      document.getElementById('regStatusDisplay').innerHTML =
-        '<div class="register-status open" style="display:inline-flex;font-size:1rem;margin-bottom:0.75rem"><span class="status-dot open"></span> Register is OPEN</div>' +
-        '<div style="font-size:0.85rem;color:var(--muted)">Opened at ' + new Date(lastEntry.date).toLocaleTimeString() + ' with ' + ST.fmt(lastEntry.amount) + '</div>';
-
-      document.getElementById('openCard').style.display = 'none';
-      document.getElementById('closeCard').style.display = 'block';
-      document.getElementById('todaySummaryCard').style.display = 'block';
-
-      // Calculate expected cash
-      const startingCash = lastEntry.amount;
-      const sales = ST.sales();
-      const todayStr = new Date().toDateString();
-      const todaySales = sales.filter(s => new Date(s.date).toDateString() === todayStr);
-      const cashSales = todaySales.filter(s => s.payMethod === 'Cash').reduce((a,s) => a + s.total, 0);
-      const exps = ST.expenses();
-      const cashExpenses = exps.filter(e => new Date(e.date).toDateString() === todayStr && (e.payMethod === 'Cash' || !e.payMethod)).reduce((a,e) => a + e.amount, 0);
-      const expected = startingCash + cashSales - cashExpenses;
-
-      document.getElementById('closeStartCash').textContent = ST.fmt(startingCash);
-      document.getElementById('closeCashSales').textContent = ST.fmt(cashSales);
-      document.getElementById('closeCashExpenses').textContent = ST.fmt(cashExpenses);
-      document.getElementById('closeExpected').textContent = ST.fmt(expected);
-
-      // Today's summary
-      const totalRev = todaySales.reduce((a,s) => a + s.total, 0);
-      const totalProfit = todaySales.reduce((a,s) => a + (s.profit||0), 0);
-      const totalExps = exps.filter(e => new Date(e.date).toDateString() === todayStr).reduce((a,e) => a + e.amount, 0);
-      document.getElementById('todaySummary').innerHTML =
-        '<div style="display:flex;flex-direction:column;gap:0.5rem">' +
-        '<div class="pay-row"><span>Total Sales</span><strong>' + todaySales.length + ' (' + ST.fmt(totalRev) + ')</strong></div>' +
-        '<div class="pay-row"><span>Gross Profit</span><strong style="color:var(--accent)">' + ST.fmt(totalProfit) + '</strong></div>' +
-        '<div class="pay-row"><span>All Expenses</span><strong style="color:var(--danger)">' + ST.fmt(totalExps) + '</strong></div>' +
-        '<div class="pay-row" style="background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);border-radius:8px;padding:0.75rem">' +
-        '<span style="font-weight:700">Net Profit</span><strong style="font-size:1.1rem;color:' + ((totalProfit - totalExps) >= 0 ? 'var(--accent)' : 'var(--danger)') + '">' + ST.fmt(totalProfit - totalExps) + '</strong></div>' +
-        '</div>';
-
-      // Payment breakdown
-      const byPay = {};
-      todaySales.forEach(s => { byPay[s.payMethod || 'Cash'] = (byPay[s.payMethod || 'Cash'] || 0) + s.total; });
-      document.getElementById('regPayBreakdown').innerHTML = Object.entries(byPay).length
-        ? Object.entries(byPay).map(([m,v]) => '<div class="pay-row"><span>' + m + '</span><strong>' + ST.fmt(v) + '</strong></div>').join('')
-        : '<div style="color:var(--muted);font-size:0.85rem">No transactions today</div>';
-
-    } else {
-      document.getElementById('regStatusDisplay').innerHTML =
-        '<div class="register-status closed" style="display:inline-flex;font-size:1rem;margin-bottom:0.75rem"><span class="status-dot closed"></span> Register is CLOSED</div>' +
-        '<div style="font-size:0.85rem;color:var(--muted)">Open the register to start recording</div>';
-      document.getElementById('openCard').style.display = 'block';
-      document.getElementById('closeCard').style.display = 'none';
-      document.getElementById('todaySummaryCard').style.display = 'none';
+  function updateRegUI(){
+    if(isRegOpen&&isToday(lastReg.date)){
+      document.getElementById('regStatus').innerHTML='<span class="alert-icon">✅</span><span>Register is <strong>OPEN</strong> since '+formatTime(lastReg.date)+'</span>';
+      document.getElementById('regStatus').className='alert alert-success mb-6';
+      document.getElementById('openCard').style.opacity='0.5';
+      calcCloseFigures();
+    }else{
+      document.getElementById('closeCard').style.opacity='0.5';
     }
-
-    // Register history
-    const history = [...regData].reverse().slice(0, 20);
-    const tbody = document.getElementById('regHistoryBody');
-    if (history.length) {
-      tbody.innerHTML = history.map(e =>
-        '<tr>' +
-        '<td style="font-size:0.82rem;color:var(--muted)">' + new Date(e.date).toLocaleString() + '</td>' +
-        '<td><span class="badge ' + (e.type === 'open' ? 'badge-success' : 'badge-danger') + '">' + (e.type === 'open' ? 'OPEN' : 'CLOSE') + '</span></td>' +
-        '<td>' + ST.fmt(e.type === 'open' ? e.amount : e.actualCash) + '</td>' +
-        '<td style="color:' + ((e.discrepancy || 0) === 0 ? 'var(--accent)' : (e.discrepancy || 0) > 0 ? 'var(--accent)' : 'var(--danger)') + '">' +
-          (e.type === 'close' ? ((e.discrepancy || 0) === 0 ? '✅ Balanced' : ST.fmt(e.discrepancy)) : '—') + '</td>' +
-        '<td style="font-size:0.82rem;color:var(--muted)">' + (e.note || '—') + '</td>' +
-        '</tr>'
+    // History
+    const recent=[...regData].reverse().slice(0,20);
+    if(recent.length){
+      document.getElementById('regHistory').innerHTML=recent.map(r=>
+        '<tr><td class="text-muted">'+formatDateTime(r.date)+'</td>'+
+        '<td><span class="badge '+(r.type==='open'?'badge-success':'badge-danger')+'">'+(r.type==='open'?'Open':'Close')+'</span></td>'+
+        '<td><strong>'+ST.fmt(r.amount||r.expectedCash||0)+'</strong></td>'+
+        '<td>'+(r.discrepancy!==undefined?ST.fmt(r.discrepancy):'—')+'</td>'+
+        '<td class="text-muted">'+(r.note||'—')+'</td></tr>'
+      ).join('');
+    }
+    // Payment breakdown
+    const todaySales=ST.sales().filter(s=>isToday(s.date));
+    if(todaySales.length){
+      const payments={};todaySales.forEach(s=>{payments[s.payMethod||'Cash']=(payments[s.payMethod||'Cash']||0)+s.total});
+      document.getElementById('payBreakdown').innerHTML=Object.entries(payments).map(([m,v])=>
+        '<div style="display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--border)"><span>'+m+'</span><strong>'+ST.fmt(v)+'</strong></div>'
       ).join('');
     }
   }
 
-  window.calcDiscrepancy = function () {
-    const expected = parseFloat(document.getElementById('closeExpected').textContent.replace(/[^0-9.-]/g, '')) || 0;
-    const actual = parseFloat(document.getElementById('actualCash').value) || 0;
-    const diff = actual - expected;
-    const display = document.getElementById('discrepancyDisplay');
-    if (document.getElementById('actualCash').value === '') {
-      display.innerHTML = '';
-      return;
-    }
-    if (diff === 0) {
-      display.innerHTML = '<div class="alert alert-success">✅ Cash drawer is balanced!</div>';
-    } else if (diff > 0) {
-      display.innerHTML = '<div class="alert alert-info">📈 Cash is over by ' + ST.fmt(diff) + '</div>';
-    } else {
-      display.innerHTML = '<div class="alert alert-danger">📉 Cash is short by ' + ST.fmt(Math.abs(diff)) + '</div>';
-    }
-  };
-
-  window.doOpenRegister = function () {
-    const amount = parseFloat(document.getElementById('startCash').value) || 0;
-    const note = document.getElementById('startNote').value.trim();
-    ST.openRegister(amount, note);
-    showToast('🔓 Register opened with ' + ST.fmt(amount));
-    updateUI();
-  };
-
-  window.doCloseRegister = function () {
-    const actualCash = parseFloat(document.getElementById('actualCash').value);
-    if (isNaN(actualCash)) { showToast('⚠️ Enter actual cash counted'); return; }
-
-    // Calculate expected
-    const regData = ST.registerData();
-    const lastOpen = [...regData].reverse().find(e => e.type === 'open');
-    const startingCash = lastOpen ? lastOpen.amount : 0;
-    const sales = ST.sales();
-    const todayStr = new Date().toDateString();
-    const todaySales = sales.filter(s => new Date(s.date).toDateString() === todayStr);
-    const cashSales = todaySales.filter(s => s.payMethod === 'Cash').reduce((a,s) => a + s.total, 0);
-    const exps = ST.expenses();
-    const cashExpenses = exps.filter(e => new Date(e.date).toDateString() === todayStr && (e.payMethod === 'Cash' || !e.payMethod)).reduce((a,e) => a + e.amount, 0);
-    const expected = startingCash + cashSales - cashExpenses;
-
-    const note = document.getElementById('closeNote').value.trim();
-    ST.closeRegister(expected, actualCash, note);
-
-    const disc = actualCash - expected;
-    showToast('🔒 Register closed. ' + (disc === 0 ? 'Balanced ✅' : 'Discrepancy: ' + ST.fmt(disc)));
-    updateUI();
-  };
-
-  updateUI();
-})();
-</script>
-<div class="brand-footer">
-  <div style="font-weight:700;color:var(--text);font-family:'Syne',sans-serif">HMG Concepts</div>
-  <div>Technology-Powered Business Intelligence</div>
-  <div style="margin-top:0.3rem"><a href="https://cssadewale.pages.dev" target="_blank">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev" target="_blank">hmgconcepts.pages.dev</a></div>
-  <div class="powered-by">Powered by HMG Enterprise — Adewale Samson Adeagbo — v3.0</div>
-</div>
-
+  function doOpen(){
+    const amt=parseFloat(document.getElementById('startCash').value)||0;
+    ST.openRegister(amt,document.getElementById('startNote').value);
+    showToast('Register opened with '+ST.fmt(amt),'success');
+    setTimeout(()=>location.reload(),500);
+  }
+  function doClose(){
+    const expected=calcCloseFigures();
+    const actual=parseFloat(document.getElementById('actualCash').value);
+    if(isNaN(actual)){showToast('Enter actual cash counted','warning');return}
+    ST.closeRegister(expected,actual,document.getElementById('closeNote').value);
+    const diff=actual-expected;
+    showToast('Register closed. Difference: '+ST.fmt(diff),diff===0?'success':diff>0?'info':'warning');
+    setTimeout(()=>location.reload(),500);
+  }
+  updateRegUI();
+  </script>
 </body>
 </html>

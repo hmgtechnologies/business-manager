@@ -1,476 +1,315 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inventory — SaleTrack — HMG Enterprise</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventory — HMG Enterprise v5.0</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6366f1">
 </head>
 <body>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header"><div class="sidebar-logo"><div class="logo-icon">🏪</div><span>HMG Enterprise</span></div><button class="sidebar-collapse-btn" onclick="toggleSidebar()">‹</button></div>
+    <nav class="sidebar-nav">
+      <div class="nav-group"><div class="nav-group-title">Overview</div><a href="index.html" class="nav-item"><span class="nav-icon">📊</span><span class="nav-text">Dashboard</span></a><a href="reports.html" class="nav-item"><span class="nav-icon">📈</span><span class="nav-text">Reports</span></a></div>
+      <div class="nav-group"><div class="nav-group-title">Operations</div><a href="sales.html" class="nav-item"><span class="nav-icon">🛒</span><span class="nav-text">Sales</span></a><a href="inventory.html" class="nav-item active"><span class="nav-icon">📦</span><span class="nav-text">Inventory</span></a><a href="expenses.html" class="nav-item"><span class="nav-icon">💸</span><span class="nav-text">Expenses</span></a><a href="register.html" class="nav-item"><span class="nav-icon">🏧</span><span class="nav-text">Register</span></a></div>
+      <div class="nav-group"><div class="nav-group-title">People</div><a href="customers.html" class="nav-item"><span class="nav-icon">👥</span><span class="nav-text">Customers</span></a><a href="suppliers.html" class="nav-item"><span class="nav-icon">🚚</span><span class="nav-text">Suppliers</span></a><a href="staff.html" class="nav-item"><span class="nav-icon">👨‍💼</span><span class="nav-text">Staff</span></a></div>
+      <div class="nav-group"><div class="nav-group-title">Finance</div><a href="budgets.html" class="nav-item"><span class="nav-icon">💰</span><span class="nav-text">Budgets</span></a><a href="credits.html" class="nav-item"><span class="nav-icon">💳</span><span class="nav-text">Credits</span></a></div>
+      <div class="nav-group"><div class="nav-group-title">Tools</div><a href="journal.html" class="nav-item"><span class="nav-icon">📝</span><span class="nav-text">Journal</span></a><a href="settings.html" class="nav-item"><span class="nav-icon">⚙️</span><span class="nav-text">Settings</span></a></div>
+    </nav>
+    <div class="sidebar-footer"><div class="footer-dot"></div><div class="sidebar-footer-info">Enterprise v5.0</div></div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-<nav class="navbar">
-  <div class="navbar-brand">
-    <div class="brand-logo">HMG</div>
-    <div>
-      <div class="brand-name" id="bizNameNav">My Store</div>
-      <div class="brand-sub">Inventory</div>
-    </div>
-  </div>
-  <nav class="navbar-links">
-    <a href="index.html">📊 Dashboard</a>
-    <a href="sales.html">🛒 Sales</a>
-    <a href="inventory.html" class="active">📦 Inventory</a>
-    <a href="expenses.html">💸 Expenses</a>
-    <a href="customers.html">👥 Customers</a>
-    <a href="suppliers.html">🚚 Suppliers</a>
-    <a href="register.html">🏧 Register</a>
-    <a href="journal.html">📝 Journal</a>
-    <a href="staff.html">👨‍💼 Staff</a>
-    <a href="budgets.html">💰 Budgets</a>
-    <a href="credits.html">💳 Credits</a>
-    <a href="reports.html">📈 Reports</a>
-    <a href="settings.html">⚙️ Settings</a>
-  </nav>
-  <button class="hamburger" onclick="toggleMenu()">☰</button>
-</nav>
+  <main class="main-content">
+    <header class="topbar">
+      <button class="topbar-hamburger" onclick="toggleSidebar()">☰</button>
+      <div class="topbar-title">📦 Inventory</div>
+      <div class="topbar-search"><input type="text" id="globalSearch" placeholder="Search products, customers…"></div>
+      <div class="topbar-actions"><button class="topbar-btn" id="notifBtn" onclick="toggleNotifPanel()">🔔<span class="notif-badge" id="notifBadge" style="display:none">0</span></button><div class="topbar-biz-name" id="bizNameNav">HMG Concepts</div></div>
+    </header>
+    <div class="search-panel" id="searchPanel"></div>
+    <div class="notif-panel" id="notifPanel"><div class="notif-panel-header"><span>Notifications</span><button class="btn btn-sm btn-ghost" onclick="ST.saveNotifications([]);renderNotifPanel();updateNotifBadge()">Clear all</button></div><div id="notifList"></div></div>
 
-<div class="mobile-menu" id="mobileMenu">
-  <a href="index.html">📊 Dashboard</a>
-  <a href="sales.html">🛒 Sales</a>
-  <a href="inventory.html" class="active">📦 Inventory</a>
-  <a href="expenses.html">💸 Expenses</a>
-  <a href="customers.html">👥 Customers</a>
-  <a href="suppliers.html">🚚 Suppliers</a>
-  <a href="register.html">🏧 Register</a>
-  <a href="journal.html">📝 Journal</a>
-  <a href="staff.html">👨‍💼 Staff</a>
-  <a href="budgets.html">💰 Budgets</a>
-  <a href="credits.html">💳 Credits</a>
-  <a href="reports.html">📈 Reports</a>
-  <a href="settings.html">⚙️ Settings</a>
-</div>
-
-<div class="page">
-
-  <div class="page-header">
-    <div>
-      <h1 class="page-title">Inventory</h1>
-      <div class="page-sub" id="invSummary">Loading...</div>
-    </div>
-    <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
-      <button class="btn btn-secondary" onclick="exportInventoryCSV()">📥 Export CSV</button>
-      <button class="btn btn-primary" onclick="openAddModal()">➕ Add Product</button>
-    </div>
-  </div>
-
-  <!-- INVENTORY STATS -->
-  <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin-bottom:1.5rem">
-    <div class="stat-card"><div class="stat-label">Total Products</div><div class="stat-val" id="totalProducts">—</div></div>
-    <div class="stat-card"><div class="stat-label">Total Stock Units</div><div class="stat-val" id="totalUnits">—</div></div>
-    <div class="stat-card"><div class="stat-label">Stock Value (Retail)</div><div class="stat-val" id="invStockValue">—</div></div>
-    <div class="stat-card"><div class="stat-label">Stock Value (Cost)</div><div class="stat-val" id="invCostValue" style="color:var(--accent2)">—</div></div>
-    <div class="stat-card"><div class="stat-label">Low Stock Items</div><div class="stat-val" id="lowStockCount" style="color:var(--warning)">—</div></div>
-    <div class="stat-card"><div class="stat-label">Out of Stock</div><div class="stat-val" id="outStockCount" style="color:var(--danger)">—</div></div>
-  </div>
-
-  <!-- FILTERS -->
-  <div class="card" style="padding:1rem">
-    <div class="filter-row">
-      <input type="text" id="searchInput" placeholder="🔍 Search product name or SKU..." oninput="renderTable()" style="max-width:260px" />
-      <select id="catFilter" onchange="renderTable()">
-        <option value="">All Categories</option>
-      </select>
-      <select id="stockFilter" onchange="renderTable()">
-        <option value="">All Stock</option>
-        <option value="ok">In Stock</option>
-        <option value="low">Low Stock</option>
-        <option value="out">Out of Stock</option>
-      </select>
-      <select id="sortBy" onchange="renderTable()">
-        <option value="name">Sort: Name</option>
-        <option value="stock_asc">Sort: Stock ↑</option>
-        <option value="stock_desc">Sort: Stock ↓</option>
-        <option value="price_asc">Sort: Price ↑</option>
-        <option value="price_desc">Sort: Price ↓</option>
-        <option value="margin_desc">Sort: Margin ↓</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- INVENTORY TABLE -->
-  <div class="card">
-    <table id="inventoryTable">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Product Name</th>
-          <th>Category</th>
-          <th>Unit Price</th>
-          <th>Cost Price</th>
-          <th>Margin</th>
-          <th>Stock</th>
-          <th>Unit</th>
-          <th>Stock Value</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="inventoryBody">
-        <tr><td colspan="11" class="empty-cell">Loading...</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- STOCK MOVEMENT HISTORY -->
-  <div class="card">
-    <div class="card-header">
-      <h3 class="card-title">📋 Stock Movement History</h3>
-      <span style="font-size:0.78rem;color:var(--muted)">Recent changes</span>
-    </div>
-    <div id="stockMovementFeed" class="activity-feed">
-      <div class="empty-cell">No stock movements recorded yet</div>
-    </div>
-  </div>
-
-</div>
-
-<!-- ADD / EDIT PRODUCT MODAL -->
-<div class="modal-overlay" id="productModal" style="display:none">
-  <div class="modal">
-    <div class="modal-header">
-      <h3 id="modalTitle">Add New Product</h3>
-      <button onclick="closeModal()" class="modal-close">✕</button>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:1rem">
-      <input type="hidden" id="m_id" />
-      <div class="form-group"><label>Product Name *</label><input id="m_name" placeholder="e.g. Coca-Cola 1L" /></div>
-      <div class="form-row">
-        <div class="form-group"><label>Selling Price *</label><input id="m_price" type="number" step="0.01" min="0" placeholder="0.00" /></div>
-        <div class="form-group"><label>Cost Price (optional)</label><input id="m_cost" type="number" step="0.01" min="0" placeholder="0.00" /></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Stock Quantity *</label><input id="m_stock" type="number" min="0" placeholder="0" /></div>
-        <div class="form-group"><label>Unit of Measure</label>
-          <select id="m_unit">
-            <option>pcs</option><option>kg</option><option>g</option><option>litres</option>
-            <option>ml</option><option>bags</option><option>cartons</option>
-            <option>bundles</option><option>dozens</option><option>pairs</option>
-            <option>bottles</option><option>crates</option>
-          </select>
+    <div class="page-content">
+      <div class="page-header">
+        <div class="page-header-row">
+          <div><h1>Inventory Manager</h1><p class="page-subtitle" id="invSubtitle">Loading...</p></div>
+          <div class="page-header-actions">
+            <button class="btn btn-outline btn-sm" onclick="exportCSV(exportData(),'inventory.csv')">📥 Export CSV</button>
+            <button class="btn btn-outline btn-sm" onclick="openModal('importModal')">📤 Import CSV</button>
+            <button class="btn btn-primary btn-sm" onclick="openAddProduct()">➕ Add Product</button>
+          </div>
         </div>
       </div>
-      <div class="form-group"><label>Category</label><select id="m_cat"></select></div>
-      <div class="form-group"><label>SKU / Product Code (optional)</label><input id="m_sku" placeholder="e.g. BEV-001" /></div>
-      <div class="form-group"><label>Reorder Level (alert when below this)</label><input id="m_reorder" type="number" min="0" placeholder="10" /></div>
-      <div style="display:flex;gap:0.75rem">
-        <button class="btn btn-primary" style="flex:1" onclick="saveProduct()">💾 Save Product</button>
-        <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+
+      <!-- Stats -->
+      <div class="stats-row" id="invStats"></div>
+
+      <!-- Filters -->
+      <div class="filter-bar">
+        <input type="text" class="form-input" id="filterName" placeholder="🔍 Search by name or SKU..." oninput="renderProducts()" style="min-width:200px">
+        <select class="form-select" id="filterCat" onchange="renderProducts()"><option value="">All Categories</option></select>
+        <select class="form-select" id="filterStock" onchange="renderProducts()"><option value="">All Stock</option><option value="in">In Stock</option><option value="low">Low Stock</option><option value="out">Out of Stock</option></select>
+        <select class="form-select" id="sortBy" onchange="renderProducts()"><option value="name">Sort: Name</option><option value="stock_asc">Stock ↑</option><option value="stock_desc">Stock ↓</option><option value="price_asc">Price ↑</option><option value="margin_desc">Margin ↓</option></select>
+      </div>
+
+      <!-- Products Table -->
+      <div class="card">
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>#</th><th>Product</th><th>Category</th><th>Price</th><th>Cost</th><th>Margin</th><th>Stock</th><th>Value</th><th>Status</th><th>Velocity</th><th>Actions</th></tr></thead>
+            <tbody id="productsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Stock Movement History -->
+      <div class="card mt-6">
+        <div class="card-header"><span class="card-title">📋 Stock Movement History</span></div>
+        <div id="movementHistory"><div class="text-center text-muted" style="padding:20px">No stock movements recorded yet</div></div>
       </div>
     </div>
+
+    <footer class="page-footer"><p>Powered by <strong>HMG Enterprise v5.0</strong></p></footer>
+  </main>
+
+  <!-- Add/Edit Product Modal -->
+  <div class="modal-overlay" id="productModal">
+    <div class="modal modal-lg">
+      <div class="modal-header"><span class="modal-title" id="productModalTitle">Add Product</span><button class="modal-close" onclick="closeModal('productModal')">✕</button></div>
+      <div class="modal-body">
+        <input type="hidden" id="editProductId">
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Product Name <span class="required">*</span></label><input type="text" id="pName" class="form-input" placeholder="e.g. Coca-Cola 50cl"></div>
+          <div class="form-group"><label class="form-label">SKU</label><input type="text" id="pSku" class="form-input" placeholder="e.g. BEV-001"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Category <span class="required">*</span></label><select id="pCategory" class="form-select"></select></div>
+          <div class="form-group"><label class="form-label">Unit</label><input type="text" id="pUnit" class="form-input" placeholder="pcs, cartons, kg" value="pcs"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Selling Price <span class="required">*</span></label><input type="number" id="pPrice" class="form-input" min="0"></div>
+          <div class="form-group"><label class="form-label">Cost Price <span class="required">*</span></label><input type="number" id="pCost" class="form-input" min="0"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Stock Quantity</label><input type="number" id="pStock" class="form-input" min="0" value="0"></div>
+          <div class="form-group"><label class="form-label">Reorder Level</label><input type="number" id="pReorder" class="form-input" min="0" value="10"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Tags (comma-separated)</label><input type="text" id="pTags" class="form-input" placeholder="e.g. fast-moving, popular"></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('productModal')">Cancel</button><button class="btn btn-primary" onclick="saveProduct()">💾 Save Product</button></div>
+    </div>
   </div>
-</div>
 
-<!-- RESTOCK MODAL -->
-<div class="modal-overlay" id="restockModal" style="display:none">
-  <div class="modal" style="max-width:380px">
-    <div class="modal-header">
-      <h3>Restock Product</h3>
-      <button onclick="document.getElementById('restockModal').style.display='none'" class="modal-close">✕</button>
+  <!-- Restock Modal -->
+  <div class="modal-overlay" id="restockModal">
+    <div class="modal" style="max-width:400px">
+      <div class="modal-header"><span class="modal-title">📦 Restock Product</span><button class="modal-close" onclick="closeModal('restockModal')">✕</button></div>
+      <div class="modal-body">
+        <input type="hidden" id="restockProductId">
+        <p id="restockProductName" style="font-weight:700;margin-bottom:12px"></p>
+        <div class="form-group"><label class="form-label">Quantity to Add <span class="required">*</span></label><input type="number" id="restockQty" class="form-input" min="1" value="1"></div>
+        <div class="form-group"><label class="form-label">Cost per Unit</label><input type="number" id="restockCost" class="form-input" min="0"></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('restockModal')">Cancel</button><button class="btn btn-success" onclick="doRestock()">📦 Restock</button></div>
     </div>
-    <div id="restockProdName" style="font-weight:700;margin-bottom:0.5rem"></div>
-    <div id="restockCurrent" style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem"></div>
-    <input type="hidden" id="rs_id" />
-    <div class="form-group" style="margin-bottom:1rem">
-      <label>Quantity to Add *</label>
-      <input type="number" id="rs_qty" min="1" placeholder="0" />
-    </div>
-    <div class="form-group" style="margin-bottom:1rem">
-      <label>New Cost Price (optional)</label>
-      <input type="number" id="rs_cost" step="0.01" min="0" placeholder="Leave blank to keep current" />
-    </div>
-    <div class="form-group" style="margin-bottom:1rem">
-      <label>Restock Note</label>
-      <input type="text" id="rs_note" placeholder="e.g. Purchased from supplier" />
-    </div>
-    <button class="btn btn-primary btn-full" onclick="confirmRestock()">✅ Confirm Restock</button>
   </div>
-</div>
 
-<div class="toast" id="toast"><span id="toastMsg"></span></div>
+  <!-- Import CSV Modal -->
+  <div class="modal-overlay" id="importModal">
+    <div class="modal">
+      <div class="modal-header"><span class="modal-title">📤 Import Products from CSV</span><button class="modal-close" onclick="closeModal('importModal')">✕</button></div>
+      <div class="modal-body">
+        <div class="alert alert-info mb-4"><span class="alert-icon">ℹ️</span><span>CSV must have columns: <strong>name, price, costPrice, stock, unit, category, sku</strong></span></div>
+        <div class="form-group"><label class="form-label">Paste CSV Content</label><textarea id="csvInput" class="form-textarea" rows="8" placeholder="name,price,costPrice,stock,unit,category,sku&#10;Product A,500,350,20,pcs,Food,FOOD-004"></textarea></div>
+        <div id="importPreview"></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-outline" onclick="previewImport()">👁 Preview</button><button class="btn btn-primary" onclick="doImport()">📤 Import</button></div>
+    </div>
+  </div>
 
-<script src="js/storage.js"></script>
-<script src="js/app.js"></script>
-<script>
-(function () {
-  ST.init();
-  const cfg = ST.config();
-  document.getElementById('bizNameNav').textContent = cfg.businessName || 'My Store';
+  <div class="toast-container" id="toastContainer"></div>
 
-  let products = ST.products();
-  const threshold = cfg.lowStockThreshold || 10;
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+  let allProducts=ST.products();
+  const cfg=ST.config();
 
-  // Populate category filter and modal
-  const allCats = [...new Set(products.map(p => p.category).filter(Boolean))];
-  const catFilter = document.getElementById('catFilter');
-  const mCat = document.getElementById('m_cat');
-  allCats.forEach(c => {
-    [catFilter, mCat].forEach(el => {
-      const o = document.createElement('option'); o.value = c; o.textContent = c; el.appendChild(o);
-    });
+  // Populate categories
+  const catSel=document.getElementById('filterCat');
+  const pCatSel=document.getElementById('pCategory');
+  (cfg.categories||[]).forEach(c=>{
+    catSel.innerHTML+='<option value="'+c+'">'+c+'</option>';
+    pCatSel.innerHTML+='<option value="'+c+'">'+c+'</option>';
   });
 
-  // Stats
-  function updateStats() {
-    products = ST.products();
-    const low = products.filter(p => p.stock > 0 && p.stock <= threshold);
-    const out = products.filter(p => p.stock <= 0);
-    const totalUnits = products.reduce((a, p) => a + p.stock, 0);
-    const stockVal = products.reduce((a, p) => a + p.price * p.stock, 0);
-    const costVal = products.reduce((a, p) => a + (p.costPrice || 0) * p.stock, 0);
-    document.getElementById('totalProducts').textContent = products.length;
-    document.getElementById('totalUnits').textContent = totalUnits;
-    document.getElementById('invStockValue').textContent = ST.fmt(stockVal);
-    document.getElementById('invCostValue').textContent = ST.fmt(costVal);
-    document.getElementById('lowStockCount').textContent = low.length;
-    document.getElementById('outStockCount').textContent = out.length;
-    document.getElementById('invSummary').textContent = products.length + ' products, stock value ' + ST.fmt(stockVal);
+  function updateStats(){
+    const active=allProducts.filter(p=>p.active);
+    const totalStock=active.reduce((a,p)=>a+p.stock,0);
+    const stockVal=active.reduce((a,p)=>a+p.price*p.stock,0);
+    const costVal=active.reduce((a,p)=>a+(p.costPrice||0)*p.stock,0);
+    const low=active.filter(p=>p.stock>0&&p.stock<=(p.reorderLevel||10)).length;
+    const out=active.filter(p=>p.stock===0).length;
+    document.getElementById('invSubtitle').textContent=active.length+' products, stock value '+ST.fmt(stockVal);
+    document.getElementById('invStats').innerHTML=
+      '<div class="stat-item"><div class="stat-value">'+active.length+'</div><div class="stat-label">Total Products</div></div>'+
+      '<div class="stat-item"><div class="stat-value">'+totalStock+'</div><div class="stat-label">Stock Units</div></div>'+
+      '<div class="stat-item"><div class="stat-value">'+ST.fmt(stockVal)+'</div><div class="stat-label">Retail Value</div></div>'+
+      '<div class="stat-item"><div class="stat-value">'+ST.fmt(costVal)+'</div><div class="stat-label">Cost Value</div></div>'+
+      '<div class="stat-item"><div class="stat-value text-warning">'+low+'</div><div class="stat-label">Low Stock</div></div>'+
+      '<div class="stat-item"><div class="stat-value text-danger">'+out+'</div><div class="stat-label">Out of Stock</div></div>';
   }
 
-  window.renderTable = function () {
-    products = ST.products();
-    const q = document.getElementById('searchInput').value.toLowerCase();
-    const cf = document.getElementById('catFilter').value;
-    const sf = document.getElementById('stockFilter').value;
-    const sort = document.getElementById('sortBy').value;
-
-    let list = products.filter(p => {
-      if (q && !p.name.toLowerCase().includes(q) && !(p.sku || '').toLowerCase().includes(q)) return false;
-      if (cf && p.category !== cf) return false;
-      if (sf === 'ok' && p.stock <= threshold) return false;
-      if (sf === 'low' && !(p.stock > 0 && p.stock <= threshold)) return false;
-      if (sf === 'out' && p.stock > 0) return false;
-      return true;
+  function getFiltered(){
+    let items=allProducts.filter(p=>p.active);
+    const nameQ=(document.getElementById('filterName').value||'').toLowerCase();
+    const cat=document.getElementById('filterCat').value;
+    const stock=document.getElementById('filterStock').value;
+    const sort=document.getElementById('sortBy').value;
+    if(nameQ)items=items.filter(p=>p.name.toLowerCase().includes(nameQ)||(p.sku||'').toLowerCase().includes(nameQ));
+    if(cat)items=items.filter(p=>p.category===cat);
+    if(stock==='in')items=items.filter(p=>p.stock>(p.reorderLevel||10));
+    if(stock==='low')items=items.filter(p=>p.stock>0&&p.stock<=(p.reorderLevel||10));
+    if(stock==='out')items=items.filter(p=>p.stock===0);
+    if(sort==='name')items.sort((a,b)=>a.name.localeCompare(b.name));
+    if(sort==='stock_asc')items.sort((a,b)=>a.stock-b.stock);
+    if(sort==='stock_desc')items.sort((a,b)=>b.stock-a.stock);
+    if(sort==='price_asc')items.sort((a,b)=>a.price-b.price);
+    if(sort==='margin_desc')items.sort((a,b)=>{
+      const ma=a.price>0?(a.price-(a.costPrice||0))/a.price:0;
+      const mb=b.price>0?(b.price-(b.costPrice||0))/b.price:0;
+      return mb-ma;
     });
+    return items;
+  }
 
-    list.sort((a, b) => {
-      if (sort === 'name') return a.name.localeCompare(b.name);
-      if (sort === 'stock_asc') return a.stock - b.stock;
-      if (sort === 'stock_desc') return b.stock - a.stock;
-      if (sort === 'price_asc') return a.price - b.price;
-      if (sort === 'price_desc') return b.price - a.price;
-      if (sort === 'margin_desc') {
-        const ma = a.costPrice > 0 ? (a.price - a.costPrice) / a.price : 0;
-        const mb = b.costPrice > 0 ? (b.price - b.costPrice) / b.price : 0;
-        return mb - ma;
-      }
-      return 0;
-    });
-
-    const tbody = document.getElementById('inventoryBody');
-    if (!list.length) {
-      tbody.innerHTML = '<tr><td colspan="11" class="empty-cell">No products match filters</td></tr>';
+  function renderProducts(){
+    const items=getFiltered();
+    if(!items.length){
+      document.getElementById('productsBody').innerHTML='<tr><td colspan="11" class="table-empty"><div class="empty-icon">📦</div><div class="empty-text">No products found</div></td></tr>';
       return;
     }
-
-    tbody.innerHTML = list.map((p, i) => {
-      const isOut = p.stock <= 0;
-      const isLow = !isOut && p.stock <= threshold;
-      const badge = isOut ? '<span class="badge badge-danger">OUT</span>'
-        : isLow ? '<span class="badge badge-warn">LOW</span>'
-        : '<span class="badge badge-success">OK</span>';
-      const stockClass = isOut ? 'class="low-stock"' : isLow ? 'class="medium-stock"' : '';
-      const margin = p.costPrice > 0 ? ((p.price - p.costPrice) / p.price * 100).toFixed(0) + '%' : '—';
-      const marginColor = p.costPrice > 0 ? (parseFloat(margin) >= 30 ? 'var(--accent)' : parseFloat(margin) >= 15 ? 'var(--warning)' : 'var(--danger)') : 'var(--muted)';
-      return '<tr>' +
-        '<td style="color:var(--muted);font-size:0.78rem">' + (i + 1) + '</td>' +
-        '<td><strong>' + p.name + '</strong>' + (p.sku ? '<br><span style="font-size:0.7rem;color:var(--muted)">' + p.sku + '</span>' : '') + '</td>' +
-        '<td><span class="badge badge-info">' + (p.category || '—') + '</span></td>' +
-        '<td>' + ST.fmt(p.price) + '</td>' +
-        '<td style="color:var(--muted)">' + (p.costPrice ? ST.fmt(p.costPrice) : '—') + '</td>' +
-        '<td style="color:' + marginColor + ';font-weight:700;font-size:0.82rem">' + margin + '</td>' +
-        '<td ' + stockClass + '><strong>' + p.stock + '</strong></td>' +
-        '<td style="color:var(--muted)">' + (p.unit || 'pcs') + '</td>' +
-        '<td>' + ST.fmt(p.price * p.stock) + '</td>' +
-        '<td>' + badge + '</td>' +
-        '<td>' +
-        '<div style="display:flex;gap:0.4rem;flex-wrap:wrap">' +
-        '<button class="btn-tiny btn-green" onclick="openRestock(\'' + p.id + '\')">+ Stock</button>' +
-        '<button class="btn-tiny" onclick="openEdit(\'' + p.id + '\')">Edit</button>' +
-        '<button class="btn-tiny" onclick="duplicateProduct(\'' + p.id + '\')">📋</button>' +
-        '<button class="btn-tiny btn-red" onclick="toggleProduct(\'' + p.id + '\')">' + (p.active === false ? 'Enable' : 'Disable') + '</button>' +
-        '</div>' +
-        '</td>' +
-        '</tr>';
+    document.getElementById('productsBody').innerHTML=items.map((p,i)=>{
+      const margin=p.price>0?((p.price-(p.costPrice||0))/p.price*100).toFixed(0):0;
+      const statusBadge=p.stock===0?'<span class="badge badge-danger">OUT</span>':p.stock<=(p.reorderLevel||10)?'<span class="badge badge-warning">LOW</span>':'<span class="badge badge-success">OK</span>';
+      const vel=ST.salesVelocity(p.id,30);
+      const velBadge=vel.velocity==='Fast'?'<span class="badge badge-success">⚡ Fast</span>':vel.velocity==='Moderate'?'<span class="badge badge-warning">~ Moderate</span>':'<span class="badge badge-muted">🐢 Slow</span>';
+      return'<tr><td class="text-muted">'+(i+1)+'</td>'+
+        '<td><strong>'+p.name+'</strong><br><span class="text-muted" style="font-size:0.72rem">'+(p.sku||'')+'</span></td>'+
+        '<td><span class="tag">'+p.category+'</span></td>'+
+        '<td>'+ST.fmt(p.price)+'</td><td class="text-muted">'+ST.fmt(p.costPrice||0)+'</td>'+
+        '<td><span class="text-primary font-bold">'+margin+'%</span></td>'+
+        '<td><strong>'+p.stock+'</strong> '+p.unit+'</td>'+
+        '<td>'+ST.fmt(p.price*p.stock)+'</td>'+
+        '<td>'+statusBadge+'</td>'+
+        '<td>'+velBadge+(vel.daysUntilOut!==Infinity?'<br><span class="text-muted" style="font-size:0.7rem">'+vel.daysUntilOut+' days left</span>':'')+'</td>'+
+        '<td><div class="table-actions">'+
+        '<button class="btn btn-sm btn-outline" onclick="openRestock(\''+p.id+'\')">+</button>'+
+        '<button class="btn btn-sm btn-ghost" onclick="editProduct(\''+p.id+'\')">✏️</button>'+
+        '<button class="btn btn-sm btn-ghost" onclick="duplicateProduct(\''+p.id+'\')">📋</button>'+
+        '<button class="btn btn-sm btn-ghost" onclick="toggleProduct(\''+p.id+'\')" title="Disable">🚫</button>'+
+        '</div></td></tr>';
     }).join('');
-  };
-
-  window.openAddModal = function () {
-    document.getElementById('modalTitle').textContent = 'Add New Product';
-    document.getElementById('m_id').value = '';
-    ['m_name', 'm_price', 'm_cost', 'm_stock', 'm_sku', 'm_reorder'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('productModal').style.display = 'flex';
-  };
-
-  window.openEdit = function (id) {
-    const p = ST.products().find(x => x.id === id);
-    if (!p) return;
-    document.getElementById('modalTitle').textContent = 'Edit Product';
-    document.getElementById('m_id').value = p.id;
-    document.getElementById('m_name').value = p.name;
-    document.getElementById('m_price').value = p.price;
-    document.getElementById('m_cost').value = p.costPrice || '';
-    document.getElementById('m_stock').value = p.stock;
-    document.getElementById('m_unit').value = p.unit || 'pcs';
-    document.getElementById('m_cat').value = p.category || '';
-    document.getElementById('m_sku').value = p.sku || '';
-    document.getElementById('m_reorder').value = p.reorderLevel || '';
-    document.getElementById('productModal').style.display = 'flex';
-  };
-
-  window.saveProduct = function () {
-    const name = document.getElementById('m_name').value.trim();
-    const price = parseFloat(document.getElementById('m_price').value);
-    const stock = parseInt(document.getElementById('m_stock').value);
-    if (!name) { showToast('⚠️ Enter product name'); return; }
-    if (isNaN(price) || price < 0) { showToast('⚠️ Enter valid price'); return; }
-    if (isNaN(stock) || stock < 0) { showToast('⚠️ Enter valid stock quantity'); return; }
-
-    const prods = ST.products();
-    const existingId = document.getElementById('m_id').value;
-    if (existingId) {
-      const p = prods.find(x => x.id === existingId);
-      if (p) {
-        p.name = name; p.price = price; p.stock = stock;
-        p.costPrice = parseFloat(document.getElementById('m_cost').value) || 0;
-        p.unit = document.getElementById('m_unit').value;
-        p.category = document.getElementById('m_cat').value;
-        p.sku = document.getElementById('m_sku').value;
-        p.reorderLevel = parseInt(document.getElementById('m_reorder').value) || threshold;
-      }
-      ST.logActivity('product', 'Updated product: ' + name);
-      showToast('✅ Product updated');
-    } else {
-      prods.push({
-        id: 'p_' + Date.now(),
-        name, price, stock,
-        costPrice: parseFloat(document.getElementById('m_cost').value) || 0,
-        unit: document.getElementById('m_unit').value,
-        category: document.getElementById('m_cat').value,
-        sku: document.getElementById('m_sku').value,
-        reorderLevel: parseInt(document.getElementById('m_reorder').value) || threshold,
-        active: true
-      });
-      ST.logActivity('product', 'Added new product: ' + name);
-      showToast('✅ Product added');
-    }
-    ST.saveProducts(prods);
-    closeModal();
-    updateStats();
-    renderTable();
-  };
-
-  window.duplicateProduct = function (id) {
-    const p = ST.products().find(x => x.id === id);
-    if (!p) return;
-    document.getElementById('m_id').value = '';
-    document.getElementById('m_name').value = p.name + ' (Copy)';
-    document.getElementById('m_price').value = p.price;
-    document.getElementById('m_cost').value = p.costPrice || '';
-    document.getElementById('m_stock').value = 0;
-    document.getElementById('m_unit').value = p.unit || 'pcs';
-    document.getElementById('m_cat').value = p.category || '';
-    document.getElementById('m_sku').value = '';
-    document.getElementById('m_reorder').value = p.reorderLevel || '';
-    document.getElementById('modalTitle').textContent = 'Duplicate Product';
-    document.getElementById('productModal').style.display = 'flex';
-  };
-
-  window.closeModal = function () {
-    document.getElementById('productModal').style.display = 'none';
-  };
-
-  window.openRestock = function (id) {
-    const p = ST.products().find(x => x.id === id);
-    if (!p) return;
-    document.getElementById('rs_id').value = id;
-    document.getElementById('restockProdName').textContent = p.name;
-    document.getElementById('restockCurrent').textContent = 'Current stock: ' + p.stock + ' ' + (p.unit || 'pcs');
-    document.getElementById('rs_qty').value = '';
-    document.getElementById('rs_cost').value = '';
-    document.getElementById('rs_note').value = '';
-    document.getElementById('restockModal').style.display = 'flex';
-  };
-
-  window.confirmRestock = function () {
-    const id = document.getElementById('rs_id').value;
-    const qty = parseInt(document.getElementById('rs_qty').value) || 0;
-    if (qty <= 0) { showToast('⚠️ Enter quantity to add'); return; }
-    const prods = ST.products();
-    const p = prods.find(x => x.id === id);
-    if (p) {
-      p.stock += qty;
-      const newCost = parseFloat(document.getElementById('rs_cost').value);
-      if (!isNaN(newCost) && newCost > 0) p.costPrice = newCost;
-      ST.saveProducts(prods);
-      const note = document.getElementById('rs_note').value;
-      ST.logActivity('restock', 'Restocked ' + qty + ' ' + (p.unit || 'units') + ' of ' + p.name + (note ? ' (' + note + ')' : ''));
-      showToast('✅ Added ' + qty + ' ' + (p.unit || 'units') + ' to ' + p.name);
-      document.getElementById('restockModal').style.display = 'none';
-      updateStats(); renderTable(); loadMovements();
-    }
-  };
-
-  window.toggleProduct = function (id) {
-    const prods = ST.products();
-    const p = prods.find(x => x.id === id);
-    if (p) { p.active = p.active === false ? true : false; ST.saveProducts(prods); renderTable(); }
-  };
-
-  window.exportInventoryCSV = function () {
-    const prods = ST.products();
-    const header = 'Name,SKU,Category,Selling Price,Cost Price,Margin%,Stock,Unit,Stock Value,Status';
-    const rows = prods.map(p => [
-      p.name, p.sku || '', p.category || '', p.price, p.costPrice || 0,
-      p.costPrice > 0 ? ((p.price - p.costPrice) / p.price * 100).toFixed(1) : '',
-      p.stock, p.unit || 'pcs', (p.price * p.stock).toFixed(2),
-      p.stock <= 0 ? 'OUT' : p.stock <= threshold ? 'LOW' : 'OK'
-    ].map(v => '"' + String(v) + '"').join(','));
-    const csv = [header, ...rows].join('\n');
-    const a = document.createElement('a');
-    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-    a.download = 'inventory_' + new Date().toISOString().slice(0, 10) + '.csv';
-    a.click();
-    showToast('📥 Inventory CSV downloaded');
-  };
-
-  // Stock Movement History
-  function loadMovements() {
-    const log = ST.activityLog().filter(a => a.type === 'restock' || (a.type === 'sale' && a.message.includes('Deleted')));
-    const recent = [...log].reverse().slice(0, 15);
-    const feed = document.getElementById('stockMovementFeed');
-    if (recent.length) {
-      feed.innerHTML = recent.map(a =>
-        '<div class="activity-item">' +
-        '<div class="activity-icon ' + a.type + '">' + (a.type === 'restock' ? '📦' : '🛒') + '</div>' +
-        '<div class="activity-text">' + a.message + '</div>' +
-        '<div class="activity-time">' + new Date(a.date).toLocaleString() + '</div>' +
-        '</div>'
-      ).join('');
-    }
   }
 
-  updateStats();
-  renderTable();
-  loadMovements();
-})();
-</script>
-<div class="brand-footer">
-  <div style="font-weight:700;color:var(--text);font-family:'Syne',sans-serif">HMG Concepts</div>
-  <div>Technology-Powered Business Intelligence</div>
-  <div style="margin-top:0.3rem"><a href="https://cssadewale.pages.dev" target="_blank">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev" target="_blank">hmgconcepts.pages.dev</a></div>
-  <div class="powered-by">Powered by HMG Enterprise — Adewale Samson Adeagbo — v3.0</div>
-</div>
+  function openAddProduct(){
+    document.getElementById('editProductId').value='';
+    document.getElementById('productModalTitle').textContent='Add Product';
+    ['pName','pSku','pUnit','pTags'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('pPrice').value='';document.getElementById('pCost').value='';
+    document.getElementById('pStock').value='0';document.getElementById('pReorder').value='10';
+    openModal('productModal');
+  }
+  function editProduct(id){
+    const p=allProducts.find(x=>x.id===id);if(!p)return;
+    document.getElementById('editProductId').value=id;
+    document.getElementById('productModalTitle').textContent='Edit: '+p.name;
+    document.getElementById('pName').value=p.name;document.getElementById('pSku').value=p.sku||'';
+    document.getElementById('pCategory').value=p.category;document.getElementById('pUnit').value=p.unit||'pcs';
+    document.getElementById('pPrice').value=p.price;document.getElementById('pCost').value=p.costPrice||0;
+    document.getElementById('pStock').value=p.stock;document.getElementById('pReorder').value=p.reorderLevel||10;
+    document.getElementById('pTags').value=(p.tags||[]).join(', ');
+    openModal('productModal');
+  }
+  function saveProduct(){
+    const id=document.getElementById('editProductId').value;
+    const name=document.getElementById('pName').value.trim();
+    if(!name){showToast('Product name is required','warning');return}
+    const data={name,sku:document.getElementById('pSku').value.trim(),
+      category:document.getElementById('pCategory').value,unit:document.getElementById('pUnit').value||'pcs',
+      price:parseFloat(document.getElementById('pPrice').value)||0,
+      costPrice:parseFloat(document.getElementById('pCost').value)||0,
+      stock:parseInt(document.getElementById('pStock').value)||0,
+      reorderLevel:parseInt(document.getElementById('pReorder').value)||10,
+      tags:(document.getElementById('pTags').value||'').split(',').map(t=>t.trim()).filter(Boolean)};
+    if(id){const i=allProducts.findIndex(x=>x.id===id);if(i>=0)allProducts[i]={...allProducts[i],...data}}
+    else{data.id='p_'+Date.now();data.active=true;allProducts.push(data)}
+    ST.saveProducts(allProducts);closeModal('productModal');
+    ST.logActivity('product',(id?'Updated':'Added')+': '+name);
+    showToast('Product '+(id?'updated':'added')+'!','success');
+    renderProducts();updateStats();
+  }
+  function duplicateProduct(id){
+    const p=allProducts.find(x=>x.id===id);if(!p)return;
+    const dup={...p,id:'p_'+Date.now(),name:p.name+' (Copy)',sku:(p.sku||'')+'-2'};
+    allProducts.push(dup);ST.saveProducts(allProducts);
+    showToast('Product duplicated!','success');renderProducts();updateStats();
+  }
+  function toggleProduct(id){
+    const p=allProducts.find(x=>x.id===id);if(!p)return;
+    p.active=!p.active;ST.saveProducts(allProducts);
+    showToast(p.active?'Product enabled':'Product disabled','info');
+    renderProducts();updateStats();
+  }
+  function openRestock(id){
+    const p=allProducts.find(x=>x.id===id);if(!p)return;
+    document.getElementById('restockProductId').value=id;
+    document.getElementById('restockProductName').textContent=p.name+' (current: '+p.stock+' '+p.unit+')';
+    document.getElementById('restockCost').value=p.costPrice||0;
+    document.getElementById('restockQty').value='1';
+    openModal('restockModal');
+  }
+  function doRestock(){
+    const id=document.getElementById('restockProductId').value;
+    const qty=parseInt(document.getElementById('restockQty').value)||0;
+    const cost=parseFloat(document.getElementById('restockCost').value)||0;
+    if(qty<1){showToast('Quantity must be at least 1','warning');return}
+    const p=allProducts.find(x=>x.id===id);if(!p)return;
+    p.stock+=qty;if(cost>0)p.costPrice=cost;
+    ST.saveProducts(allProducts);closeModal('restockModal');
+    ST.logActivity('restock','Restocked '+p.name+' +'+qty);
+    showToast(p.name+' restocked +'+qty,'success');
+    renderProducts();updateStats();
+  }
 
+  // CSV Import
+  let importData=[];
+  function previewImport(){
+    const csv=document.getElementById('csvInput').value.trim();
+    if(!csv){showToast('Paste CSV content first','warning');return}
+    importData=ST.parseCSV(csv);
+    document.getElementById('importPreview').innerHTML='<div class="alert alert-success"><span class="alert-icon">✅</span><span>Parsed <strong>'+importData.length+'</strong> products. Click Import to add them.</span></div>';
+  }
+  function doImport(){
+    if(!importData.length){showToast('Preview first','warning');return}
+    importData.forEach(r=>{
+      allProducts.push({id:'p_'+Date.now()+Math.random().toString(36).slice(2,5),
+        name:r.name||'Unnamed',price:parseFloat(r.price)||0,costPrice:parseFloat(r.costPrice)||0,
+        stock:parseInt(r.stock)||0,unit:r.unit||'pcs',category:r.category||'Other',
+        sku:r.sku||'',reorderLevel:10,active:true,tags:[]});
+    });
+    ST.saveProducts(allProducts);closeModal('importModal');
+    ST.logActivity('product','Imported '+importData.length+' products via CSV');
+    showToast(importData.length+' products imported!','success');
+    importData=[];renderProducts();updateStats();
+  }
+
+  function exportData(){return allProducts.filter(p=>p.active).map(p=>({name:p.name,sku:p.sku,category:p.category,price:p.price,costPrice:p.costPrice,stock:p.stock,unit:p.unit,margin:p.price>0?((p.price-(p.costPrice||0))/p.price*100).toFixed(1)+'%':'0%',value:p.price*p.stock}))}
+
+  updateStats();renderProducts();
+  </script>
 </body>
 </html>

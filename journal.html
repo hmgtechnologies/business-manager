@@ -1,168 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Business Journal — HMG Enterprise</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Journal — HMG Enterprise v5.0</title>
+  <link rel="stylesheet" href="css/style.css"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#6366f1">
 </head>
 <body>
-<nav class="navbar">
-  <div class="navbar-brand"><div class="brand-logo">HMG</div><div><div class="brand-name" id="bizNameNav">HMG Concepts</div><div class="brand-sub">Business Journal</div></div></div>
-  <nav class="navbar-links">
-    <a href="index.html">📊 Dashboard</a>
-    <a href="sales.html">🛒 Sales</a>
-    <a href="inventory.html">📦 Inventory</a>
-    <a href="expenses.html">💸 Expenses</a>
-    <a href="customers.html">👥 Customers</a>
-    <a href="suppliers.html">🚚 Suppliers</a>
-    <a href="register.html">🏧 Register</a>
-    <a href="journal.html" class="active">📝 Journal</a>
-    <a href="staff.html">👨‍💼 Staff</a>
-    <a href="budgets.html">💰 Budgets</a>
-    <a href="credits.html">💳 Credits</a>
-    <a href="reports.html">📈 Reports</a>
-    <a href="settings.html">⚙️ Settings</a>
-  </nav>
-  <button class="hamburger" onclick="toggleMenu()">☰</button>
-</nav>
-<div class="mobile-menu" id="mobileMenu">
-  <a href="index.html">📊 Dashboard</a>
-  <a href="sales.html">🛒 Sales</a>
-  <a href="inventory.html">📦 Inventory</a>
-  <a href="expenses.html">💸 Expenses</a>
-  <a href="customers.html">👥 Customers</a>
-  <a href="suppliers.html">🚚 Suppliers</a>
-  <a href="register.html">🏧 Register</a>
-  <a href="journal.html" class="active">📝 Journal</a>
-  <a href="staff.html">👨‍💼 Staff</a>
-  <a href="budgets.html">💰 Budgets</a>
-  <a href="credits.html">💳 Credits</a>
-  <a href="reports.html">📈 Reports</a>
-  <a href="settings.html">⚙️ Settings</a>
-</div>
+  <aside class="sidebar" id="sidebar"><div class="sidebar-header"><div class="sidebar-logo"><div class="logo-icon">🏪</div><span>HMG Enterprise</span></div><button class="sidebar-collapse-btn" onclick="toggleSidebar()">‹</button></div><nav class="sidebar-nav"><div class="nav-group"><div class="nav-group-title">Overview</div><a href="index.html" class="nav-item"><span class="nav-icon">📊</span><span class="nav-text">Dashboard</span></a><a href="reports.html" class="nav-item"><span class="nav-icon">📈</span><span class="nav-text">Reports</span></a></div><div class="nav-group"><div class="nav-group-title">Operations</div><a href="sales.html" class="nav-item"><span class="nav-icon">🛒</span><span class="nav-text">Sales</span></a><a href="inventory.html" class="nav-item"><span class="nav-icon">📦</span><span class="nav-text">Inventory</span></a><a href="expenses.html" class="nav-item"><span class="nav-icon">💸</span><span class="nav-text">Expenses</span></a><a href="register.html" class="nav-item"><span class="nav-icon">🏧</span><span class="nav-text">Register</span></a></div><div class="nav-group"><div class="nav-group-title">People</div><a href="customers.html" class="nav-item"><span class="nav-icon">👥</span><span class="nav-text">Customers</span></a><a href="suppliers.html" class="nav-item"><span class="nav-icon">🚚</span><span class="nav-text">Suppliers</span></a><a href="staff.html" class="nav-item"><span class="nav-icon">👨‍💼</span><span class="nav-text">Staff</span></a></div><div class="nav-group"><div class="nav-group-title">Finance</div><a href="budgets.html" class="nav-item"><span class="nav-icon">💰</span><span class="nav-text">Budgets</span></a><a href="credits.html" class="nav-item"><span class="nav-icon">💳</span><span class="nav-text">Credits</span></a></div><div class="nav-group"><div class="nav-group-title">Tools</div><a href="journal.html" class="nav-item active"><span class="nav-icon">📝</span><span class="nav-text">Journal</span></a><a href="settings.html" class="nav-item"><span class="nav-icon">⚙️</span><span class="nav-text">Settings</span></a></div></nav><div class="sidebar-footer"><div class="footer-dot"></div><div class="sidebar-footer-info">Enterprise v5.0</div></div></aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <main class="main-content">
+    <header class="topbar"><button class="topbar-hamburger" onclick="toggleSidebar()">☰</button><div class="topbar-title">📝 Journal</div><div class="topbar-search"><input type="text" id="globalSearch" placeholder="Search…"></div><div class="topbar-actions"><button class="topbar-btn" id="notifBtn" onclick="toggleNotifPanel()">🔔<span class="notif-badge" id="notifBadge" style="display:none">0</span></button><div class="topbar-biz-name" id="bizNameNav">HMG Concepts</div></div></header>
+    <div class="search-panel" id="searchPanel"></div><div class="notif-panel" id="notifPanel"><div class="notif-panel-header"><span>Notifications</span><button class="btn btn-sm btn-ghost" onclick="ST.saveNotifications([]);renderNotifPanel();updateNotifBadge()">Clear all</button></div><div id="notifList"></div></div>
+    <div class="page-content">
+      <div class="page-header"><div class="page-header-row"><div><h1>Business Journal</h1><p class="page-subtitle">Daily notes, to-dos, and reminders for your business</p></div><div class="page-header-actions"><button class="btn btn-primary btn-sm" onclick="openModal('noteModal')">➕ New Note</button></div></div></div>
 
-<div class="page">
-  <div class="page-header">
-    <div><h1 class="page-title">📝 Business Journal</h1><div class="page-sub">Daily notes, to-dos, and reminders for your business</div></div>
-    <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
-      <select id="noteFilter" onchange="renderNotes()" style="width:auto">
-        <option value="all">All Notes</option><option value="todo">📋 To-Do</option><option value="reminder">⏰ Reminders</option>
-        <option value="idea">💡 Ideas</option><option value="meeting">🤝 Meetings</option><option value="done">✅ Completed</option>
-      </select>
-      <button class="btn btn-primary" onclick="openNoteModal()">➕ New Note</button>
+      <div class="tabs" id="noteTabs">
+        <button class="tab active" onclick="filterNotes('all',this)">All Notes</button>
+        <button class="tab" onclick="filterNotes('To-Do',this)">📋 To-Do</button>
+        <button class="tab" onclick="filterNotes('Reminder',this)">⏰ Reminders</button>
+        <button class="tab" onclick="filterNotes('Idea',this)">💡 Ideas</button>
+        <button class="tab" onclick="filterNotes('Meeting',this)">🤝 Meetings</button>
+        <button class="tab" onclick="filterNotes('done',this)">✅ Completed</button>
+      </div>
+
+      <div class="stats-row mb-6" id="noteStats"></div>
+      <div class="grid-auto" id="notesGrid"></div>
     </div>
-  </div>
+    <footer class="page-footer"><p>Powered by <strong>HMG Enterprise v5.0</strong></p></footer>
+  </main>
 
-  <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
-    <div class="stat-card"><div class="stat-label">Total Notes</div><div class="stat-val" id="totalNotes">—</div></div>
-    <div class="stat-card"><div class="stat-label">Pending To-Dos</div><div class="stat-val" id="pendingTodos" style="color:var(--warning)">—</div></div>
-    <div class="stat-card"><div class="stat-label">Completed</div><div class="stat-val" id="completedNotes" style="color:var(--accent)">—</div></div>
-    <div class="stat-card"><div class="stat-label">High Priority</div><div class="stat-val" id="highPriority" style="color:var(--danger)">—</div></div>
-  </div>
-
-  <div id="notesList"></div>
-</div>
-
-<div class="brand-footer">
-  <div style="font-weight:700;color:var(--text);font-family:'Syne',sans-serif">HMG Concepts Enterprise</div>
-  <div>Technology-Powered Business Intelligence</div>
-  <div style="margin-top:0.3rem"><a href="https://cssadewale.pages.dev" target="_blank">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev" target="_blank">hmgconcepts.pages.dev</a> · <a href="https://hmgacademy.pages.dev" target="_blank">hmgacademy.pages.dev</a></div>
-  <div class="powered-by">Powered by HMG Enterprise — Adewale Samson Adeagbo — Enterprise v4.0</div>
-</div>
-
-<div class="toast" id="toast"><span id="toastMsg"></span></div>
-<script src="js/storage.js"></script><script src="js/app.js"></script>
-<script>
-(function(){
-  ST.init();
-  document.getElementById('bizNameNav').textContent=ST.config().businessName||'HMG Concepts';
-
+  <div class="modal-overlay" id="noteModal"><div class="modal"><div class="modal-header"><span class="modal-title">📝 New Note</span><button class="modal-close" onclick="closeModal('noteModal')">✕</button></div><div class="modal-body"><div class="form-group"><label class="form-label">Title <span class="required">*</span></label><input type="text" id="nTitle" class="form-input" placeholder="Note title"></div><div class="form-row"><div class="form-group"><label class="form-label">Type</label><select id="nType" class="form-select"><option>To-Do</option><option>Reminder</option><option>Idea</option><option>Meeting</option><option>General</option></select></div><div class="form-group"><label class="form-label">Priority</label><select id="nPriority" class="form-select"><option>Medium</option><option>High</option><option>Low</option></select></div></div><div class="form-group"><label class="form-label">Due Date</label><input type="date" id="nDue" class="form-input"></div><div class="form-group"><label class="form-label">Content</label><textarea id="nContent" class="form-textarea" rows="4" placeholder="Write your note..."></textarea></div></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('noteModal')">Cancel</button><button class="btn btn-primary" onclick="saveNote()">💾 Save</button></div></div></div>
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="js/storage.js"></script><script src="js/app.js"></script>
+  <script>
+  let allNotes=ST.notes();let currentFilter='all';
   function updateStats(){
-    const all=ST.notes();
-    document.getElementById('totalNotes').textContent=all.length;
-    document.getElementById('pendingTodos').textContent=all.filter(n=>!n.done&&n.type==='todo').length;
-    document.getElementById('completedNotes').textContent=all.filter(n=>n.done).length;
-    document.getElementById('highPriority').textContent=all.filter(n=>n.priority==='high'&&!n.done).length;
+    const pending=allNotes.filter(n=>!n.done&&n.type==='To-Do').length;
+    const done=allNotes.filter(n=>n.done).length;
+    const high=allNotes.filter(n=>!n.done&&n.priority==='High').length;
+    document.getElementById('noteStats').innerHTML=
+      '<div class="stat-item"><div class="stat-value">'+allNotes.length+'</div><div class="stat-label">Total Notes</div></div>'+
+      '<div class="stat-item"><div class="stat-value text-warning">'+pending+'</div><div class="stat-label">Pending To-Dos</div></div>'+
+      '<div class="stat-item"><div class="stat-value text-success">'+done+'</div><div class="stat-label">Completed</div></div>'+
+      '<div class="stat-item"><div class="stat-value text-danger">'+high+'</div><div class="stat-label">High Priority</div></div>';
   }
-
-  window.renderNotes=function(){
-    let all=ST.notes();
-    const f=document.getElementById('noteFilter').value;
-    if(f==='done') all=all.filter(n=>n.done);
-    else if(f!=='all') all=all.filter(n=>n.type===f&&!n.done);
-    else all=all.filter(n=>!n.done).concat(all.filter(n=>n.done));
-
-    const list=document.getElementById('notesList');
-    if(!all.length){list.innerHTML='<div class="card"><div class="empty-cell">No notes found. <a href="javascript:openNoteModal()">Create your first note →</a></div></div>';return;}
-
-    const typeIcons={todo:'📋',reminder:'⏰',idea:'💡',meeting:'🤝',general:'📌'};
-    list.innerHTML=all.map(n=>
-      '<div class="note-card" style="'+(n.done?'opacity:0.5':'')+'">'+
-      '<div class="note-card-header">'+
-      '<div style="display:flex;align-items:center;gap:0.5rem">'+
-      '<span style="font-size:1.1rem">'+(typeIcons[n.type||'general']||'📌')+'</span>'+
-      '<span class="note-card-title" style="'+(n.done?'text-decoration:line-through':'')+'">'+(n.title||'Untitled')+'</span>'+
-      '</div>'+
-      '<div style="display:flex;align-items:center;gap:0.5rem">'+
-      '<span class="note-priority '+(n.priority||'low')+'">'+(n.priority||'low')+'</span>'+
-      (n.done?'<span class="badge badge-success">✅ Done</span>':'')+
-      '</div></div>'+
-      (n.body?'<div class="note-card-body">'+n.body.replace(/\n/g,'<br>')+'</div>':'')+
-      '<div class="note-card-meta">'+
-      new Date(n.date).toLocaleString()+
-      (n.due?' · Due: '+new Date(n.due).toLocaleDateString():'')+
-      '</div>'+
-      '<div style="display:flex;gap:0.5rem;margin-top:0.5rem">'+
-      (n.done?'<button class="btn-tiny btn-green" onclick="toggleNote(\''+n.id+'\')">↩ Reopen</button>'
-      :'<button class="btn-tiny btn-green" onclick="toggleNote(\''+n.id+'\')">✅ Done</button>')+
-      '<button class="btn-tiny" onclick="shareNote(\''+n.id+'\')">📱 Share</button>'+
-      '<button class="btn-tiny btn-red" onclick="deleteNote(\''+n.id+'\')">🗑</button>'+
-      '</div></div>'
-    ).join('');
-  };
-
-  window.openNoteModal=function(){
-    ['noteTitle','noteBody','noteDue'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('noteType').value='todo';
-    document.getElementById('notePriority').value='low';
-    document.getElementById('noteModal').style.display='flex';
-  };
-
-  window.saveNote=function(){
-    const title=document.getElementById('noteTitle').value.trim();
-    if(!title){showToast('⚠️ Enter a title');return;}
-    ST.addNote({
-      title, body:document.getElementById('noteBody').value.trim(),
-      type:document.getElementById('noteType').value,
-      priority:document.getElementById('notePriority').value,
-      due:document.getElementById('noteDue').value||null
-    });
-    showToast('✅ Note saved');
-    document.getElementById('noteModal').style.display='none';
-    updateStats();renderNotes();
-  };
-
-  window.toggleNote=function(id){
-    const all=ST.notes(), n=all.find(x=>x.id===id);
-    if(n){n.done=!n.done;ST.saveNotes(all);showToast(n.done?'✅ Marked complete':'↩ Reopened');updateStats();renderNotes();}
-  };
-
-  window.deleteNote=function(id){
-    if(!confirm('Delete this note?'))return;
-    ST.saveNotes(ST.notes().filter(n=>n.id!==id));
-    showToast('🗑 Note deleted');updateStats();renderNotes();
-  };
-
-  window.shareNote=function(id){
-    const n=ST.notes().find(x=>x.id===id);if(!n)return;
-    const text='📝 *'+(n.title||'Note')+'*\n'+(n.body||'')+'\n\n— HMG Concepts';
-    shareWhatsApp(text);
-  };
-
+  function filterNotes(filter,tab){
+    currentFilter=filter;
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    if(tab)tab.classList.add('active');
+    renderNotes();
+  }
+  function renderNotes(){
+    let items=[...allNotes];
+    if(currentFilter==='done')items=items.filter(n=>n.done);
+    else if(currentFilter!=='all')items=items.filter(n=>n.type===currentFilter&&!n.done);
+    if(!items.length){document.getElementById('notesGrid').innerHTML='<div class="text-center text-muted" style="padding:40px;grid-column:1/-1"><div style="font-size:2rem">📝</div><p>No notes found</p></div>';return}
+    const typeIcons={'To-Do':'📋','Reminder':'⏰','Idea':'💡','Meeting':'🤝','General':'📝'};
+    const prioColors={High:'badge-danger',Medium:'badge-warning',Low:'badge-muted'};
+    document.getElementById('notesGrid').innerHTML=items.map(n=>{
+      const isOverdue=n.dueDate&&!n.done&&new Date(n.dueDate)<new Date();
+      return'<div class="card" style="'+(n.done?'opacity:0.6':'')+'">'+
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">'+
+        '<div style="display:flex;gap:8px;align-items:center"><span style="font-size:1.3rem">'+(typeIcons[n.type]||'📝')+'</span><div><div style="font-weight:700">'+n.title+'</div><div class="text-muted" style="font-size:0.75rem">'+formatDate(n.date)+'</div></div></div>'+
+        '<span class="badge '+prioColors[n.priority||'Medium']+'">'+(n.priority||'Medium')+'</span></div>'+
+        (n.content?'<p class="text-muted" style="font-size:0.85rem;margin-bottom:10px">'+n.content+'</p>':'')+
+        (n.dueDate?'<div class="text-muted" style="font-size:0.78rem;margin-bottom:8px">📅 Due: '+formatDate(n.dueDate)+(isOverdue?' <span class="text-danger">OVERDUE</span>':'')+'</div>':'')+
+        '<div style="display:flex;gap:6px">'+
+        (n.done?'':'<button class="btn btn-sm btn-outline" onclick="toggleNoteDone(\''+n.id+'\')">✅ Complete</button>')+
+        '<button class="btn btn-sm btn-ghost" onclick="shareWhatsApp(\'📝 '+n.title+'\\n'+(n.content||'')+'\')">📱</button>'+
+        '<button class="btn btn-sm btn-ghost text-danger" onclick="deleteNote(\''+n.id+'\')">🗑</button></div></div>';
+    }).join('');
+  }
+  function saveNote(){
+    const title=document.getElementById('nTitle').value.trim();
+    if(!title){showToast('Title required','warning');return}
+    ST.addNote({title,type:document.getElementById('nType').value,priority:document.getElementById('nPriority').value,
+      dueDate:document.getElementById('nDue').value||'',content:document.getElementById('nContent').value});
+    allNotes=ST.notes();closeModal('noteModal');showToast('Note saved!','success');
+    ['nTitle','nContent','nDue'].forEach(id=>document.getElementById(id).value='');
+    renderNotes();updateStats();
+  }
+  function toggleNoteDone(id){
+    const n=allNotes.find(x=>x.id===id);if(n){n.done=!n.done;ST.saveNotes(allNotes);renderNotes();updateStats()}
+  }
+  function deleteNote(id){
+    allNotes=allNotes.filter(n=>n.id!==id);ST.saveNotes(allNotes);renderNotes();updateStats();showToast('Note deleted','info');
+  }
   updateStats();renderNotes();
-})();
-</script>
+  </script>
 </body>
 </html>

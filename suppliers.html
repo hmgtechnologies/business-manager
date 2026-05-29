@@ -1,180 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Suppliers — HMG Enterprise</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suppliers — HMG Enterprise v5.0</title>
+  <link rel="stylesheet" href="css/style.css"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#6366f1">
 </head>
 <body>
-<nav class="navbar">
-  <div class="navbar-brand"><div class="brand-logo">HMG</div><div><div class="brand-name" id="bizNameNav">HMG Concepts</div><div class="brand-sub">Suppliers</div></div></div>
-  <nav class="navbar-links">
-    <a href="index.html">📊 Dashboard</a>
-    <a href="sales.html">🛒 Sales</a>
-    <a href="inventory.html">📦 Inventory</a>
-    <a href="expenses.html">💸 Expenses</a>
-    <a href="customers.html">👥 Customers</a>
-    <a href="suppliers.html" class="active">🚚 Suppliers</a>
-    <a href="register.html">🏧 Register</a>
-    <a href="journal.html">📝 Journal</a>
-    <a href="staff.html">👨‍💼 Staff</a>
-    <a href="budgets.html">💰 Budgets</a>
-    <a href="credits.html">💳 Credits</a>
-    <a href="reports.html">📈 Reports</a>
-    <a href="settings.html">⚙️ Settings</a>
-  </nav>
-  <button class="hamburger" onclick="toggleMenu()">☰</button>
-</nav>
-<div class="mobile-menu" id="mobileMenu">
-  <a href="index.html">📊 Dashboard</a>
-  <a href="sales.html">🛒 Sales</a>
-  <a href="inventory.html">📦 Inventory</a>
-  <a href="expenses.html">💸 Expenses</a>
-  <a href="customers.html">👥 Customers</a>
-  <a href="suppliers.html" class="active">🚚 Suppliers</a>
-  <a href="register.html">🏧 Register</a>
-  <a href="journal.html">📝 Journal</a>
-  <a href="staff.html">👨‍💼 Staff</a>
-  <a href="budgets.html">💰 Budgets</a>
-  <a href="credits.html">💳 Credits</a>
-  <a href="reports.html">📈 Reports</a>
-  <a href="settings.html">⚙️ Settings</a>
-</div>
-
-<div class="page">
-  <div class="page-header">
-    <div><h1 class="page-title">Suppliers</h1><div class="page-sub" id="supSummary">Loading...</div></div>
-    <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
-      <button class="btn btn-secondary" onclick="exportSuppliersCSV()">📥 Export CSV</button>
-      <button class="btn btn-primary" onclick="openSupModal()">➕ Add Supplier</button>
+  <aside class="sidebar" id="sidebar"><div class="sidebar-header"><div class="sidebar-logo"><div class="logo-icon">🏪</div><span>HMG Enterprise</span></div><button class="sidebar-collapse-btn" onclick="toggleSidebar()">‹</button></div><nav class="sidebar-nav"><div class="nav-group"><div class="nav-group-title">Overview</div><a href="index.html" class="nav-item"><span class="nav-icon">📊</span><span class="nav-text">Dashboard</span></a><a href="reports.html" class="nav-item"><span class="nav-icon">📈</span><span class="nav-text">Reports</span></a></div><div class="nav-group"><div class="nav-group-title">Operations</div><a href="sales.html" class="nav-item"><span class="nav-icon">🛒</span><span class="nav-text">Sales</span></a><a href="inventory.html" class="nav-item"><span class="nav-icon">📦</span><span class="nav-text">Inventory</span></a><a href="expenses.html" class="nav-item"><span class="nav-icon">💸</span><span class="nav-text">Expenses</span></a><a href="register.html" class="nav-item"><span class="nav-icon">🏧</span><span class="nav-text">Register</span></a></div><div class="nav-group"><div class="nav-group-title">People</div><a href="customers.html" class="nav-item"><span class="nav-icon">👥</span><span class="nav-text">Customers</span></a><a href="suppliers.html" class="nav-item active"><span class="nav-icon">🚚</span><span class="nav-text">Suppliers</span></a><a href="staff.html" class="nav-item"><span class="nav-icon">👨‍💼</span><span class="nav-text">Staff</span></a></div><div class="nav-group"><div class="nav-group-title">Finance</div><a href="budgets.html" class="nav-item"><span class="nav-icon">💰</span><span class="nav-text">Budgets</span></a><a href="credits.html" class="nav-item"><span class="nav-icon">💳</span><span class="nav-text">Credits</span></a></div><div class="nav-group"><div class="nav-group-title">Tools</div><a href="journal.html" class="nav-item"><span class="nav-icon">📝</span><span class="nav-text">Journal</span></a><a href="settings.html" class="nav-item"><span class="nav-icon">⚙️</span><span class="nav-text">Settings</span></a></div></nav><div class="sidebar-footer"><div class="footer-dot"></div><div class="sidebar-footer-info">Enterprise v5.0</div></div></aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <main class="main-content">
+    <header class="topbar"><button class="topbar-hamburger" onclick="toggleSidebar()">☰</button><div class="topbar-title">🚚 Suppliers</div><div class="topbar-search"><input type="text" id="globalSearch" placeholder="Search…"></div><div class="topbar-actions"><button class="topbar-btn" id="notifBtn" onclick="toggleNotifPanel()">🔔<span class="notif-badge" id="notifBadge" style="display:none">0</span></button><div class="topbar-biz-name" id="bizNameNav">HMG Concepts</div></div></header>
+    <div class="search-panel" id="searchPanel"></div><div class="notif-panel" id="notifPanel"><div class="notif-panel-header"><span>Notifications</span><button class="btn btn-sm btn-ghost" onclick="ST.saveNotifications([]);renderNotifPanel();updateNotifBadge()">Clear all</button></div><div id="notifList"></div></div>
+    <div class="page-content">
+      <div class="page-header"><div class="page-header-row"><div><h1>Supplier Management</h1><p class="page-subtitle" id="supSubtitle">Loading...</p></div><div class="page-header-actions"><button class="btn btn-outline btn-sm" onclick="exportCSV(ST.suppliers().map(s=>({company:s.company,contact:s.contact||'',phone:s.phone||'',email:s.email||'',category:s.category||'',address:s.address||'',totalSpent:s.totalSpent||0})),'suppliers.csv')">📥 Export CSV</button><button class="btn btn-primary btn-sm" onclick="openModal('supModal')">➕ Add Supplier</button></div></div></div>
+      <div class="stats-row" id="supStats"></div>
+      <div class="filter-bar"><input type="text" class="form-input" id="filterSup" placeholder="🔍 Search suppliers..." oninput="renderSuppliers()" style="min-width:200px"><select class="form-select" id="sortSup" onchange="renderSuppliers()"><option value="name">Name</option><option value="recent">Recent</option><option value="spent">Most Spent</option></select></div>
+      <div class="card"><div class="table-wrapper"><table class="data-table"><thead><tr><th>Company</th><th>Contact</th><th>Phone</th><th>Category</th><th>Total Spent</th><th>Notes</th><th>Actions</th></tr></thead><tbody id="supBody"></tbody></table></div></div>
     </div>
-  </div>
-
-  <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
-    <div class="stat-card"><div class="stat-label">Total Suppliers</div><div class="stat-val" id="totalSups">—</div></div>
-    <div class="stat-card"><div class="stat-label">Total Purchases</div><div class="stat-val" id="totalPurchases" style="color:var(--accent2)">—</div></div>
-    <div class="stat-card"><div class="stat-label">Categories</div><div class="stat-val" id="supCategories" style="color:#a855f7">—</div></div>
-  </div>
-
-  <div class="card" style="padding:1rem"><div class="filter-row">
-    <input type="text" id="supSearch" placeholder="🔍 Search suppliers..." oninput="renderSuppliers()" style="max-width:260px" />
-    <select id="supSort" onchange="renderSuppliers()"><option value="name">Sort: Name</option><option value="recent">Sort: Recent</option><option value="spent">Sort: Most Spent</option></select>
-  </div></div>
-
-  <div id="supplierList"></div>
-</div>
-
-<div class="brand-footer">
-  <div style="font-weight:700;color:var(--text);font-family:'Syne',sans-serif">HMG Concepts Enterprise</div>
-  <div>Technology-Powered Business Intelligence</div>
-  <div style="margin-top:0.3rem"><a href="https://cssadewale.pages.dev" target="_blank">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev" target="_blank">hmgconcepts.pages.dev</a> · <a href="https://hmgacademy.pages.dev" target="_blank">hmgacademy.pages.dev</a></div>
-  <div class="powered-by">Powered by HMG Enterprise — Adewale Samson Adeagbo — Enterprise v4.0</div>
-</div>
-
-<div class="toast" id="toast"><span id="toastMsg"></span></div>
-<script src="js/storage.js"></script><script src="js/app.js"></script>
-<script>
-(function(){
-  ST.init();
-  document.getElementById('bizNameNav').textContent=ST.config().businessName||'HMG Concepts';
-
+    <footer class="page-footer"><p>Powered by <strong>HMG Enterprise v5.0</strong></p></footer>
+  </main>
+  <div class="modal-overlay" id="supModal"><div class="modal modal-lg"><div class="modal-header"><span class="modal-title" id="supModalTitle">Add Supplier</span><button class="modal-close" onclick="closeModal('supModal')">✕</button></div><div class="modal-body"><input type="hidden" id="editSupId"><div class="form-row"><div class="form-group"><label class="form-label">Company Name <span class="required">*</span></label><input type="text" id="sCompany" class="form-input"></div><div class="form-group"><label class="form-label">Contact Person</label><input type="text" id="sContact" class="form-input"></div></div><div class="form-row"><div class="form-group"><label class="form-label">Phone</label><input type="text" id="sPhone" class="form-input"></div><div class="form-group"><label class="form-label">Email</label><input type="email" id="sEmail" class="form-input"></div></div><div class="form-row"><div class="form-group"><label class="form-label">Category</label><input type="text" id="sCategory" class="form-input" placeholder="e.g. Beverages, Food"></div><div class="form-group"><label class="form-label">Address</label><input type="text" id="sAddr" class="form-input"></div></div><div class="form-group"><label class="form-label">Notes (payment terms, delivery schedule)</label><textarea id="sNotes" class="form-textarea" rows="2"></textarea></div></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('supModal')">Cancel</button><button class="btn btn-primary" onclick="saveSup()">💾 Save</button></div></div></div>
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="js/storage.js"></script><script src="js/app.js"></script>
+  <script>
+  let allSups=ST.suppliers();
   function updateStats(){
-    const all=ST.suppliers();
-    document.getElementById('totalSups').textContent=all.length;
-    document.getElementById('totalPurchases').textContent=ST.fmt(all.reduce((a,s)=>a+(s.totalSpent||0),0));
-    const cats=[...new Set(all.map(s=>s.category).filter(Boolean))];
-    document.getElementById('supCategories').textContent=cats.length;
-    document.getElementById('supSummary').textContent=all.length+' suppliers registered';
+    document.getElementById('supSubtitle').textContent=allSups.length+' suppliers registered';
+    const cats=[...new Set(allSups.map(s=>s.category).filter(Boolean))];
+    document.getElementById('supStats').innerHTML=
+      '<div class="stat-item"><div class="stat-value">'+allSups.length+'</div><div class="stat-label">Total Suppliers</div></div>'+
+      '<div class="stat-item"><div class="stat-value">'+ST.fmt(allSups.reduce((a,s)=>a+(s.totalSpent||0),0))+'</div><div class="stat-label">Total Purchases</div></div>'+
+      '<div class="stat-item"><div class="stat-value">'+cats.length+'</div><div class="stat-label">Categories</div></div>';
   }
-
-  window.renderSuppliers=function(){
-    let all=ST.suppliers();
-    const q=document.getElementById('supSearch').value.toLowerCase(), sort=document.getElementById('supSort').value;
-    if(q) all=all.filter(s=>(s.name||'').toLowerCase().includes(q)||(s.contact||'').toLowerCase().includes(q)||(s.category||'').toLowerCase().includes(q));
-    all.sort((a,b)=>{
-      if(sort==='name') return (a.name||'').localeCompare(b.name||'');
-      if(sort==='recent') return new Date(b.createdAt||0)-new Date(a.createdAt||0);
-      if(sort==='spent') return (b.totalSpent||0)-(a.totalSpent||0);
-      return 0;
-    });
-    const list=document.getElementById('supplierList');
-    if(!all.length){list.innerHTML='<div class="card"><div class="empty-cell">No suppliers found. <a href="javascript:openSupModal()">Add your first supplier →</a></div></div>';return;}
-    list.innerHTML=all.map(s=>
-      '<div class="supplier-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:1rem">'+
-      '<div><div style="font-weight:700;font-size:0.95rem">'+(s.name||'Unnamed')+'</div>'+
-      '<div style="font-size:0.78rem;color:var(--muted)">'+(s.contact?s.contact+' · ':'')+(s.phone||'No phone')+'</div>'+
-      (s.category?'<span class="badge badge-info" style="margin-top:0.3rem">'+s.category+'</span>':'')+
-      '</div>'+
-      '<div style="text-align:right">'+
-      '<div style="color:var(--accent2);font-weight:700">'+ST.fmt(s.totalSpent||0)+'</div>'+
-      '<div style="font-size:0.72rem;color:var(--muted)">'+(s.totalOrders||0)+' orders</div>'+
-      '</div></div>'+
-      (s.email||s.address?'<div style="font-size:0.78rem;color:var(--muted);margin-top:0.5rem">'+(s.email?s.email+' · ':'')+(s.address||'')+'</div>':'')+
-      (s.notes?'<div style="font-size:0.78rem;color:var(--muted);margin-top:0.3rem;font-style:italic">'+s.notes+'</div>':'')+
-      '<div style="display:flex;gap:0.5rem;margin-top:0.75rem">'+
-      '<button class="btn-tiny" onclick="editSup(\''+s.id+'\')">✏️ Edit</button>'+
-      (s.phone?'<a class="share-btn whatsapp" style="font-size:0.72rem;padding:0.2rem 0.5rem" href="https://wa.me/'+s.phone.replace(/^0+/,'').replace(/\s/g,'')+'" target="_blank">📱 WhatsApp</a>':'')+
-      '<button class="btn-tiny btn-red" onclick="deleteSup(\''+s.id+'\')">🗑</button>'+
-      '</div></div>'
+  function renderSuppliers(){
+    let items=[...allSups];const q=(document.getElementById('filterSup').value||'').toLowerCase();
+    const sort=document.getElementById('sortSup').value;
+    if(q)items=items.filter(s=>(s.company||'').toLowerCase().includes(q)||(s.contact||'').toLowerCase().includes(q));
+    if(sort==='name')items.sort((a,b)=>(a.company||'').localeCompare(b.company||''));
+    if(sort==='recent')items.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
+    if(sort==='spent')items.sort((a,b)=>(b.totalSpent||0)-(a.totalSpent||0));
+    if(!items.length){document.getElementById('supBody').innerHTML='<tr><td colspan="7" class="table-empty"><div class="empty-icon">🚚</div><div class="empty-text">No suppliers found</div><div class="empty-hint">Add your first supplier →</div></td></tr>';return}
+    document.getElementById('supBody').innerHTML=items.map(s=>
+      '<tr><td><strong>'+s.company+'</strong></td><td>'+(s.contact||'—')+'</td><td>'+(s.phone||'—')+'</td>'+
+      '<td><span class="tag">'+(s.category||'General')+'</span></td><td>'+ST.fmt(s.totalSpent||0)+'</td>'+
+      '<td class="text-muted" style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(s.notes||'—')+'</td>'+
+      '<td><div class="table-actions"><button class="btn btn-sm btn-ghost" onclick="editSup(\''+s.id+'\')">✏️</button>'+
+      (s.phone?'<button class="btn btn-sm btn-ghost" onclick="shareWhatsApp(\'Hi '+s.company+'\')">📱</button>':'')+
+      '</div></td></tr>'
     ).join('');
-  };
-
-  window.openSupModal=function(){
-    document.getElementById('supId').value='';
-    document.getElementById('supModalTitle').textContent='Add Supplier';
-    ['supName','supContact','supPhone','supEmail','supCategory','supAddress','supNotes'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('supModal').style.display='flex';
-  };
-
-  window.editSup=function(id){
-    const s=ST.suppliers().find(x=>x.id===id);if(!s)return;
-    document.getElementById('supId').value=s.id;
-    document.getElementById('supModalTitle').textContent='Edit Supplier';
-    document.getElementById('supName').value=s.name||'';
-    document.getElementById('supContact').value=s.contact||'';
-    document.getElementById('supPhone').value=s.phone||'';
-    document.getElementById('supEmail').value=s.email||'';
-    document.getElementById('supCategory').value=s.category||'';
-    document.getElementById('supAddress').value=s.address||'';
-    document.getElementById('supNotes').value=s.notes||'';
-    document.getElementById('supModal').style.display='flex';
-  };
-
-  window.saveSup=function(){
-    const name=document.getElementById('supName').value.trim();
-    if(!name){showToast('⚠️ Enter supplier name');return;}
-    ST.addOrUpdateSupplier({
-      id:document.getElementById('supId').value||null,
-      name, contact:document.getElementById('supContact').value.trim(),
-      phone:document.getElementById('supPhone').value.trim(), email:document.getElementById('supEmail').value.trim(),
-      category:document.getElementById('supCategory').value.trim(), address:document.getElementById('supAddress').value.trim(),
-      notes:document.getElementById('supNotes').value.trim()
-    });
-    showToast('✅ Supplier saved');
-    document.getElementById('supModal').style.display='none';
-    updateStats();renderSuppliers();
-  };
-
-  window.deleteSup=function(id){
-    if(!confirm('Delete this supplier?'))return;
-    ST.saveSuppliers(ST.suppliers().filter(s=>s.id!==id));
-    showToast('🗑 Supplier deleted');updateStats();renderSuppliers();
-  };
-
-  window.exportSuppliersCSV=function(){
-    const all=ST.suppliers(), header='Name,Contact,Phone,Email,Category,Address,Total Spent,Orders,Notes';
-    const rows=all.map(s=>[s.name,s.contact||'',s.phone||'',s.email||'',s.category||'',s.address||'',
-      (s.totalSpent||0).toFixed(2),s.totalOrders||0,s.notes||''].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','));
-    const csv=[header,...rows].join('\n');
-    const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-    a.download='suppliers_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
-    showToast('📥 Suppliers CSV downloaded');
-  };
-
+  }
+  function editSup(id){
+    const s=allSups.find(x=>x.id===id);if(!s)return;
+    document.getElementById('editSupId').value=id;
+    document.getElementById('supModalTitle').textContent='Edit: '+s.company;
+    document.getElementById('sCompany').value=s.company;document.getElementById('sContact').value=s.contact||'';
+    document.getElementById('sPhone').value=s.phone||'';document.getElementById('sEmail').value=s.email||'';
+    document.getElementById('sCategory').value=s.category||'';document.getElementById('sAddr').value=s.address||'';
+    document.getElementById('sNotes').value=s.notes||'';openModal('supModal');
+  }
+  function saveSup(){
+    const id=document.getElementById('editSupId').value;
+    const company=document.getElementById('sCompany').value.trim();
+    if(!company){showToast('Company name required','warning');return}
+    const data={company,contact:document.getElementById('sContact').value,phone:document.getElementById('sPhone').value,
+      email:document.getElementById('sEmail').value,category:document.getElementById('sCategory').value,
+      address:document.getElementById('sAddr').value,notes:document.getElementById('sNotes').value};
+    if(id)data.id=id;
+    ST.saveSupplier(data);allSups=ST.suppliers();
+    closeModal('supModal');showToast('Supplier saved!','success');
+    document.getElementById('editSupId').value='';['sCompany','sContact','sPhone','sEmail','sCategory','sAddr','sNotes'].forEach(id=>document.getElementById(id).value='');
+    renderSuppliers();updateStats();
+  }
   updateStats();renderSuppliers();
-})();
-</script>
+  </script>
 </body>
 </html>

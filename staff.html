@@ -1,131 +1,84 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Staff — HMG Enterprise</title><link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="css/style.css"><link rel="manifest" href="manifest.json"></head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff — HMG Enterprise v5.0</title>
+  <link rel="stylesheet" href="css/style.css"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#6366f1">
+</head>
 <body>
-<nav class="navbar"><div class="navbar-brand"><div class="brand-logo">HMG</div><div><div class="brand-name" id="bizNameNav">HMG Concepts</div><div class="brand-sub">Staff</div></div></div>
-<nav class="navbar-links">
-    <a href="index.html">📊 Dashboard</a><a href="sales.html">🛒 Sales</a><a href="inventory.html">📦 Inventory</a><a href="expenses.html">💸 Expenses</a><a href="customers.html">👥 Customers</a><a href="suppliers.html">🚚 Suppliers</a><a href="register.html">🏧 Register</a><a href="journal.html">📝 Journal</a><a href="staff.html" class="active">👨‍💼 Staff</a><a href="budgets.html">💰 Budgets</a><a href="credits.html">💳 Credits</a><a href="reports.html">📈 Reports</a><a href="settings.html">⚙️ Settings</a>
-</nav><button class="hamburger" onclick="toggleMenu()">☰</button></nav>
-<div class="mobile-menu" id="mobileMenu">
-  <a href="index.html">📊 Dashboard</a><a href="sales.html">🛒 Sales</a><a href="inventory.html">📦 Inventory</a><a href="expenses.html">💸 Expenses</a><a href="customers.html">👥 Customers</a><a href="suppliers.html">🚚 Suppliers</a><a href="register.html">🏧 Register</a><a href="journal.html">📝 Journal</a><a href="staff.html" class="active">👨‍💼 Staff</a><a href="budgets.html">💰 Budgets</a><a href="credits.html">💳 Credits</a><a href="reports.html">📈 Reports</a><a href="settings.html">⚙️ Settings</a>
-</div>
-
-<div class="page">
-  <div class="page-header"><div><h1 class="page-title">👨‍💼 Staff Management</h1><div class="page-sub" id="staffSub">Manage employees and track performance</div></div>
-    <div style="display:flex;gap:0.75rem;flex-wrap:wrap"><button class="btn btn-secondary" onclick="exportStaffCSV()">📥 Export</button><button class="btn btn-primary" onclick="openStaffModal()">➕ Add Staff</button></div></div>
-
-  <div class="stats-grid">
-    <div class="stat-card"><div class="stat-label">Total Staff</div><div class="stat-val" id="totalStaff">—</div></div>
-    <div class="stat-card"><div class="stat-label">Active Today</div><div class="stat-val" id="activeStaff" style="color:var(--accent)">—</div></div>
-    <div class="stat-card"><div class="stat-label">Top Performer</div><div class="stat-val" id="topPerformer" style="color:#a855f7;font-size:1rem">—</div></div>
-    <div class="stat-card"><div class="stat-label">Staff Revenue</div><div class="stat-val" id="staffRevenue" style="color:var(--accent2)">—</div></div>
-  </div>
-
-  <div class="card" style="padding:1rem"><div class="filter-row">
-    <input type="text" id="staffSearch" placeholder="🔍 Search staff..." oninput="renderStaff()" style="max-width:240px"/>
-    <select id="staffSort" onchange="renderStaff()"><option value="name">Sort: Name</option><option value="revenue">Sort: Revenue</option><option value="recent">Sort: Recent</option></select>
-  </div></div>
-
-  <div class="card"><table><thead><tr><th>Name</th><th>Role</th><th>Phone</th><th>Sales</th><th>Revenue</th><th>Status</th><th>Actions</th></tr></thead>
-  <tbody id="staffBody"><tr><td colspan="7" class="empty-cell">No staff added yet</td></tr></tbody></table></div>
-
-  <div class="card"><h3 class="card-title">📊 Staff Performance (This Month)</h3><div id="staffPerf"></div></div>
-</div>
-
-<div class="brand-footer"><div style="font-weight:700;color:var(--text);font-family:'Syne',sans-serif">HMG Concepts Enterprise</div><div>Technology-Powered Business Intelligence</div><div style="margin-top:0.3rem"><a href="https://cssadewale.pages.dev" target="_blank">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev" target="_blank">hmgconcepts.pages.dev</a></div><div class="powered-by">Powered by HMG Concepts — Adewale Samson Adeagbo — Enterprise v4.0</div></div>
-
-<div class="modal-overlay" id="staffModal" style="display:none"><div class="modal" style="max-width:460px">
-  <div class="modal-header"><h3 id="smTitle">Add Staff Member</h3><button onclick="document.getElementById('staffModal').style.display='none'" class="modal-close">✕</button></div>
-  <div style="display:flex;flex-direction:column;gap:0.8rem">
-    <input type="hidden" id="smId"/>
-    <div class="form-group"><label>Full Name *</label><input id="smName" placeholder="e.g. John Doe"/></div>
-    <div class="form-row"><div class="form-group"><label>Role</label><select id="smRole"><option>Sales Associate</option><option>Cashier</option><option>Manager</option><option>Supervisor</option><option>Storekeeper</option><option>Accountant</option><option>Other</option></select></div>
-    <div class="form-group"><label>Phone</label><input id="smPhone" type="tel" placeholder="080XXXXXXXX"/></div></div>
-    <div class="form-row"><div class="form-group"><label>Email</label><input id="smEmail" type="email" placeholder="staff@email.com"/></div>
-    <div class="form-group"><label>Monthly Salary</label><input id="smSalary" type="number" step="0.01" placeholder="0.00"/></div></div>
-    <div class="form-group"><label>Notes</label><input id="smNotes" placeholder="Shift, responsibilities, etc."/></div>
-    <button class="btn btn-primary btn-full" onclick="saveStaffMember()">💾 Save</button>
-  </div>
-</div></div>
-
-<div class="toast" id="toast"><span id="toastMsg"></span></div>
-<script src="js/storage.js"></script><script src="js/app.js"></script>
-<script>
-(function(){
-  ST.init();document.getElementById('bizNameNav').textContent=ST.config().businessName||'HMG Concepts';
+  <aside class="sidebar" id="sidebar"><div class="sidebar-header"><div class="sidebar-logo"><div class="logo-icon">🏪</div><span>HMG Enterprise</span></div><button class="sidebar-collapse-btn" onclick="toggleSidebar()">‹</button></div><nav class="sidebar-nav"><div class="nav-group"><div class="nav-group-title">Overview</div><a href="index.html" class="nav-item"><span class="nav-icon">📊</span><span class="nav-text">Dashboard</span></a><a href="reports.html" class="nav-item"><span class="nav-icon">📈</span><span class="nav-text">Reports</span></a></div><div class="nav-group"><div class="nav-group-title">Operations</div><a href="sales.html" class="nav-item"><span class="nav-icon">🛒</span><span class="nav-text">Sales</span></a><a href="inventory.html" class="nav-item"><span class="nav-icon">📦</span><span class="nav-text">Inventory</span></a><a href="expenses.html" class="nav-item"><span class="nav-icon">💸</span><span class="nav-text">Expenses</span></a><a href="register.html" class="nav-item"><span class="nav-icon">🏧</span><span class="nav-text">Register</span></a></div><div class="nav-group"><div class="nav-group-title">People</div><a href="customers.html" class="nav-item"><span class="nav-icon">👥</span><span class="nav-text">Customers</span></a><a href="suppliers.html" class="nav-item"><span class="nav-icon">🚚</span><span class="nav-text">Suppliers</span></a><a href="staff.html" class="nav-item active"><span class="nav-icon">👨‍💼</span><span class="nav-text">Staff</span></a></div><div class="nav-group"><div class="nav-group-title">Finance</div><a href="budgets.html" class="nav-item"><span class="nav-icon">💰</span><span class="nav-text">Budgets</span></a><a href="credits.html" class="nav-item"><span class="nav-icon">💳</span><span class="nav-text">Credits</span></a></div><div class="nav-group"><div class="nav-group-title">Tools</div><a href="journal.html" class="nav-item"><span class="nav-icon">📝</span><span class="nav-text">Journal</span></a><a href="settings.html" class="nav-item"><span class="nav-icon">⚙️</span><span class="nav-text">Settings</span></a></div></nav><div class="sidebar-footer"><div class="footer-dot"></div><div class="sidebar-footer-info">Enterprise v5.0</div></div></aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <main class="main-content">
+    <header class="topbar"><button class="topbar-hamburger" onclick="toggleSidebar()">☰</button><div class="topbar-title">👨‍💼 Staff</div><div class="topbar-search"><input type="text" id="globalSearch" placeholder="Search…"></div><div class="topbar-actions"><button class="topbar-btn" id="notifBtn" onclick="toggleNotifPanel()">🔔<span class="notif-badge" id="notifBadge" style="display:none">0</span></button><div class="topbar-biz-name" id="bizNameNav">HMG Concepts</div></div></header>
+    <div class="search-panel" id="searchPanel"></div><div class="notif-panel" id="notifPanel"><div class="notif-panel-header"><span>Notifications</span><button class="btn btn-sm btn-ghost" onclick="ST.saveNotifications([]);renderNotifPanel();updateNotifBadge()">Clear all</button></div><div id="notifList"></div></div>
+    <div class="page-content">
+      <div class="page-header"><div class="page-header-row"><div><h1>Staff Management</h1><p class="page-subtitle" id="staffSubtitle">Loading...</p></div><div class="page-header-actions"><button class="btn btn-outline btn-sm" onclick="exportCSV(ST.staff().map(s=>({name:s.name,role:s.role||'',phone:s.phone||'',email:s.email||'',salary:s.salary||0,totalSales:s.totalSales||0,totalRevenue:s.totalRevenue||0})),'staff.csv')">📥 Export</button><button class="btn btn-primary btn-sm" onclick="openModal('staffModal')">➕ Add Staff</button></div></div></div>
+      <div class="stats-row" id="staffStats"></div>
+      <div class="card"><div class="table-wrapper"><table class="data-table"><thead><tr><th>Name</th><th>Role</th><th>Phone</th><th>Sales</th><th>Revenue</th><th>Salary</th><th>Status</th><th>Actions</th></tr></thead><tbody id="staffBody"></tbody></table></div></div>
+      <div class="card mt-6"><div class="card-header"><span class="card-title">📊 Staff Performance (This Month)</span></div><div id="staffPerf"></div></div>
+    </div>
+    <footer class="page-footer"><p>Powered by <strong>HMG Enterprise v5.0</strong></p></footer>
+  </main>
+  <div class="modal-overlay" id="staffModal"><div class="modal"><div class="modal-header"><span class="modal-title" id="staffModalTitle">Add Staff</span><button class="modal-close" onclick="closeModal('staffModal')">✕</button></div><div class="modal-body"><input type="hidden" id="editStaffId"><div class="form-group"><label class="form-label">Name <span class="required">*</span></label><input type="text" id="sfName" class="form-input"></div><div class="form-row"><div class="form-group"><label class="form-label">Role</label><select id="sfRole" class="form-select"><option>Sales Associate</option><option>Cashier</option><option>Manager</option><option>Supervisor</option><option>Storekeeper</option><option>Accountant</option><option>Other</option></select></div><div class="form-group"><label class="form-label">Monthly Salary</label><input type="number" id="sfSalary" class="form-input" min="0"></div></div><div class="form-row"><div class="form-group"><label class="form-label">Phone</label><input type="text" id="sfPhone" class="form-input"></div><div class="form-group"><label class="form-label">Email</label><input type="email" id="sfEmail" class="form-input"></div></div><div class="form-group"><label class="form-label">Notes</label><textarea id="sfNotes" class="form-textarea" rows="2"></textarea></div></div><div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('staffModal')">Cancel</button><button class="btn btn-primary" onclick="saveStaffMember()">💾 Save</button></div></div></div>
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="js/storage.js"></script><script src="js/app.js"></script>
+  <script>
+  let allStaff=ST.staff();
   function updateStats(){
-    const all=ST.staff(),sales=ST.sales(),now=new Date();
-    document.getElementById('totalStaff').textContent=all.length;
-    const active=all.filter(s=>s.isActive!==false);
-    document.getElementById('activeStaff').textContent=active.length;
-    // Staff revenue this month
-    const monthSales=sales.filter(s=>{const d=new Date(s.date);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear()});
-    const byStaff={};
-    monthSales.forEach(s=>{const sn=s.staffName||'Unknown';if(!byStaff[sn])byStaff[sn]={rev:0,count:0};byStaff[sn].rev+=s.total;byStaff[sn].count++});
-    const topS=Object.entries(byStaff).sort((a,b)=>b[1].rev-a[1].rev);
-    document.getElementById('topPerformer').textContent=topS.length?topS[0][0]:'—';
-    document.getElementById('staffRevenue').textContent=ST.fmt(monthSales.reduce((a,s)=>a+s.total,0));
-    document.getElementById('staffSub').textContent=all.length+' staff members';
-    // Perf chart
-    if(topS.length){
-      const maxRev=topS[0][1].rev;
-      document.getElementById('staffPerf').innerHTML=topS.slice(0,8).map(([name,d])=>
-        '<div class="target-row"><div class="target-header"><span class="target-label">'+name+'</span><span class="target-value">'+ST.fmt(d.rev)+' ('+d.count+' sales)</span></div>'+
-        '<div class="progress-bar-container"><div class="progress-bar-fill green" style="width:'+Math.max(2,d.rev/maxRev*100)+'%"></div></div></div>'
-      ).join('');
-    }
+    const active=allStaff.filter(s=>s.isActive!==false);
+    const top=allStaff.sort((a,b)=>(b.totalRevenue||0)-(a.totalRevenue||0))[0];
+    document.getElementById('staffSubtitle').textContent=allStaff.length+' staff members';
+    document.getElementById('staffStats').innerHTML=
+      '<div class="stat-item"><div class="stat-value">'+allStaff.length+'</div><div class="stat-label">Total Staff</div></div>'+
+      '<div class="stat-item"><div class="stat-value">'+active.length+'</div><div class="stat-label">Active</div></div>'+
+      '<div class="stat-item"><div class="stat-value">'+(top?top.name:'—')+'</div><div class="stat-label">Top Performer</div></div>'+
+      '<div class="stat-item"><div class="stat-value">'+ST.fmt(allStaff.reduce((a,s)=>a+(s.totalRevenue||0),0))+'</div><div class="stat-label">Staff Revenue</div></div>';
   }
-
-  window.renderStaff=function(){
-    let all=ST.staff();const q=document.getElementById('staffSearch').value.toLowerCase(),sort=document.getElementById('staffSort').value;
-    if(q)all=all.filter(s=>(s.name||'').toLowerCase().includes(q)||(s.role||'').toLowerCase().includes(q));
-    all.sort((a,b)=>{if(sort==='revenue')return(b.totalRevenue||0)-(a.totalRevenue||0);if(sort==='recent')return new Date(b.createdAt||0)-new Date(a.createdAt||0);return(a.name||'').localeCompare(b.name||'')});
-    const tbody=document.getElementById('staffBody');
-    if(!all.length){tbody.innerHTML='<tr><td colspan="7" class="empty-cell">No staff found</td></tr>';return}
-    tbody.innerHTML=all.map(s=>
-      '<tr><td><strong>'+(s.name||'Unnamed')+'</strong></td>'+
-      '<td><span class="badge badge-info">'+(s.role||'—')+'</span></td>'+
-      '<td>'+(s.phone||'—')+'</td>'+
-      '<td>'+(s.totalSales||0)+'</td>'+
-      '<td>'+ST.fmt(s.totalRevenue||0)+'</td>'+
-      '<td><span class="badge '+(s.isActive!==false?'badge-success':'badge-danger')+'">'+(s.isActive!==false?'Active':'Inactive')+'</span></td>'+
-      '<td><div style="display:flex;gap:0.3rem">'+
-      '<button class="btn-tiny" onclick="editStaff(\''+s.id+'\')">✏️</button>'+
-      '<button class="btn-tiny '+(s.isActive!==false?'btn-red':'btn-green')+'" onclick="toggleStaff(\''+s.id+'\')">'+(s.isActive!==false?'Disable':'Enable')+'</button>'+
-      '<button class="btn-tiny btn-red" onclick="deleteStaff(\''+s.id+'\')">🗑</button></div></td></tr>'
+  function renderStaff(){
+    if(!allStaff.length){document.getElementById('staffBody').innerHTML='<tr><td colspan="8" class="table-empty"><div class="empty-icon">👨‍💼</div><div class="empty-text">No staff found</div></td></tr>';return}
+    document.getElementById('staffBody').innerHTML=allStaff.map(s=>
+      '<tr><td><strong>'+s.name+'</strong></td><td><span class="tag">'+(s.role||'N/A')+'</span></td>'+
+      '<td>'+(s.phone||'—')+'</td><td>'+(s.totalSales||0)+'</td><td><strong>'+ST.fmt(s.totalRevenue||0)+'</strong></td>'+
+      '<td>'+ST.fmt(s.salary||0)+'</td>'+
+      '<td><span class="badge '+(s.isActive!==false?'badge-success':'badge-muted')+'">'+(s.isActive!==false?'Active':'Disabled')+'</span></td>'+
+      '<td><div class="table-actions"><button class="btn btn-sm btn-ghost" onclick="editStaff(\''+s.id+'\')">✏️</button>'+
+      '<button class="btn btn-sm btn-ghost" onclick="toggleStaff(\''+s.id+'\')">'+(s.isActive!==false?'🚫':'✅')+'</button></div></td></tr>'
     ).join('');
-  };
-
-  window.openStaffModal=function(){
-    document.getElementById('smId').value='';document.getElementById('smTitle').textContent='Add Staff Member';
-    ['smName','smPhone','smEmail','smSalary','smNotes'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('staffModal').style.display='flex';
-  };
-  window.editStaff=function(id){
-    const s=ST.staff().find(x=>x.id===id);if(!s)return;
-    document.getElementById('smId').value=s.id;document.getElementById('smTitle').textContent='Edit Staff';
-    document.getElementById('smName').value=s.name||'';document.getElementById('smRole').value=s.role||'Sales Associate';
-    document.getElementById('smPhone').value=s.phone||'';document.getElementById('smEmail').value=s.email||'';
-    document.getElementById('smSalary').value=s.salary||'';document.getElementById('smNotes').value=s.notes||'';
-    document.getElementById('staffModal').style.display='flex';
-  };
-  window.saveStaffMember=function(){
-    const name=document.getElementById('smName').value.trim();
-    if(!name){showToast('⚠️ Enter staff name');return}
-    ST.saveStaffMember({
-      id:document.getElementById('smId').value||null,name,
-      role:document.getElementById('smRole').value,phone:document.getElementById('smPhone').value.trim(),
-      email:document.getElementById('smEmail').value.trim(),salary:parseFloat(document.getElementById('smSalary').value)||0,
-      notes:document.getElementById('smNotes').value.trim()
-    });
-    ST.logActivity('staff','Staff updated: '+name);
-    showToast('✅ Staff saved');document.getElementById('staffModal').style.display='none';updateStats();renderStaff();
-  };
-  window.toggleStaff=function(id){const all=ST.staff(),s=all.find(x=>x.id===id);if(s){s.isActive=s.isActive===false?true:false;ST.saveStaff(all);renderStaff()}};
-  window.deleteStaff=function(id){if(!confirm('Remove this staff member?'))return;ST.saveStaff(ST.staff().filter(x=>x.id!==id));showToast('🗑 Removed');updateStats();renderStaff()};
-  window.exportStaffCSV=function(){
-    const all=ST.staff(),h='Name,Role,Phone,Email,Salary,Sales,Revenue,Status';
-    const rows=all.map(s=>[s.name,s.role||'',s.phone||'',s.email||'',s.salary||0,s.totalSales||0,(s.totalRevenue||0).toFixed(2),s.isActive!==false?'Active':'Inactive'].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','));
-    const csv=[h,...rows].join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='staff_'+new Date().toISOString().slice(0,10)+'.csv';a.click();showToast('📥 CSV downloaded');
-  };
+    // Performance bars
+    const maxRev=Math.max(...allStaff.map(s=>s.totalRevenue||0),1);
+    document.getElementById('staffPerf').innerHTML=allStaff.filter(s=>s.isActive!==false).map(s=>{
+      const pct=(s.totalRevenue||0)/maxRev*100;
+      return'<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-weight:600">'+s.name+' <span class="text-muted">('+s.role+')</span></span><span class="text-primary">'+ST.fmt(s.totalRevenue||0)+'</span></div><div class="progress-bar"><div class="progress-bar-fill" style="width:'+pct+'%"></div></div></div>';
+    }).join('');
+  }
+  function editStaff(id){
+    const s=allStaff.find(x=>x.id===id);if(!s)return;
+    document.getElementById('editStaffId').value=id;
+    document.getElementById('staffModalTitle').textContent='Edit: '+s.name;
+    document.getElementById('sfName').value=s.name;document.getElementById('sfRole').value=s.role||'Sales Associate';
+    document.getElementById('sfSalary').value=s.salary||0;document.getElementById('sfPhone').value=s.phone||'';
+    document.getElementById('sfEmail').value=s.email||'';document.getElementById('sfNotes').value=s.notes||'';
+    openModal('staffModal');
+  }
+  function saveStaffMember(){
+    const id=document.getElementById('editStaffId').value;
+    const name=document.getElementById('sfName').value.trim();
+    if(!name){showToast('Name required','warning');return}
+    const data={name,role:document.getElementById('sfRole').value,salary:parseFloat(document.getElementById('sfSalary').value)||0,
+      phone:document.getElementById('sfPhone').value,email:document.getElementById('sfEmail').value,notes:document.getElementById('sfNotes').value};
+    if(id)data.id=id;
+    ST.saveStaffMember(data);allStaff=ST.staff();
+    closeModal('staffModal');showToast('Staff saved!','success');
+    document.getElementById('editStaffId').value='';['sfName','sfPhone','sfEmail','sfNotes'].forEach(id=>document.getElementById(id).value='');
+    renderStaff();updateStats();
+  }
+  function toggleStaff(id){
+    const s=allStaff.find(x=>x.id===id);if(!s)return;
+    s.isActive=s.isActive===false?true:false;ST.saveStaff(allStaff);
+    showToast(s.name+(s.isActive?' enabled':' disabled'),'info');renderStaff();updateStats();
+  }
   updateStats();renderStaff();
-})();
-</script></body></html>
+  </script>
+</body>
+</html>

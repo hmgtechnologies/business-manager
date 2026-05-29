@@ -1,465 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Settings — SaleTrack — HMG Enterprise</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — HMG Enterprise v5.0</title>
+  <link rel="stylesheet" href="css/style.css"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#6366f1">
 </head>
 <body>
+  <aside class="sidebar" id="sidebar"><div class="sidebar-header"><div class="sidebar-logo"><div class="logo-icon">🏪</div><span>HMG Enterprise</span></div><button class="sidebar-collapse-btn" onclick="toggleSidebar()">‹</button></div><nav class="sidebar-nav"><div class="nav-group"><div class="nav-group-title">Overview</div><a href="index.html" class="nav-item"><span class="nav-icon">📊</span><span class="nav-text">Dashboard</span></a><a href="reports.html" class="nav-item"><span class="nav-icon">📈</span><span class="nav-text">Reports</span></a></div><div class="nav-group"><div class="nav-group-title">Operations</div><a href="sales.html" class="nav-item"><span class="nav-icon">🛒</span><span class="nav-text">Sales</span></a><a href="inventory.html" class="nav-item"><span class="nav-icon">📦</span><span class="nav-text">Inventory</span></a><a href="expenses.html" class="nav-item"><span class="nav-icon">💸</span><span class="nav-text">Expenses</span></a><a href="register.html" class="nav-item"><span class="nav-icon">🏧</span><span class="nav-text">Register</span></a></div><div class="nav-group"><div class="nav-group-title">People</div><a href="customers.html" class="nav-item"><span class="nav-icon">👥</span><span class="nav-text">Customers</span></a><a href="suppliers.html" class="nav-item"><span class="nav-icon">🚚</span><span class="nav-text">Suppliers</span></a><a href="staff.html" class="nav-item"><span class="nav-icon">👨‍💼</span><span class="nav-text">Staff</span></a></div><div class="nav-group"><div class="nav-group-title">Finance</div><a href="budgets.html" class="nav-item"><span class="nav-icon">💰</span><span class="nav-text">Budgets</span></a><a href="credits.html" class="nav-item"><span class="nav-icon">💳</span><span class="nav-text">Credits</span></a></div><div class="nav-group"><div class="nav-group-title">Tools</div><a href="journal.html" class="nav-item"><span class="nav-icon">📝</span><span class="nav-text">Journal</span></a><a href="settings.html" class="nav-item active"><span class="nav-icon">⚙️</span><span class="nav-text">Settings</span></a></div></nav><div class="sidebar-footer"><div class="footer-dot"></div><div class="sidebar-footer-info">Enterprise v5.0</div></div></aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <main class="main-content">
+    <header class="topbar"><button class="topbar-hamburger" onclick="toggleSidebar()">☰</button><div class="topbar-title">⚙️ Settings</div><div class="topbar-search"><input type="text" id="globalSearch" placeholder="Search…"></div><div class="topbar-actions"><button class="topbar-btn" id="notifBtn" onclick="toggleNotifPanel()">🔔<span class="notif-badge" id="notifBadge" style="display:none">0</span></button><div class="topbar-biz-name" id="bizNameNav">HMG Concepts</div></div></header>
+    <div class="search-panel" id="searchPanel"></div><div class="notif-panel" id="notifPanel"><div class="notif-panel-header"><span>Notifications</span><button class="btn btn-sm btn-ghost" onclick="ST.saveNotifications([]);renderNotifPanel();updateNotifBadge()">Clear all</button></div><div id="notifList"></div></div>
+    <div class="page-content">
+      <div class="page-header"><h1>Settings</h1><p class="page-subtitle">Configure your business details and system preferences</p></div>
 
-<nav class="navbar">
-  <div class="navbar-brand">
-    <div class="brand-logo">HMG</div>
-    <div>
-      <div class="brand-name" id="bizNameNav">My Store</div>
-      <div class="brand-sub">Settings</div>
-    </div>
-  </div>
-  <nav class="navbar-links">
-    <a href="index.html">📊 Dashboard</a>
-    <a href="sales.html">🛒 Sales</a>
-    <a href="inventory.html">📦 Inventory</a>
-    <a href="expenses.html">💸 Expenses</a>
-    <a href="customers.html">👥 Customers</a>
-    <a href="suppliers.html">🚚 Suppliers</a>
-    <a href="register.html">🏧 Register</a>
-    <a href="journal.html">📝 Journal</a>
-    <a href="staff.html">👨‍💼 Staff</a>
-    <a href="budgets.html">💰 Budgets</a>
-    <a href="credits.html">💳 Credits</a>
-    <a href="reports.html">📈 Reports</a>
-    <a href="settings.html" class="active">⚙️ Settings</a>
-  </nav>
-  <button class="hamburger" onclick="toggleMenu()">☰</button>
-</nav>
+      <!-- Business Information -->
+      <div class="form-section">
+        <div class="form-section-title">🏪 Business Information</div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Business Name</label><input type="text" id="cfgBizName" class="form-input"></div>
+          <div class="form-group"><label class="form-label">Owner / Manager Name</label><input type="text" id="cfgOwner" class="form-input"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Business Type</label>
+            <select id="cfgBizType" class="form-select"><option>Retail Shop</option><option>Wholesale</option><option>Pharmacy / Health</option><option>Food & Beverage</option><option>Electronics</option><option>Fashion & Clothing</option><option>Agribusiness</option><option>Auto Parts</option><option>General Merchandise</option><option>Services</option><option>Consulting</option><option>Multi-industry Solutions</option></select></div>
+          <div class="form-group"><label class="form-label">Business Address</label><input type="text" id="cfgAddr" class="form-input"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Phone Number</label><input type="text" id="cfgPhone" class="form-input"></div>
+          <div class="form-group"><label class="form-label">Email</label><input type="email" id="cfgEmail" class="form-input"></div>
+        </div>
+      </div>
 
-<div class="mobile-menu" id="mobileMenu">
-  <a href="index.html">📊 Dashboard</a>
-  <a href="sales.html">🛒 Sales</a>
-  <a href="inventory.html">📦 Inventory</a>
-  <a href="expenses.html">💸 Expenses</a>
-  <a href="customers.html">👥 Customers</a>
-  <a href="suppliers.html">🚚 Suppliers</a>
-  <a href="register.html">🏧 Register</a>
-  <a href="journal.html">📝 Journal</a>
-  <a href="staff.html">👨‍💼 Staff</a>
-  <a href="budgets.html">💰 Budgets</a>
-  <a href="credits.html">💳 Credits</a>
-  <a href="reports.html">📈 Reports</a>
-  <a href="settings.html" class="active">⚙️ Settings</a>
-</div>
+      <!-- Financial Settings -->
+      <div class="form-section">
+        <div class="form-section-title">💰 Financial Settings</div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Currency Symbol</label>
+            <select id="cfgCurrency" class="form-select"><option value="₦">₦ Nigerian Naira (NGN)</option><option value="GH₵">GH₵ Ghana Cedi (GHS)</option><option value="KSh">KSh Kenyan Shilling (KES)</option><option value="R">R South African Rand (ZAR)</option><option value="$">$ US Dollar (USD)</option><option value="€">€ Euro (EUR)</option><option value="£">£ British Pound (GBP)</option><option value="UGX">UGX Uganda Shilling</option><option value="TZS">TZS Tanzania Shilling</option><option value="XOF">XOF CFA Franc</option><option value="Rwf">Rwf Rwandan Franc</option><option value="ZMW">ZMW Zambian Kwacha</option><option value="EGP">EGP Egyptian Pound</option><option value="MAD">MAD Moroccan Dirham</option></select></div>
+          <div class="form-group"><label class="form-label">Default Tax Rate (%)</label><input type="number" id="cfgTax" class="form-input" min="0" step="0.5"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Low Stock Alert Threshold (units)</label><input type="number" id="cfgLowStock" class="form-input" min="1"></div>
+          <div class="form-group"><label class="form-label">Financial Year Start</label>
+            <select id="cfgFyStart" class="form-select"><option value="1">January</option><option value="4">April</option><option value="7">July</option><option value="10">October</option></select></div>
+        </div>
+      </div>
 
-<div class="page">
+      <!-- Sales Targets -->
+      <div class="form-section">
+        <div class="form-section-title">🎯 Sales Targets (Revenue Goals)</div>
+        <p class="form-hint mb-4">Set revenue targets to track progress on your dashboard. Leave 0 to disable.</p>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Daily Target</label><input type="number" id="cfgTargetDaily" class="form-input" min="0"></div>
+          <div class="form-group"><label class="form-label">Weekly Target</label><input type="number" id="cfgTargetWeekly" class="form-input" min="0"></div>
+          <div class="form-group"><label class="form-label">Monthly Target</label><input type="number" id="cfgTargetMonthly" class="form-input" min="0"></div>
+        </div>
+      </div>
 
-  <div class="page-header">
-    <div>
-      <h1 class="page-title">Settings</h1>
-      <div class="page-sub">Configure your business details and system preferences</div>
-    </div>
-  </div>
+      <!-- Product Categories -->
+      <div class="form-section">
+        <div class="form-section-title">📂 Product Categories</div>
+        <p class="form-hint mb-4">Define categories for organising your products.</p>
+        <div id="categoriesArea"></div>
+        <button class="btn btn-outline btn-sm mt-2" onclick="addCategory()">+ Add Category</button>
+      </div>
 
-  <!-- BUSINESS SETTINGS -->
-  <div class="card">
-    <h3 class="card-title">🏪 Business Information</h3>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Business Name</label>
-        <input type="text" id="s_bizName" />
+      <!-- Themes -->
+      <div class="form-section">
+        <div class="form-section-title">🎨 Theme & Appearance</div>
+        <p class="form-hint mb-4">Choose a visual theme. Changes apply instantly.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px">
+          <div class="card" style="cursor:pointer;text-align:center;padding:16px" onclick="setTheme('indigo')"><div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#818cf8);margin:0 auto 8px"></div><div style="font-weight:600;font-size:0.85rem">Indigo</div></div>
+          <div class="card" style="cursor:pointer;text-align:center;padding:16px" onclick="setTheme('blue')"><div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#60a5fa);margin:0 auto 8px"></div><div style="font-weight:600;font-size:0.85rem">Blue</div></div>
+          <div class="card" style="cursor:pointer;text-align:center;padding:16px" onclick="setTheme('emerald')"><div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#10b981,#34d399);margin:0 auto 8px"></div><div style="font-weight:600;font-size:0.85rem">Emerald</div></div>
+          <div class="card" style="cursor:pointer;text-align:center;padding:16px" onclick="setTheme('purple')"><div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#a78bfa);margin:0 auto 8px"></div><div style="font-weight:600;font-size:0.85rem">Purple</div></div>
+          <div class="card" style="cursor:pointer;text-align:center;padding:16px" onclick="setTheme('rose')"><div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#f43f5e,#fb7185);margin:0 auto 8px"></div><div style="font-weight:600;font-size:0.85rem">Rose</div></div>
+          <div class="card" style="cursor:pointer;text-align:center;padding:16px" onclick="setTheme('amber')"><div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#fbbf24);margin:0 auto 8px"></div><div style="font-weight:600;font-size:0.85rem">Amber</div></div>
+          <div class="card" style="cursor:pointer;text-align:center;padding:16px" onclick="setTheme('light')"><div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#f1f5f9,#ffffff);border:1px solid #e2e8f0;margin:0 auto 8px"></div><div style="font-weight:600;font-size:0.85rem">Light</div></div>
+        </div>
       </div>
-      <div class="form-group">
-        <label>Owner / Manager Name</label>
-        <input type="text" id="s_ownerName" />
-      </div>
-      <div class="form-group">
-        <label>Business Type</label>
-        <select id="s_bizType">
-          <option>Retail Shop</option>
-          <option>Wholesale</option>
-          <option>Pharmacy / Health</option>
-          <option>Food & Beverage</option>
-          <option>Electronics</option>
-          <option>Fashion & Clothing</option>
-          <option>Agribusiness</option>
-          <option>Auto Parts</option>
-          <option>General Merchandise</option>
-          <option>Services</option>
-          <option>Consulting</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Business Address (for receipts)</label>
-        <input type="text" id="s_address" placeholder="e.g. 12 Market Street, Lagos" />
-      </div>
-      <div class="form-group">
-        <label>Phone Number</label>
-        <input type="tel" id="s_phone" placeholder="e.g. 080XXXXXXXX" />
-      </div>
-      <div class="form-group">
-        <label>Email (optional)</label>
-        <input type="email" id="s_email" placeholder="business@email.com" />
-      </div>
-    </div>
-  </div>
 
-  <!-- FINANCIAL SETTINGS -->
-  <div class="card">
-    <h3 class="card-title">💰 Financial Settings</h3>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Currency Symbol</label>
-        <select id="s_currency">
-          <option value="₦">₦ Nigerian Naira (NGN)</option>
-          <option value="GH₵">GH₵ Ghana Cedi (GHS)</option>
-          <option value="KSh">KSh Kenyan Shilling (KES)</option>
-          <option value="R">R South African Rand (ZAR)</option>
-          <option value="$">$ US Dollar (USD)</option>
-          <option value="€">€ Euro (EUR)</option>
-          <option value="£">£ British Pound (GBP)</option>
-          <option value="UGX">UGX Uganda Shilling</option>
-          <option value="TZS">TZS Tanzania Shilling</option>
-          <option value="XOF">XOF CFA Franc</option>
-          <option value="Rwf">Rwf Rwandan Franc</option>
-          <option value="ZMW">ZMW Zambian Kwacha</option>
-          <option value="EGP">EGP Egyptian Pound</option>
-          <option value="MAD">MAD Moroccan Dirham</option>
-        </select>
+      <!-- Security -->
+      <div class="form-section">
+        <div class="form-section-title">🔒 Security</div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">4-Digit PIN (leave blank to disable)</label><input type="password" id="cfgPin" class="form-input" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="••••"></div>
+          <div class="form-group"><label class="form-label">Confirm PIN</label><input type="password" id="cfgPinConfirm" class="form-input" maxlength="4" inputmode="numeric" placeholder="••••"></div>
+        </div>
+        <div style="display:flex;gap:10px"><button class="btn btn-primary btn-sm" onclick="setPIN()">🔒 Set PIN</button><button class="btn btn-outline btn-sm" onclick="removePIN()">🔓 Remove PIN</button></div>
+        <div id="pinStatus" class="text-muted mt-2" style="font-size:0.85rem"></div>
       </div>
-      <div class="form-group">
-        <label>Default Tax Rate (%)</label>
-        <input type="number" id="s_taxRate" min="0" max="100" placeholder="0" />
+
+      <!-- Save -->
+      <div style="display:flex;gap:10px;margin:24px 0">
+        <button class="btn btn-primary btn-lg" onclick="saveSettings()">💾 Save All Settings</button>
+        <button class="btn btn-outline btn-lg" onclick="loadSettings()">↺ Discard Changes</button>
       </div>
-      <div class="form-group">
-        <label>Low Stock Alert Threshold (units)</label>
-        <input type="number" id="s_lowStock" min="1" placeholder="10" />
+
+      <!-- Danger Zone -->
+      <div class="danger-zone">
+        <div class="danger-zone-title">⚠️ Danger Zone</div>
+        <p class="text-muted mb-4" style="font-size:0.85rem">These actions are irreversible. Make a backup first from Reports page.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-outline btn-sm" style="border-color:var(--danger-border);color:var(--danger)" onclick="if(confirm('Clear ALL sales data?')){ST.saveSales([]);showToast('Sales cleared','info')}">🗑 Clear All Sales</button>
+          <button class="btn btn-outline btn-sm" style="border-color:var(--danger-border);color:var(--danger)" onclick="if(confirm('Clear ALL expenses?')){ST.saveExpenses([]);showToast('Expenses cleared','info')}">🗑 Clear All Expenses</button>
+          <button class="btn btn-outline btn-sm" style="border-color:var(--danger-border);color:var(--danger)" onclick="if(confirm('Reset ALL stock to zero?')){const p=ST.products();p.forEach(x=>x.stock=0);ST.saveProducts(p);showToast('Stock reset','info')}">📦 Reset All Stock</button>
+          <button class="btn btn-danger btn-sm" onclick="if(confirm('FACTORY RESET: This will erase EVERYTHING. Are you absolutely sure?')){localStorage.clear();location.reload()}">💣 Factory Reset</button>
+        </div>
       </div>
-      <div class="form-group">
-        <label>Financial Year Start Month</label>
-        <select id="s_fyStart">
-          <option value="1">January</option>
-          <option value="4">April</option>
-          <option value="7">July</option>
-          <option value="10">October</option>
-        </select>
+
+      <!-- Keyboard Shortcuts -->
+      <div class="form-section mt-6">
+        <div class="form-section-title">⌨️ Keyboard Shortcuts</div>
+        <div class="shortcut-row"><span>Dashboard</span><span class="kbd">Alt</span>+<span class="kbd">D</span></div>
+        <div class="shortcut-row"><span>Sales</span><span class="kbd">Alt</span>+<span class="kbd">S</span></div>
+        <div class="shortcut-row"><span>Inventory</span><span class="kbd">Alt</span>+<span class="kbd">I</span></div>
+        <div class="shortcut-row"><span>Expenses</span><span class="kbd">Alt</span>+<span class="kbd">E</span></div>
+        <div class="shortcut-row"><span>Customers</span><span class="kbd">Alt</span>+<span class="kbd">C</span></div>
+        <div class="shortcut-row"><span>Reports</span><span class="kbd">Alt</span>+<span class="kbd">R</span></div>
+        <div class="shortcut-row"><span>Register</span><span class="kbd">Alt</span>+<span class="kbd">G</span></div>
+        <div class="shortcut-row"><span>Journal</span><span class="kbd">Alt</span>+<span class="kbd">N</span></div>
+        <div class="shortcut-row"><span>Staff</span><span class="kbd">Alt</span>+<span class="kbd">O</span></div>
+        <div class="shortcut-row"><span>Budgets</span><span class="kbd">Alt</span>+<span class="kbd">B</span></div>
+        <div class="shortcut-row"><span>Credits</span><span class="kbd">Alt</span>+<span class="kbd">T</span></div>
+      </div>
+
+      <!-- About -->
+      <div class="form-section mt-6">
+        <div class="form-section-title">ℹ️ About</div>
+        <div style="display:grid;gap:8px;font-size:0.88rem">
+          <div style="display:flex;justify-content:space-between"><span class="text-muted">Version</span><strong>HMG Enterprise v5.0.0</strong></div>
+          <div style="display:flex;justify-content:space-between"><span class="text-muted">Storage</span><span>Browser localStorage (free, offline)</span></div>
+          <div style="display:flex;justify-content:space-between"><span class="text-muted">Hosting</span><span>GitHub Pages (free)</span></div>
+          <div style="display:flex;justify-content:space-between"><span class="text-muted">Storage Used</span><span id="aboutStorage">—</span></div>
+        </div>
+        <div class="divider"></div>
+        <p class="text-muted" style="font-size:0.82rem">All data is saved in your browser's localStorage. It does NOT sync across devices. Use Reports → Backup to export and transfer data.</p>
       </div>
     </div>
-  </div>
-
-  <!-- SALES TARGETS -->
-  <div class="card">
-    <h3 class="card-title">🎯 Sales Targets (Revenue Goals)</h3>
-    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem">Set revenue targets to track progress on your dashboard. Leave 0 to disable a target.</p>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Daily Target</label>
-        <input type="number" id="s_targetDaily" min="0" placeholder="0" />
-      </div>
-      <div class="form-group">
-        <label>Weekly Target</label>
-        <input type="number" id="s_targetWeekly" min="0" placeholder="0" />
-      </div>
-      <div class="form-group">
-        <label>Monthly Target</label>
-        <input type="number" id="s_targetMonthly" min="0" placeholder="0" />
-      </div>
-    </div>
-  </div>
-
-  <!-- CATEGORIES -->
-  <div class="card">
-    <h3 class="card-title">📂 Product Categories</h3>
-    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem">Define categories for organising your products. Changes take effect on next product edit.</p>
-    <div class="form-grid" id="categoriesGrid"></div>
-    <button class="btn btn-secondary" style="margin-top:1rem" onclick="addCategoryField()">+ Add Category</button>
-  </div>
-
-  <!-- THEME -->
-  <div class="card">
-    <h3 class="card-title">🎨 Theme & Appearance</h3>
-    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem">Choose a visual theme for your dashboard. Changes apply instantly.</p>
-    <div class="theme-grid">
-      <div class="theme-option" onclick="setTheme('dark-green')">
-        <div class="theme-swatch" style="background:linear-gradient(135deg,#0a0d12,#00e5a0)"></div>
-        <div class="theme-option-label">🟢 Dark Green</div>
-      </div>
-      <div class="theme-option" onclick="setTheme('dark-blue')">
-        <div class="theme-swatch" style="background:linear-gradient(135deg,#080f1a,#38bdf8)"></div>
-        <div class="theme-option-label">🔵 Dark Blue</div>
-      </div>
-      <div class="theme-option" onclick="setTheme('dark-purple')">
-        <div class="theme-swatch" style="background:linear-gradient(135deg,#0c0816,#a78bfa)"></div>
-        <div class="theme-option-label">🟣 Dark Purple</div>
-      </div>
-      <div class="theme-option" onclick="setTheme('dark-red')">
-        <div class="theme-swatch" style="background:linear-gradient(135deg,#120a0a,#f87171)"></div>
-        <div class="theme-option-label">🔴 Dark Red</div>
-      </div>
-      <div class="theme-option" onclick="setTheme('light')">
-        <div class="theme-swatch" style="background:linear-gradient(135deg,#f3f4f6,#059669)"></div>
-        <div class="theme-option-label">☀️ Light Mode</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SECURITY -->
-  <div class="card">
-    <h3 class="card-title">🔒 Security</h3>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>4-Digit PIN (leave blank to disable)</label>
-        <input type="password" id="s_pin" maxlength="4" placeholder="Enter 4-digit PIN" />
-      </div>
-      <div class="form-group">
-        <label>Confirm PIN</label>
-        <input type="password" id="s_pinConfirm" maxlength="4" placeholder="Confirm PIN" />
-      </div>
-    </div>
-    <div style="margin-top:1rem;display:flex;gap:0.75rem;flex-wrap:wrap">
-      <button class="btn btn-secondary" onclick="setPIN()">🔒 Set PIN</button>
-      <button class="btn btn-secondary" onclick="clearPIN()">🔓 Remove PIN</button>
-    </div>
-    <div id="pinStatus" style="margin-top:0.75rem;font-size:0.82rem;color:var(--muted)"></div>
-  </div>
-
-  <!-- SAVE -->
-  <div style="display:flex;gap:1rem;margin-top:1rem;margin-bottom:2rem">
-    <button class="btn btn-primary" onclick="saveSettings()">💾 Save All Settings</button>
-    <button class="btn btn-secondary" onclick="location.reload()">↺ Discard Changes</button>
-  </div>
-
-  <!-- DANGER ZONE -->
-  <div class="card" style="border-color:rgba(255,71,87,0.3)">
-    <h3 class="card-title" style="color:var(--danger)">⚠️ Danger Zone</h3>
-    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1.2rem">These actions are <strong style="color:var(--text)">irreversible</strong>. Make a backup first from the Reports page.</p>
-    <div style="display:flex;gap:1rem;flex-wrap:wrap">
-      <button class="btn btn-danger" onclick="clearSalesData()">🗑 Clear All Sales Data</button>
-      <button class="btn btn-danger" onclick="clearExpensesData()">🗑 Clear All Expenses</button>
-      <button class="btn btn-danger" onclick="resetStock()">📦 Reset All Stock to Zero</button>
-      <button class="btn btn-danger" onclick="factoryReset()">💣 Factory Reset (Erase Everything)</button>
-    </div>
-  </div>
-
-  <!-- KEYBOARD SHORTCUTS -->
-  <div class="card" style="margin-top:1.5rem">
-    <h3 class="card-title">⌨️ Keyboard Shortcuts</h3>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.5rem;font-size:0.85rem">
-      <div class="pay-row"><code style="color:var(--accent)">Alt+D</code> <span>Dashboard</span></div>
-      <div class="pay-row"><code style="color:var(--accent)">Alt+S</code> <span>Sales</span></div>
-      <div class="pay-row"><code style="color:var(--accent)">Alt+I</code> <span>Inventory</span></div>
-      <div class="pay-row"><code style="color:var(--accent)">Alt+E</code> <span>Expenses</span></div>
-      <div class="pay-row"><code style="color:var(--accent)">Alt+C</code> <span>Customers</span></div>
-      <div class="pay-row"><code style="color:var(--accent)">Alt+R</code> <span>Reports</span></div>
-      <div class="pay-row"><code style="color:var(--accent)">Alt+G</code> <span>Register</span></div>
-    </div>
-  </div>
-
-  <!-- ABOUT -->
-  <div class="card" style="margin-top:1.5rem;background:rgba(0,229,160,0.03)">
-    <h3 class="card-title">ℹ️ About SaleTrack</h3>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;font-size:0.85rem;color:var(--muted)">
-      <div><strong style="color:var(--text)">Version</strong><br>SaleTrack v2.0.0 (Enhanced)</div>
-      <div><strong style="color:var(--text)">Storage</strong><br>Browser localStorage (free, offline)</div>
-      <div><strong style="color:var(--text)">Hosting</strong><br>GitHub Pages (free)</div>
-      <div><strong style="color:var(--text)">Generated</strong><br><span id="generatedDate"></span></div>
-      <div><strong style="color:var(--text)">Storage Used</strong><br><span id="storageUsed"></span></div>
-    </div>
-    <div style="margin-top:1rem;padding:1rem;background:var(--surface2);border-radius:8px;font-size:0.82rem;color:var(--muted);line-height:1.7">
-      <strong style="color:var(--text)">📋 How Data is Stored:</strong> All your sales, inventory, expenses, customers, and register data is saved in your browser's localStorage on the device you use.
-      It does NOT sync automatically across devices. To move data to another device, go to
-      <a href="reports.html" style="color:var(--accent)">Reports</a> → Backup, download the JSON file,
-      then Restore it on the other device.
-    </div>
-    <div style="margin-top:0.75rem;padding:1rem;background:var(--surface2);border-radius:8px;font-size:0.82rem;color:var(--muted);line-height:1.7">
-      <strong style="color:var(--text)">🆕 New in v2.0:</strong> Expenses tracker, customer management, cash register, sales targets with progress bars, theme switcher (5 themes),
-      WhatsApp sharing for receipts and reports, invoice numbers, activity log, enhanced profit & loss reports, duplicate products, stock movement history,
-      cost-based stock valuation, and improved keyboard shortcuts.
-    </div>
-  </div>
-
-</div>
-
-<div class="toast" id="toast"><span id="toastMsg"></span></div>
-
-<script src="js/storage.js"></script>
-<script src="js/app.js"></script>
-<script>
-(function () {
-  ST.init();
-  const cfg = ST.config();
-  document.getElementById('bizNameNav').textContent = cfg.businessName || 'My Store';
-  document.getElementById('generatedDate').textContent = cfg.generatedAt ? new Date(cfg.generatedAt).toLocaleDateString() : '—';
-
-  // Storage usage
-  const usage = ST.storageUsage();
-  document.getElementById('storageUsed').textContent = (usage.used / 1024).toFixed(1) + ' KB (' + usage.pct + '% of 5MB)';
-
-  // Load settings into form
-  function loadSettings() {
-    const fields = {
-      s_bizName: cfg.businessName, s_ownerName: cfg.ownerName,
-      s_address: cfg.address, s_phone: cfg.phone, s_email: cfg.email,
-      s_taxRate: cfg.taxRate, s_lowStock: cfg.lowStockThreshold
-    };
-    Object.entries(fields).forEach(([id, val]) => {
-      const el = document.getElementById(id);
-      if (el && val !== undefined && val !== null) el.value = val;
-    });
-    const bizTypeEl = document.getElementById('s_bizType');
-    if (bizTypeEl) bizTypeEl.value = cfg.businessType || 'Retail Shop';
-    const currEl = document.getElementById('s_currency');
-    if (currEl) currEl.value = cfg.currency || '₦';
-    const fyEl = document.getElementById('s_fyStart');
-    if (fyEl) fyEl.value = cfg.fyStart || '1';
-
-    // Targets
-    const targets = ST.targets();
-    document.getElementById('s_targetDaily').value = targets.daily || 0;
-    document.getElementById('s_targetWeekly').value = targets.weekly || 0;
-    document.getElementById('s_targetMonthly').value = targets.monthly || 0;
-
+    <footer class="page-footer"><p>Powered by <strong>HMG Enterprise v5.0</strong> — <a href="https://cssadewale.pages.dev">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev">hmgconcepts.pages.dev</a></p></footer>
+  </main>
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="js/storage.js"></script><script src="js/app.js"></script>
+  <script>
+  function loadSettings(){
+    const cfg=ST.config();
+    document.getElementById('cfgBizName').value=cfg.businessName||'';
+    document.getElementById('cfgOwner').value=cfg.ownerName||'';
+    document.getElementById('cfgBizType').value=cfg.businessType||'Retail Shop';
+    document.getElementById('cfgAddr').value=cfg.address||'';
+    document.getElementById('cfgPhone').value=cfg.phone||'';
+    document.getElementById('cfgEmail').value=cfg.email||'';
+    document.getElementById('cfgCurrency').value=cfg.currency||'₦';
+    document.getElementById('cfgTax').value=cfg.taxRate||0;
+    document.getElementById('cfgLowStock').value=cfg.lowStockThreshold||10;
+    document.getElementById('cfgFyStart').value=cfg.fyStart||1;
+    const targets=ST.targets();
+    document.getElementById('cfgTargetDaily').value=targets.daily||0;
+    document.getElementById('cfgTargetWeekly').value=targets.weekly||0;
+    document.getElementById('cfgTargetMonthly').value=targets.monthly||0;
     // Categories
-    const cats = cfg.categories || [];
-    const grid = document.getElementById('categoriesGrid');
-    grid.innerHTML = '';
-    cats.forEach((c, i) => addCategoryField(c));
-    if (cats.length === 0) { addCategoryField(''); addCategoryField(''); addCategoryField(''); }
-
+    renderCategories(cfg.categories||[]);
     // PIN status
-    const pin = localStorage.getItem('st_pin');
-    const pinClean = pin ? pin.replace(/^"|"$/g, '') : '';
-    document.getElementById('pinStatus').textContent = pinClean ? '🔒 PIN is currently set' : '🔓 No PIN set — system is open access';
-
-    // Theme highlight
-    const currentTheme = ST.theme();
-    document.querySelectorAll('.theme-option').forEach(el => {
-      el.classList.remove('active');
-    });
-    if (currentTheme) {
-      const themeOptions = document.querySelectorAll('.theme-option');
-      const themes = ['dark-green','dark-blue','dark-purple','dark-red','light'];
-      const idx = themes.indexOf(currentTheme);
-      if (idx >= 0 && themeOptions[idx]) themeOptions[idx].classList.add('active');
-    } else {
-      const first = document.querySelector('.theme-option');
-      if (first) first.classList.add('active');
-    }
+    const pin=localStorage.getItem('st_pin');
+    document.getElementById('pinStatus').textContent=pin?'🔒 PIN is set':'🔓 No PIN set — system is open access';
+    // Storage
+    const usage=ST.storageUsage();
+    document.getElementById('aboutStorage').textContent=(usage.used/1024).toFixed(1)+' KB ('+usage.pct+' of 5MB)';
   }
+  let categories=[];
+  function renderCategories(cats){categories=[...cats];
+    document.getElementById('categoriesArea').innerHTML=categories.map((c,i)=>
+      '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">'+
+      '<input type="text" class="form-input cat-input" value="'+c+'" style="flex:1">'+
+      '<button class="btn btn-sm btn-ghost text-danger" onclick="removeCategory('+i+')">✕</button></div>'
+    ).join('');
+  }
+  function addCategory(){categories.push('');renderCategories(categories)}
+  function removeCategory(i){categories.splice(i,1);renderCategories(categories)}
 
-  let catCount = 0;
-  window.addCategoryField = function (value) {
-    catCount++;
-    const grid = document.getElementById('categoriesGrid');
-    const div = document.createElement('div');
-    div.className = 'form-group';
-    div.innerHTML = '<label>Category ' + catCount + '</label><input type="text" class="cat-input" value="' + (value || '') + '" placeholder="e.g. Beverages" />';
-    grid.appendChild(div);
-  };
-
-  window.setTheme = function (theme) {
-    ST.saveTheme(theme);
-    applyTheme();
-    document.querySelectorAll('.theme-option').forEach(el => el.classList.remove('active'));
-    const themes = ['dark-green','dark-blue','dark-purple','dark-red','light'];
-    const idx = themes.indexOf(theme);
-    const opts = document.querySelectorAll('.theme-option');
-    if (idx >= 0 && opts[idx]) opts[idx].classList.add('active');
-    showToast('🎨 Theme changed to ' + theme);
-  };
-
-  window.saveSettings = function () {
-    const updatedCfg = {
-      ...cfg,
-      businessName: document.getElementById('s_bizName').value.trim() || cfg.businessName,
-      ownerName: document.getElementById('s_ownerName').value.trim(),
-      businessType: document.getElementById('s_bizType').value,
-      address: document.getElementById('s_address').value.trim(),
-      phone: document.getElementById('s_phone').value.trim(),
-      email: document.getElementById('s_email').value.trim(),
-      currency: document.getElementById('s_currency').value,
-      taxRate: parseFloat(document.getElementById('s_taxRate').value) || 0,
-      lowStockThreshold: parseInt(document.getElementById('s_lowStock').value) || 10,
-      fyStart: document.getElementById('s_fyStart').value,
-      categories: Array.from(document.querySelectorAll('.cat-input')).map(i => i.value.trim()).filter(Boolean),
-      updatedAt: new Date().toISOString()
-    };
-    ST.saveConfig(updatedCfg);
-    document.getElementById('bizNameNav').textContent = updatedCfg.businessName;
-
-    // Save targets
-    ST.saveTargets({
-      daily: parseFloat(document.getElementById('s_targetDaily').value) || 0,
-      weekly: parseFloat(document.getElementById('s_targetWeekly').value) || 0,
-      monthly: parseFloat(document.getElementById('s_targetMonthly').value) || 0
-    });
-
-    ST.logActivity('setting', 'Settings updated');
-    showToast('✅ Settings saved successfully');
-  };
-
-  window.setPIN = function () {
-    const pin = document.getElementById('s_pin').value;
-    const confirm = document.getElementById('s_pinConfirm').value;
-    if (!pin) { showToast('⚠️ Enter a PIN'); return; }
-    if (pin.length !== 4 || !/^\d+$/.test(pin)) { showToast('⚠️ PIN must be exactly 4 digits'); return; }
-    if (pin !== confirm) { showToast('⚠️ PINs do not match'); return; }
-    localStorage.setItem('st_pin', pin);
-    sessionStorage.setItem('st_unlocked', '1');
-    document.getElementById('pinStatus').textContent = '🔒 PIN is currently set';
-    document.getElementById('s_pin').value = '';
-    document.getElementById('s_pinConfirm').value = '';
-    showToast('🔒 PIN set successfully');
-  };
-
-  window.clearPIN = function () {
-    if (!confirm('Remove PIN protection? Anyone will be able to access the system.')) return;
-    localStorage.removeItem('st_pin');
-    sessionStorage.removeItem('st_unlocked');
-    document.getElementById('pinStatus').textContent = '🔓 No PIN set — system is open access';
-    showToast('🔓 PIN removed');
-  };
-
-  window.clearSalesData = function () {
-    if (!confirm('DELETE ALL SALES DATA? This cannot be undone. Back up first!')) return;
-    if (!confirm('Are you absolutely sure? All sales history will be permanently lost.')) return;
-    ST.saveSales([]);
-    ST.logActivity('setting', 'All sales data cleared');
-    showToast('🗑 All sales data cleared');
-  };
-
-  window.clearExpensesData = function () {
-    if (!confirm('DELETE ALL EXPENSES DATA? This cannot be undone.')) return;
-    ST.saveExpenses([]);
-    ST.logActivity('setting', 'All expenses data cleared');
-    showToast('🗑 All expenses cleared');
-  };
-
-  window.resetStock = function () {
-    if (!confirm('Reset all product stock quantities to zero?')) return;
-    const prods = ST.products().map(p => ({ ...p, stock: 0 }));
-    ST.saveProducts(prods);
-    ST.logActivity('setting', 'All stock reset to zero');
-    showToast('📦 All stock reset to zero');
-  };
-
-  window.factoryReset = function () {
-    if (!confirm('⚠️ FACTORY RESET: This deletes ALL data including products, sales, expenses, customers, and settings. Are you sure?')) return;
-    if (!confirm('FINAL WARNING: Everything will be permanently erased. Continue?')) return;
-    ['st_config', 'st_products', 'st_sales', 'st_pin', 'st_expenses', 'st_customers', 'st_register', 'st_targets', 'st_activity', 'st_theme'].forEach(k => localStorage.removeItem(k));
-    sessionStorage.clear();
-    showToast('💣 Factory reset done. Redirecting...');
-    setTimeout(() => { window.location.href = 'index.html'; }, 1500);
-  };
-
+  function saveSettings(){
+    const cfg=ST.config();
+    cfg.businessName=document.getElementById('cfgBizName').value.trim()||cfg.businessName;
+    cfg.ownerName=document.getElementById('cfgOwner').value.trim()||cfg.ownerName;
+    cfg.businessType=document.getElementById('cfgBizType').value;
+    cfg.address=document.getElementById('cfgAddr').value;
+    cfg.phone=document.getElementById('cfgPhone').value;
+    cfg.email=document.getElementById('cfgEmail').value;
+    cfg.currency=document.getElementById('cfgCurrency').value;
+    cfg.taxRate=parseFloat(document.getElementById('cfgTax').value)||0;
+    cfg.lowStockThreshold=parseInt(document.getElementById('cfgLowStock').value)||10;
+    cfg.fyStart=parseInt(document.getElementById('cfgFyStart').value)||1;
+    const catInputs=document.querySelectorAll('.cat-input');
+    cfg.categories=[...catInputs].map(i=>i.value.trim()).filter(Boolean);
+    ST.saveConfig(cfg);
+    // Targets
+    ST.saveTargets({daily:parseFloat(document.getElementById('cfgTargetDaily').value)||0,
+      weekly:parseFloat(document.getElementById('cfgTargetWeekly').value)||0,
+      monthly:parseFloat(document.getElementById('cfgTargetMonthly').value)||0});
+    ST.logActivity('setting','Settings updated');
+    showToast('Settings saved!','success');
+  }
+  function setTheme(t){
+    ST.saveTheme(t);applyTheme();showToast('Theme applied!','success');
+  }
+  function setPIN(){
+    const pin=document.getElementById('cfgPin').value;
+    const confirm=document.getElementById('cfgPinConfirm').value;
+    if(!pin||pin.length!==4||!/^\d{4}$/.test(pin)){showToast('PIN must be exactly 4 digits','warning');return}
+    if(pin!==confirm){showToast('PINs do not match','warning');return}
+    localStorage.setItem('st_pin',JSON.stringify(pin));
+    document.getElementById('pinStatus').textContent='🔒 PIN is set';
+    showToast('PIN set! It will activate on next page load.','success');
+    document.getElementById('cfgPin').value='';document.getElementById('cfgPinConfirm').value='';
+  }
+  function removePIN(){
+    localStorage.removeItem('st_pin');sessionStorage.removeItem('st_unlocked');
+    document.getElementById('pinStatus').textContent='🔓 No PIN set — system is open access';
+    showToast('PIN removed','info');
+  }
   loadSettings();
-})();
-</script>
-<div class="brand-footer">
-  <div style="font-weight:700;color:var(--text);font-family:'Syne',sans-serif">HMG Concepts</div>
-  <div>Technology-Powered Business Intelligence</div>
-  <div style="margin-top:0.3rem"><a href="https://cssadewale.pages.dev" target="_blank">cssadewale.pages.dev</a> · <a href="https://hmgconcepts.pages.dev" target="_blank">hmgconcepts.pages.dev</a></div>
-  <div class="powered-by">Powered by HMG Enterprise — Adewale Samson Adeagbo — v3.0</div>
-</div>
-
+  </script>
 </body>
 </html>
