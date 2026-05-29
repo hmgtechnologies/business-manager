@@ -128,13 +128,29 @@ function applyTheme(){
   document.body.className='';
   if(t==='light'||t==='light-mode')document.body.classList.add('light-theme');
   else if(t!=='dark'&&t!=='indigo')document.body.classList.add('theme-'+t);
-  // Update sidebar active state
-  document.querySelectorAll('.nav-item').forEach(a=>{
-    a.classList.remove('active');
-    if(a.getAttribute('data-page')===t)a.classList.add('active');
-  });
+  // NOTE: Nav active state is managed separately by setActiveNav() — do NOT manipulate it here
 }
 applyTheme();
+
+/* ── Set Active Nav Item ─────────────────────────────────────── */
+function setActiveNav(){
+  // Get current page name, stripping query strings and hash fragments
+  let currentPage=window.location.pathname.split('/').pop()||'index.html';
+  // Strip query string and hash
+  currentPage=currentPage.split('?')[0].split('#')[0];
+  if(!currentPage||currentPage==='')currentPage='index.html';
+
+  document.querySelectorAll('.nav-item').forEach(a=>{
+    const href=a.getAttribute('href');
+    // Get just the filename from the href
+    const hrefPage=(href||'').split('/').pop().split('?')[0].split('#')[0];
+    if(hrefPage===currentPage){
+      a.classList.add('active');
+    }else{
+      a.classList.remove('active');
+    }
+  });
+}
 
 /* ── WhatsApp Sharing ────────────────────────────────────────── */
 function shareWhatsApp(text){
@@ -165,7 +181,7 @@ function generateShareSummary(period){
 (function checkPin(){
   const pin=localStorage.getItem('st_pin');
   if(!pin)return;
-  const sp=pin.replace(/^"|"$/g,'');
+  const sp=pin.replace(/^\"|\"$/g,'');
   if(!sp||sessionStorage.getItem('st_unlocked')==='1')return;
   const o=document.createElement('div');
   o.className='modal-overlay active';
@@ -257,12 +273,8 @@ document.addEventListener('DOMContentLoaded',function(){
   updateNotifBadge();renderNotifPanel();
   // Init search
   initGlobalSearch();
-  // Mark active nav item
-  const currentPage=window.location.pathname.split('/').pop()||'index.html';
-  document.querySelectorAll('.nav-item').forEach(a=>{
-    const href=a.getAttribute('href');
-    if(href===currentPage)a.classList.add('active');
-  });
+  // Mark active nav item (use robust setActiveNav function)
+  setActiveNav();
   // Close notif/search panel on outside click
   document.addEventListener('click',function(e){
     const np=document.getElementById('notifPanel');

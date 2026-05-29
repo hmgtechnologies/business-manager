@@ -81,7 +81,7 @@ const ST=(function(){
 
   /* ── Basic Accessors ──────────────────────────────────────── */
   const cfg=()=>g(K.config,DC);
-  const prods=()=>g(K.products,[]);
+  const prods=()=>g(K.products,DP);
   const sls=()=>g(K.sales,[]);
   const saveProds=a=>s(K.products,a);
   const saveSls=a=>s(K.sales,a);
@@ -402,3 +402,6 @@ const ST=(function(){
     loyaltyTier,salesVelocity,globalSearch,monthlyComparison,
     healthScore,dataHealthCheck,calendarData,parseCSV,invoiceNumber};
 })();
+
+// ── AUTO-INITIALIZE storage on first load ──────────────────────
+ST.init();
